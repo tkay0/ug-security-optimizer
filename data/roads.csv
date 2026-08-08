@@ -1,101 +1,101 @@
-road_id,from_location_id,to_location_id,distance_km,travel_time_min,condition_weight,routeLabel,routingWeight,roadType,trafficLevel,isBlocked,dataNote
-1,1,2,0.11,1.18,1.16,Main University Gate - Legon Police Station,1.369,MAIN_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-2,1,3,0.213,1.68,1.16,Main University Gate - University of Ghana Hospital,1.949,MAIN_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-3,1,4,0.199,1.68,1.16,Main University Gate - University of Ghana Fire Station,1.949,MAIN_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-4,3,4,0.119,0.63,1.08,University of Ghana Hospital - University of Ghana Fire Station,0.68,MAIN_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-5,3,5,0.164,1.65,1.08,University of Ghana Hospital - Bush Canteen,1.782,CAMPUS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-6,4,5,0.087,1.02,1.24,University of Ghana Fire Station - Bush Canteen,1.265,MAIN_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-7,5,33,0.272,1.88,1.0,Bush Canteen - University Basic School,1.88,CAMPUS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-8,6,7,0.08,0.7,1.16,University Square - Balme Library,0.812,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-9,6,41,0.108,0.84,1.16,University Square - Department of Sociology,0.974,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-10,6,42,0.104,0.89,1.16,University Square - Careers and Counselling Centre,1.032,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-11,6,43,0.08,1.29,1.16,University Square - University of Ghana Bookshop,1.496,CAMPUS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-12,6,44,0.139,0.75,1.16,University Square - University of Ghana Information Technology Directorate,0.87,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-13,6,50,0.139,0.81,1.16,University Square - University of Ghana School of Law,0.94,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-14,7,38,0.114,0.8,1.32,Balme Library - School of Engineering Sciences,1.056,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-15,7,39,0.143,0.94,1.32,Balme Library - School of Biological Sciences,1.241,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-16,7,43,0.08,1.23,1.32,Balme Library - University of Ghana Bookshop,1.624,CAMPUS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-17,7,49,0.123,1.0,1.32,Balme Library - International Programmes Office,1.32,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-18,8,9,0.09,0.33,1.08,Great Hall - Central Administration,0.356,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-19,8,10,0.219,0.65,1.08,Great Hall - Commonwealth Hall,0.702,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-20,8,32,0.215,0.7,1.08,Great Hall - University of Ghana Botanical Gardens,0.756,ACCESS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-21,9,46,0.126,0.58,1.24,Central Administration - Graduate School,0.719,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-22,10,32,0.218,0.83,1.0,Commonwealth Hall - University of Ghana Botanical Gardens,0.83,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-23,11,50,0.132,0.71,1.16,Legon Hall - University of Ghana School of Law,0.824,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-24,12,13,0.091,0.33,1.32,Akuafo Hall - Volta Hall,0.436,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-25,12,17,0.103,0.42,1.32,Akuafo Hall - VALCO Trust Hostel,0.554,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-26,12,38,0.126,0.52,1.32,Akuafo Hall - School of Engineering Sciences,0.686,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-27,12,39,0.131,0.59,1.32,Akuafo Hall - School of Biological Sciences,0.779,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-28,12,40,0.151,0.69,1.32,Akuafo Hall - School of Agriculture,0.911,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-29,12,49,0.121,1.0,1.32,Akuafo Hall - International Programmes Office,1.32,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-30,13,17,0.129,0.41,1.08,Volta Hall - VALCO Trust Hostel,0.443,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-31,14,28,0.106,0.71,1.24,Mensah Sarbah Hall - University of Ghana Guest Centre,0.88,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-32,14,41,0.13,0.53,1.24,Mensah Sarbah Hall - Department of Sociology,0.657,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-33,14,42,0.152,0.63,1.24,Mensah Sarbah Hall - Careers and Counselling Centre,0.781,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-34,15,16,0.08,0.82,1.0,Jubilee Hall - International Students' Hostel,0.82,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-35,15,18,0.129,1.02,1.0,Jubilee Hall - Hilla Limann Hall,1.02,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-36,15,25,0.215,1.57,1.0,Jubilee Hall - Banking Square,1.57,RESIDENTIAL_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-37,15,26,0.151,1.36,1.0,Jubilee Hall - Night Market,1.36,RESIDENTIAL_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-38,15,27,0.138,0.86,1.0,Jubilee Hall - Legon Mosque,0.86,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-39,15,34,0.082,0.76,1.0,Jubilee Hall - Noguchi Memorial Institute for Medical Research,0.76,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-40,16,18,0.134,0.97,1.16,International Students' Hostel - Hilla Limann Hall,1.125,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-41,16,34,0.08,0.88,1.16,International Students' Hostel - Noguchi Memorial Institute for Medical Research,1.021,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-42,16,35,0.127,0.71,1.16,International Students' Hostel - School of Public Health,0.824,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-43,16,37,0.142,0.82,1.16,International Students' Hostel - School of Pharmacy,0.951,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-44,17,46,0.08,0.43,1.32,VALCO Trust Hostel - Graduate School,0.568,RESIDENTIAL_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-45,17,47,0.102,0.82,1.32,VALCO Trust Hostel - Dean of Students Office,1.082,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-46,17,49,0.127,0.95,1.32,VALCO Trust Hostel - International Programmes Office,1.254,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-47,18,19,0.08,0.88,1.08,Hilla Limann Hall - Alexander Adum Kwapong Hall,0.95,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-48,18,20,0.094,0.62,1.08,Hilla Limann Hall - Jean Nelson Aka Hall,0.67,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-49,18,21,0.139,0.81,1.08,Hilla Limann Hall - Elizabeth Frances Sey Hall,0.875,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-50,18,34,0.092,0.73,1.08,Hilla Limann Hall - Noguchi Memorial Institute for Medical Research,0.788,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-51,18,35,0.129,0.9,1.08,Hilla Limann Hall - School of Public Health,0.972,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-52,19,20,0.08,0.82,1.24,Alexander Adum Kwapong Hall - Jean Nelson Aka Hall,1.017,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-53,19,21,0.096,0.92,1.24,Alexander Adum Kwapong Hall - Elizabeth Frances Sey Hall,1.141,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-54,19,22,0.144,0.76,1.24,Alexander Adum Kwapong Hall - African Union Hall,0.942,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-55,19,34,0.107,0.72,1.24,Alexander Adum Kwapong Hall - Noguchi Memorial Institute for Medical Research,0.893,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-56,19,35,0.114,0.8,1.24,Alexander Adum Kwapong Hall - School of Public Health,0.992,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-57,20,21,0.08,0.76,1.0,Jean Nelson Aka Hall - Elizabeth Frances Sey Hall,0.76,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-58,20,22,0.101,0.88,1.0,Jean Nelson Aka Hall - African Union Hall,0.88,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-59,20,23,0.151,1.08,1.0,Jean Nelson Aka Hall - James Topp Nelson Yankah Hall,1.08,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-60,20,34,0.14,0.75,1.0,Jean Nelson Aka Hall - Noguchi Memorial Institute for Medical Research,0.75,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-61,20,35,0.116,0.74,1.0,Jean Nelson Aka Hall - School of Public Health,0.74,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-62,21,22,0.08,0.7,1.16,Elizabeth Frances Sey Hall - African Union Hall,0.812,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-63,21,23,0.107,0.84,1.16,Elizabeth Frances Sey Hall - James Topp Nelson Yankah Hall,0.974,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-64,21,24,0.153,1.03,1.16,Elizabeth Frances Sey Hall - United Nations Hall,1.195,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-65,21,35,0.123,1.0,1.16,Elizabeth Frances Sey Hall - School of Public Health,1.16,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-66,22,23,0.08,0.58,1.32,African Union Hall - James Topp Nelson Yankah Hall,0.766,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-67,22,24,0.093,0.68,1.32,African Union Hall - United Nations Hall,0.898,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-68,23,24,0.08,0.7,1.08,James Topp Nelson Yankah Hall - United Nations Hall,0.756,RESIDENTIAL_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-69,25,26,0.08,1.17,1.0,Banking Square - Night Market,1.17,CAMPUS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-70,25,27,0.122,1.41,1.0,Banking Square - Legon Mosque,1.41,ACCESS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-71,26,27,0.08,1.29,1.16,Night Market - Legon Mosque,1.496,ACCESS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-72,28,41,0.103,0.64,1.08,University of Ghana Guest Centre - Department of Sociology,0.691,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-73,28,42,0.132,0.79,1.08,University of Ghana Guest Centre - Careers and Counselling Centre,0.853,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-74,28,45,0.163,0.94,1.08,University of Ghana Guest Centre - Safety and Security Services Directorate,1.015,MAIN_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-75,29,44,0.119,0.87,1.24,Athletic Oval - University of Ghana Information Technology Directorate,1.079,ACCESS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-76,29,48,0.151,0.69,1.24,Athletic Oval - Sports and Wellness Directorate,0.856,ACCESS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-77,30,31,0.081,0.61,1.0,University of Ghana Sports Stadium - Legon Poolside,0.61,ACCESS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-78,30,37,0.147,0.44,1.0,University of Ghana Sports Stadium - School of Pharmacy,0.44,ACCESS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-79,30,48,0.087,0.38,1.0,University of Ghana Sports Stadium - Sports and Wellness Directorate,0.38,ACCESS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-80,31,48,0.08,0.43,1.16,Legon Poolside - Sports and Wellness Directorate,0.499,ACCESS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-81,33,45,0.225,1.17,1.08,University Basic School - Safety and Security Services Directorate,1.264,MAIN_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-82,34,35,0.08,0.55,1.24,Noguchi Memorial Institute for Medical Research - School of Public Health,0.682,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-83,34,36,0.136,0.72,1.24,Noguchi Memorial Institute for Medical Research - School of Nursing and Midwifery,0.893,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-84,34,37,0.146,0.44,1.24,Noguchi Memorial Institute for Medical Research - School of Pharmacy,0.546,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-85,35,36,0.08,0.37,1.0,School of Public Health - School of Nursing and Midwifery,0.37,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-86,35,37,0.103,0.48,1.0,School of Public Health - School of Pharmacy,0.48,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-87,36,37,0.08,0.49,1.16,School of Nursing and Midwifery - School of Pharmacy,0.568,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-88,38,39,0.08,0.55,1.08,School of Engineering Sciences - School of Biological Sciences,0.594,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-89,38,40,0.098,0.65,1.08,School of Engineering Sciences - School of Agriculture,0.702,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-90,38,49,0.08,0.58,1.08,School of Engineering Sciences - International Programmes Office,0.626,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-91,39,40,0.08,0.37,1.24,School of Biological Sciences - School of Agriculture,0.459,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-92,39,49,0.123,0.82,1.24,School of Biological Sciences - International Programmes Office,1.017,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-93,41,42,0.08,0.49,1.16,Department of Sociology - Careers and Counselling Centre,0.568,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-94,41,43,0.1,1.32,1.16,Department of Sociology - University of Ghana Bookshop,1.531,CAMPUS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-95,41,50,0.118,0.69,1.16,Department of Sociology - University of Ghana School of Law,0.8,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-96,42,43,0.09,1.04,1.32,Careers and Counselling Centre - University of Ghana Bookshop,1.373,CAMPUS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-97,42,50,0.08,0.37,1.32,Careers and Counselling Centre - University of Ghana School of Law,0.488,CAMPUS_ROAD,LOW,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-98,43,50,0.117,1.27,1.08,University of Ghana Bookshop - University of Ghana School of Law,1.372,CAMPUS_ROAD,HIGH,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-99,46,47,0.107,0.84,1.16,Graduate School - Dean of Students Office,0.974,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
-100,47,49,0.08,0.82,1.32,Dean of Students Office - International Programmes Office,1.082,CAMPUS_ROAD,MODERATE,False,Synthetic descriptive route/link and weights for coursework; not an official road name or navigation-grade route
+road_id,from_location_id,to_location_id,distance_km,travel_time_min,condition_weight,route_label,road_type,traffic_level,is_blocked
+1,1,2,0.11,1.18,1.16,Main University Gate - Legon Police Station,MAIN_ROAD,HIGH,False
+2,1,3,0.213,1.68,1.16,Main University Gate - University of Ghana Hospital,MAIN_ROAD,HIGH,False
+3,1,4,0.199,1.68,1.16,Main University Gate - University of Ghana Fire Station,MAIN_ROAD,HIGH,False
+4,3,4,0.119,0.63,1.08,University of Ghana Hospital - University of Ghana Fire Station,MAIN_ROAD,LOW,False
+5,3,5,0.164,1.65,1.08,University of Ghana Hospital - Bush Canteen,CAMPUS_ROAD,HIGH,False
+6,4,5,0.087,1.02,1.24,University of Ghana Fire Station - Bush Canteen,MAIN_ROAD,HIGH,False
+7,5,33,0.272,1.88,1.0,Bush Canteen - University Basic School,CAMPUS_ROAD,HIGH,False
+8,6,7,0.08,0.7,1.16,University Square - Balme Library,CAMPUS_ROAD,MODERATE,False
+9,6,41,0.108,0.84,1.16,University Square - Department of Sociology,CAMPUS_ROAD,MODERATE,False
+10,6,42,0.104,0.89,1.16,University Square - Careers and Counselling Centre,CAMPUS_ROAD,MODERATE,False
+11,6,43,0.08,1.29,1.16,University Square - University of Ghana Bookshop,CAMPUS_ROAD,HIGH,False
+12,6,44,0.139,0.75,1.16,University Square - University of Ghana Information Technology Directorate,CAMPUS_ROAD,MODERATE,False
+13,6,50,0.139,0.81,1.16,University Square - University of Ghana School of Law,CAMPUS_ROAD,MODERATE,False
+14,7,38,0.114,0.8,1.32,Balme Library - School of Engineering Sciences,CAMPUS_ROAD,MODERATE,False
+15,7,39,0.143,0.94,1.32,Balme Library - School of Biological Sciences,CAMPUS_ROAD,MODERATE,False
+16,7,43,0.08,1.23,1.32,Balme Library - University of Ghana Bookshop,CAMPUS_ROAD,HIGH,False
+17,7,49,0.123,1.0,1.32,Balme Library - International Programmes Office,CAMPUS_ROAD,MODERATE,False
+18,8,9,0.09,0.33,1.08,Great Hall - Central Administration,CAMPUS_ROAD,LOW,False
+19,8,10,0.219,0.65,1.08,Great Hall - Commonwealth Hall,RESIDENTIAL_ROAD,LOW,False
+20,8,32,0.215,0.7,1.08,Great Hall - University of Ghana Botanical Gardens,ACCESS_ROAD,LOW,False
+21,9,46,0.126,0.58,1.24,Central Administration - Graduate School,CAMPUS_ROAD,LOW,False
+22,10,32,0.218,0.83,1.0,Commonwealth Hall - University of Ghana Botanical Gardens,RESIDENTIAL_ROAD,LOW,False
+23,11,50,0.132,0.71,1.16,Legon Hall - University of Ghana School of Law,RESIDENTIAL_ROAD,LOW,False
+24,12,13,0.091,0.33,1.32,Akuafo Hall - Volta Hall,RESIDENTIAL_ROAD,LOW,False
+25,12,17,0.103,0.42,1.32,Akuafo Hall - VALCO Trust Hostel,RESIDENTIAL_ROAD,LOW,False
+26,12,38,0.126,0.52,1.32,Akuafo Hall - School of Engineering Sciences,RESIDENTIAL_ROAD,LOW,False
+27,12,39,0.131,0.59,1.32,Akuafo Hall - School of Biological Sciences,RESIDENTIAL_ROAD,LOW,False
+28,12,40,0.151,0.69,1.32,Akuafo Hall - School of Agriculture,RESIDENTIAL_ROAD,LOW,False
+29,12,49,0.121,1.0,1.32,Akuafo Hall - International Programmes Office,RESIDENTIAL_ROAD,MODERATE,False
+30,13,17,0.129,0.41,1.08,Volta Hall - VALCO Trust Hostel,RESIDENTIAL_ROAD,LOW,False
+31,14,28,0.106,0.71,1.24,Mensah Sarbah Hall - University of Ghana Guest Centre,RESIDENTIAL_ROAD,MODERATE,False
+32,14,41,0.13,0.53,1.24,Mensah Sarbah Hall - Department of Sociology,RESIDENTIAL_ROAD,LOW,False
+33,14,42,0.152,0.63,1.24,Mensah Sarbah Hall - Careers and Counselling Centre,RESIDENTIAL_ROAD,LOW,False
+34,15,16,0.08,0.82,1.0,Jubilee Hall - International Students' Hostel,RESIDENTIAL_ROAD,MODERATE,False
+35,15,18,0.129,1.02,1.0,Jubilee Hall - Hilla Limann Hall,RESIDENTIAL_ROAD,MODERATE,False
+36,15,25,0.215,1.57,1.0,Jubilee Hall - Banking Square,RESIDENTIAL_ROAD,HIGH,False
+37,15,26,0.151,1.36,1.0,Jubilee Hall - Night Market,RESIDENTIAL_ROAD,HIGH,False
+38,15,27,0.138,0.86,1.0,Jubilee Hall - Legon Mosque,RESIDENTIAL_ROAD,MODERATE,False
+39,15,34,0.082,0.76,1.0,Jubilee Hall - Noguchi Memorial Institute for Medical Research,RESIDENTIAL_ROAD,MODERATE,False
+40,16,18,0.134,0.97,1.16,International Students' Hostel - Hilla Limann Hall,RESIDENTIAL_ROAD,MODERATE,False
+41,16,34,0.08,0.88,1.16,International Students' Hostel - Noguchi Memorial Institute for Medical Research,RESIDENTIAL_ROAD,MODERATE,False
+42,16,35,0.127,0.71,1.16,International Students' Hostel - School of Public Health,RESIDENTIAL_ROAD,MODERATE,False
+43,16,37,0.142,0.82,1.16,International Students' Hostel - School of Pharmacy,RESIDENTIAL_ROAD,MODERATE,False
+44,17,46,0.08,0.43,1.32,VALCO Trust Hostel - Graduate School,RESIDENTIAL_ROAD,LOW,False
+45,17,47,0.102,0.82,1.32,VALCO Trust Hostel - Dean of Students Office,RESIDENTIAL_ROAD,MODERATE,False
+46,17,49,0.127,0.95,1.32,VALCO Trust Hostel - International Programmes Office,RESIDENTIAL_ROAD,MODERATE,False
+47,18,19,0.08,0.88,1.08,Hilla Limann Hall - Alexander Adum Kwapong Hall,RESIDENTIAL_ROAD,MODERATE,False
+48,18,20,0.094,0.62,1.08,Hilla Limann Hall - Jean Nelson Aka Hall,RESIDENTIAL_ROAD,MODERATE,False
+49,18,21,0.139,0.81,1.08,Hilla Limann Hall - Elizabeth Frances Sey Hall,RESIDENTIAL_ROAD,MODERATE,False
+50,18,34,0.092,0.73,1.08,Hilla Limann Hall - Noguchi Memorial Institute for Medical Research,RESIDENTIAL_ROAD,MODERATE,False
+51,18,35,0.129,0.9,1.08,Hilla Limann Hall - School of Public Health,RESIDENTIAL_ROAD,MODERATE,False
+52,19,20,0.08,0.82,1.24,Alexander Adum Kwapong Hall - Jean Nelson Aka Hall,RESIDENTIAL_ROAD,MODERATE,False
+53,19,21,0.096,0.92,1.24,Alexander Adum Kwapong Hall - Elizabeth Frances Sey Hall,RESIDENTIAL_ROAD,MODERATE,False
+54,19,22,0.144,0.76,1.24,Alexander Adum Kwapong Hall - African Union Hall,RESIDENTIAL_ROAD,MODERATE,False
+55,19,34,0.107,0.72,1.24,Alexander Adum Kwapong Hall - Noguchi Memorial Institute for Medical Research,RESIDENTIAL_ROAD,MODERATE,False
+56,19,35,0.114,0.8,1.24,Alexander Adum Kwapong Hall - School of Public Health,RESIDENTIAL_ROAD,MODERATE,False
+57,20,21,0.08,0.76,1.0,Jean Nelson Aka Hall - Elizabeth Frances Sey Hall,RESIDENTIAL_ROAD,MODERATE,False
+58,20,22,0.101,0.88,1.0,Jean Nelson Aka Hall - African Union Hall,RESIDENTIAL_ROAD,MODERATE,False
+59,20,23,0.151,1.08,1.0,Jean Nelson Aka Hall - James Topp Nelson Yankah Hall,RESIDENTIAL_ROAD,MODERATE,False
+60,20,34,0.14,0.75,1.0,Jean Nelson Aka Hall - Noguchi Memorial Institute for Medical Research,RESIDENTIAL_ROAD,MODERATE,False
+61,20,35,0.116,0.74,1.0,Jean Nelson Aka Hall - School of Public Health,RESIDENTIAL_ROAD,MODERATE,False
+62,21,22,0.08,0.7,1.16,Elizabeth Frances Sey Hall - African Union Hall,RESIDENTIAL_ROAD,MODERATE,False
+63,21,23,0.107,0.84,1.16,Elizabeth Frances Sey Hall - James Topp Nelson Yankah Hall,RESIDENTIAL_ROAD,MODERATE,False
+64,21,24,0.153,1.03,1.16,Elizabeth Frances Sey Hall - United Nations Hall,RESIDENTIAL_ROAD,MODERATE,False
+65,21,35,0.123,1.0,1.16,Elizabeth Frances Sey Hall - School of Public Health,RESIDENTIAL_ROAD,MODERATE,False
+66,22,23,0.08,0.58,1.32,African Union Hall - James Topp Nelson Yankah Hall,RESIDENTIAL_ROAD,MODERATE,False
+67,22,24,0.093,0.68,1.32,African Union Hall - United Nations Hall,RESIDENTIAL_ROAD,MODERATE,False
+68,23,24,0.08,0.7,1.08,James Topp Nelson Yankah Hall - United Nations Hall,RESIDENTIAL_ROAD,MODERATE,False
+69,25,26,0.08,1.17,1.0,Banking Square - Night Market,CAMPUS_ROAD,HIGH,False
+70,25,27,0.122,1.41,1.0,Banking Square - Legon Mosque,ACCESS_ROAD,HIGH,False
+71,26,27,0.08,1.29,1.16,Night Market - Legon Mosque,ACCESS_ROAD,HIGH,False
+72,28,41,0.103,0.64,1.08,University of Ghana Guest Centre - Department of Sociology,CAMPUS_ROAD,MODERATE,False
+73,28,42,0.132,0.79,1.08,University of Ghana Guest Centre - Careers and Counselling Centre,CAMPUS_ROAD,MODERATE,False
+74,28,45,0.163,0.94,1.08,University of Ghana Guest Centre - Safety and Security Services Directorate,MAIN_ROAD,MODERATE,False
+75,29,44,0.119,0.87,1.24,Athletic Oval - University of Ghana Information Technology Directorate,ACCESS_ROAD,MODERATE,False
+76,29,48,0.151,0.69,1.24,Athletic Oval - Sports and Wellness Directorate,ACCESS_ROAD,LOW,False
+77,30,31,0.081,0.61,1.0,University of Ghana Sports Stadium - Legon Poolside,ACCESS_ROAD,LOW,False
+78,30,37,0.147,0.44,1.0,University of Ghana Sports Stadium - School of Pharmacy,ACCESS_ROAD,LOW,False
+79,30,48,0.087,0.38,1.0,University of Ghana Sports Stadium - Sports and Wellness Directorate,ACCESS_ROAD,LOW,False
+80,31,48,0.08,0.43,1.16,Legon Poolside - Sports and Wellness Directorate,ACCESS_ROAD,LOW,False
+81,33,45,0.225,1.17,1.08,University Basic School - Safety and Security Services Directorate,MAIN_ROAD,MODERATE,False
+82,34,35,0.08,0.55,1.24,Noguchi Memorial Institute for Medical Research - School of Public Health,CAMPUS_ROAD,LOW,False
+83,34,36,0.136,0.72,1.24,Noguchi Memorial Institute for Medical Research - School of Nursing and Midwifery,CAMPUS_ROAD,LOW,False
+84,34,37,0.146,0.44,1.24,Noguchi Memorial Institute for Medical Research - School of Pharmacy,CAMPUS_ROAD,LOW,False
+85,35,36,0.08,0.37,1.0,School of Public Health - School of Nursing and Midwifery,CAMPUS_ROAD,LOW,False
+86,35,37,0.103,0.48,1.0,School of Public Health - School of Pharmacy,CAMPUS_ROAD,LOW,False
+87,36,37,0.08,0.49,1.16,School of Nursing and Midwifery - School of Pharmacy,CAMPUS_ROAD,LOW,False
+88,38,39,0.08,0.55,1.08,School of Engineering Sciences - School of Biological Sciences,CAMPUS_ROAD,LOW,False
+89,38,40,0.098,0.65,1.08,School of Engineering Sciences - School of Agriculture,CAMPUS_ROAD,LOW,False
+90,38,49,0.08,0.58,1.08,School of Engineering Sciences - International Programmes Office,CAMPUS_ROAD,MODERATE,False
+91,39,40,0.08,0.37,1.24,School of Biological Sciences - School of Agriculture,CAMPUS_ROAD,LOW,False
+92,39,49,0.123,0.82,1.24,School of Biological Sciences - International Programmes Office,CAMPUS_ROAD,MODERATE,False
+93,41,42,0.08,0.49,1.16,Department of Sociology - Careers and Counselling Centre,CAMPUS_ROAD,LOW,False
+94,41,43,0.1,1.32,1.16,Department of Sociology - University of Ghana Bookshop,CAMPUS_ROAD,HIGH,False
+95,41,50,0.118,0.69,1.16,Department of Sociology - University of Ghana School of Law,CAMPUS_ROAD,LOW,False
+96,42,43,0.09,1.04,1.32,Careers and Counselling Centre - University of Ghana Bookshop,CAMPUS_ROAD,HIGH,False
+97,42,50,0.08,0.37,1.32,Careers and Counselling Centre - University of Ghana School of Law,CAMPUS_ROAD,LOW,False
+98,43,50,0.117,1.27,1.08,University of Ghana Bookshop - University of Ghana School of Law,CAMPUS_ROAD,HIGH,False
+99,46,47,0.107,0.84,1.16,Graduate School - Dean of Students Office,CAMPUS_ROAD,MODERATE,False
+100,47,49,0.08,0.82,1.32,Dean of Students Office - International Programmes Office,CAMPUS_ROAD,MODERATE,False

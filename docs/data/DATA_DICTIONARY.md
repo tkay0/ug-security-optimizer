@@ -12,9 +12,8 @@ The first columns in each of the four core datasets match the lecturer-supplied 
 | location_type | TEXT | Yes | Location category. | ACADEMIC / ACADEMIC_ADMIN / ADMIN / ASSEMBLY / COMMERCIAL / EDUCATION / EMERGENCY / GATE / GUEST_SERVICES / HEALTH / LANDMARK / LIBRARY / RECREATION / RELIGIOUS / RESEARCH / RESIDENCE / SECURITY / STUDENT_SUPPORT / TECH_SUPPORT. |
 | x_coord | INTEGER | Yes | Synthetic local X coordinate in metres. | Schematic only; not GPS. |
 | y_coord | INTEGER | Yes | Synthetic local Y coordinate in metres. | Schematic only; not GPS. |
-| operatingHours | TEXT | No | Typical/project operating-hours constraint. | Informational project value. |
-| sourceUrl | TEXT | Yes | Web source used to verify place/facility name. | UG or University-affiliated source. |
-| coordinateNote | TEXT | Yes | Clarifies coordinate status. | Must not claim survey accuracy. |
+| operating_hours | TEXT | No | Typical/project operating-hours constraint. | `HH:MM-HH:MM` or `24/7`. |
+| source_url | TEXT | Yes | Web source used to verify the place/facility name. | UG or University-affiliated source. |
 
 ## roads.csv
 
@@ -26,12 +25,12 @@ The first columns in each of the four core datasets match the lecturer-supplied 
 | distance_km | DECIMAL | Yes | Synthetic route distance in kilometres. | Positive. |
 | travel_time_min | DECIMAL | Yes | Synthetic baseline vehicle travel time in minutes. | Positive; varies by distance/traffic/junction delay. |
 | condition_weight | DECIMAL | Yes | Baseline road-condition penalty multiplier. | Positive finite. |
-| routeLabel | TEXT | Yes | Synthetic descriptive label made from the two endpoint names. | Not an official street/road name. |
-| routingWeight | DECIMAL | Yes | Derived weight = travel_time_min × condition_weight. | Positive finite. |
-| roadType | TEXT | No | Synthetic campus-road category. | ACCESS_ROAD / CAMPUS_ROAD / MAIN_ROAD / RESIDENTIAL_ROAD. |
-| trafficLevel | TEXT | No | Synthetic baseline traffic label. | LOW / MODERATE / HIGH. |
-| isBlocked | BOOLEAN | No | Baseline blockage state. | False in seed data; overrides live in road_scenarios.csv. |
-| dataNote | TEXT | Yes | Clarifies synthetic/navigation status. | Not navigation-grade. |
+| route_label | TEXT | Yes | Synthetic descriptive label made from the two endpoint names. | Not an official street/road name. |
+| road_type | TEXT | No | Synthetic campus-road category. | ACCESS_ROAD / CAMPUS_ROAD / MAIN_ROAD / RESIDENTIAL_ROAD. |
+| traffic_level | TEXT | No | Synthetic baseline traffic label. | LOW / MODERATE / HIGH. |
+| is_blocked | BOOLEAN | No | Baseline blockage state. | False in seed data; overrides live in road_scenarios.csv. |
+
+The application derives routing cost at runtime as `travel_time_min * condition_weight`; no duplicate derived routing-cost column is stored.
 
 ## road_scenarios.csv
 
@@ -40,14 +39,13 @@ The first columns in each of the four core datasets match the lecturer-supplied 
 | scenarioId | INTEGER | Yes | Unique scenario-row ID. | Positive unique integer. |
 | scenarioName | TEXT | Yes | Named what-if scenario. | ACCESS_BLOCKAGE_DRILL / EVENT_CROWD / RAINY_EVENING. |
 | roadId | INTEGER | Yes | Affected baseline road. | FK -> roads.road_id. |
-| routeLabel | TEXT | Yes | Human-readable affected route. | Copied from roads.csv. |
+| routeLabel | TEXT | Yes | Human-readable affected route. | Copied from `roads.csv` `route_label`. |
 | scenarioStart | TIMESTAMP | Yes | Synthetic UTC start. | ISO-8601. |
 | scenarioEnd | TIMESTAMP | Yes | Synthetic UTC end. | After scenarioStart. |
 | isBlockedOverride | BOOLEAN | Yes | Scenario blockage override. | True only for blockage drill rows. |
 | conditionWeightMultiplier | DECIMAL | Yes | Multiplier applied to baseline condition weight. | Positive. |
 | travelTimeMultiplier | DECIMAL | Yes | Multiplier applied to baseline travel time. | Positive. |
 | reason | TEXT | Yes | Why the synthetic scenario changes the road. | No claim of a real incident. |
-| dataNote | TEXT | Yes | Clarifies that scenario is fictional. | Baseline roads remain unchanged. |
 
 ## resources.csv
 
@@ -58,11 +56,9 @@ The first columns in each of the four core datasets match the lecturer-supplied 
 | home_location_id | INTEGER | Yes | Normal base location. | FK -> locations.location_id. |
 | capacity | INTEGER | Yes | Project capacity measure. | Positive. |
 | availability_status | TEXT | Yes | Availability state. | AVAILABLE / BUSY / OFF_DUTY / MAINTENANCE. |
-| resourceName | TEXT | No | Synthetic unit label. | No personal data. |
-| currentLocation | INTEGER | No | Current project location. | FK -> locations.location_id. |
-| shiftStart | TEXT | No | Synthetic shift start. | HH:MM. |
-| shiftEnd | TEXT | No | Synthetic shift end. | HH:MM. |
-| dataNote | TEXT | Yes | Confirms synthetic status. | No live operational asset implied. |
+| current_location_id | INTEGER | No | Current project location used for dispatch. | FK -> locations.location_id. |
+| shift_start | TEXT | No | Synthetic availability-window start. | HH:MM. |
+| shift_end | TEXT | No | Synthetic availability-window end. | HH:MM. |
 
 ## service_requests.csv
 
@@ -76,11 +72,10 @@ The first columns in each of the four core datasets match the lecturer-supplied 
 | time_submitted | TIMESTAMP | Yes | Synthetic UTC submission time. | ISO-8601. |
 | deadline | TIMESTAMP | Yes | Synthetic target response deadline. | After time_submitted. |
 | status | TEXT | Yes | Request status. | PENDING / ASSIGNED / IN_PROGRESS / COMPLETED / CANCELLED. |
-| requiredResourceType | TEXT | No | Preferred resource class. | AMBULANCE / CCTV_TECHNICIAN / CROWD_CONTROL_TEAM / FIRE_RESPONSE_UNIT / INVESTIGATION_TEAM / MOTORCYCLE_PATROL / PATROL_OFFICER / PATROL_VEHICLE / RAPID_RESPONSE_TEAM. |
-| peopleAffected | INTEGER | No | Synthetic prioritisation count. | >=1. |
-| priorityScore | INTEGER | No | Synthetic helper score. | 0..100. |
-| description | TEXT | No | Generic fictional request description. | Not a real incident. |
-| dataNote | TEXT | Yes | Confirms fictional nature. | No personal data. |
+| required_resource_type | TEXT | No | Preferred resource class used for assignment. | AMBULANCE / CCTV_TECHNICIAN / CROWD_CONTROL_TEAM / FIRE_RESPONSE_UNIT / INVESTIGATION_TEAM / MOTORCYCLE_PATROL / PATROL_OFFICER / PATROL_VEHICLE / RAPID_RESPONSE_TEAM. |
+| description | TEXT | No | Concise human-readable request description. | Preserves the category meaning without per-row provenance boilerplate. |
+
+Request priority is calculated by the application/algorithm layer from the project rules and is not stored as a precomputed field.
 
 ## algorithm_runs.csv
 
@@ -95,7 +90,6 @@ The first columns in each of the four core datasets match the lecturer-supplied 
 | status | TEXT | No | Benchmark status. | PLANNED / MEASURED; current rows are PLANNED. |
 | experimentGroup | TEXT | No | Groups repeated runs. | Algorithm_size. |
 | runNumber | INTEGER | No | Repeat number. | 1..3. |
-| dataNote | TEXT | Yes | Prevents placeholders being treated as empirical evidence. | Replace after real benchmarking. |
 
 ## audit_events.csv
 
@@ -108,4 +102,3 @@ The first columns in each of the four core datasets match the lecturer-supplied 
 | entityId | INTEGER | Yes | Referenced synthetic entity ID. | Must exist in target table. |
 | actorType | TEXT | No | Synthetic actor category. | SYSTEM / DISPATCH_OPERATOR; no personal identity. |
 | details | TEXT | No | Generic project event description. | Synthetic. |
-| dataNote | TEXT | Yes | Confirms synthetic nature. | No personal data. |

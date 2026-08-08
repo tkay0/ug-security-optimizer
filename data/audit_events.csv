@@ -1,61 +1,61 @@
-eventId,eventType,timestamp,entityType,entityId,actorType,details,dataNote
-1,REQUEST_CREATED,2026-08-01T07:37:00Z,SERVICE_REQUEST,18,DISPATCH_OPERATOR,Synthetic audit event 1 for stack/undo and database demonstrations,Synthetic project audit record
-2,REQUEST_ASSIGNED,2026-08-01T09:14:00Z,SERVICE_REQUEST,35,DISPATCH_OPERATOR,Synthetic audit event 2 for stack/undo and database demonstrations,Synthetic project audit record
-3,REQUEST_STATUS_CHANGED,2026-08-01T10:51:00Z,SERVICE_REQUEST,52,DISPATCH_OPERATOR,Synthetic audit event 3 for stack/undo and database demonstrations,Synthetic project audit record
-4,RESOURCE_STATUS_CHANGED,2026-08-01T12:28:00Z,RESOURCE,29,SYSTEM,Synthetic audit event 4 for stack/undo and database demonstrations,Synthetic project audit record
-5,ROAD_BLOCK_UPDATED,2026-08-01T14:05:00Z,ROAD,56,DISPATCH_OPERATOR,Synthetic audit event 5 for stack/undo and database demonstrations,Synthetic project audit record
-6,UNDO_ACTION,2026-08-01T15:42:00Z,SERVICE_REQUEST,103,DISPATCH_OPERATOR,Synthetic audit event 6 for stack/undo and database demonstrations,Synthetic project audit record
-7,REQUEST_CREATED,2026-08-01T17:19:00Z,SERVICE_REQUEST,120,DISPATCH_OPERATOR,Synthetic audit event 7 for stack/undo and database demonstrations,Synthetic project audit record
-8,REQUEST_ASSIGNED,2026-08-01T18:56:00Z,SERVICE_REQUEST,137,SYSTEM,Synthetic audit event 8 for stack/undo and database demonstrations,Synthetic project audit record
-9,REQUEST_STATUS_CHANGED,2026-08-01T20:33:00Z,SERVICE_REQUEST,154,DISPATCH_OPERATOR,Synthetic audit event 9 for stack/undo and database demonstrations,Synthetic project audit record
-10,RESOURCE_STATUS_CHANGED,2026-08-01T22:10:00Z,RESOURCE,11,DISPATCH_OPERATOR,Synthetic audit event 10 for stack/undo and database demonstrations,Synthetic project audit record
-11,ROAD_BLOCK_UPDATED,2026-08-01T23:47:00Z,ROAD,22,DISPATCH_OPERATOR,Synthetic audit event 11 for stack/undo and database demonstrations,Synthetic project audit record
-12,UNDO_ACTION,2026-08-02T01:24:00Z,SERVICE_REQUEST,205,SYSTEM,Synthetic audit event 12 for stack/undo and database demonstrations,Synthetic project audit record
-13,REQUEST_CREATED,2026-08-02T03:01:00Z,SERVICE_REQUEST,222,DISPATCH_OPERATOR,Synthetic audit event 13 for stack/undo and database demonstrations,Synthetic project audit record
-14,REQUEST_ASSIGNED,2026-08-02T04:38:00Z,SERVICE_REQUEST,239,DISPATCH_OPERATOR,Synthetic audit event 14 for stack/undo and database demonstrations,Synthetic project audit record
-15,REQUEST_STATUS_CHANGED,2026-08-02T06:15:00Z,SERVICE_REQUEST,256,DISPATCH_OPERATOR,Synthetic audit event 15 for stack/undo and database demonstrations,Synthetic project audit record
-16,RESOURCE_STATUS_CHANGED,2026-08-02T07:52:00Z,RESOURCE,23,SYSTEM,Synthetic audit event 16 for stack/undo and database demonstrations,Synthetic project audit record
-17,ROAD_BLOCK_UPDATED,2026-08-02T09:29:00Z,ROAD,88,DISPATCH_OPERATOR,Synthetic audit event 17 for stack/undo and database demonstrations,Synthetic project audit record
-18,UNDO_ACTION,2026-08-02T11:06:00Z,SERVICE_REQUEST,7,DISPATCH_OPERATOR,Synthetic audit event 18 for stack/undo and database demonstrations,Synthetic project audit record
-19,REQUEST_CREATED,2026-08-02T12:43:00Z,SERVICE_REQUEST,24,DISPATCH_OPERATOR,Synthetic audit event 19 for stack/undo and database demonstrations,Synthetic project audit record
-20,REQUEST_ASSIGNED,2026-08-02T14:20:00Z,SERVICE_REQUEST,41,SYSTEM,Synthetic audit event 20 for stack/undo and database demonstrations,Synthetic project audit record
-21,REQUEST_STATUS_CHANGED,2026-08-02T15:57:00Z,SERVICE_REQUEST,58,DISPATCH_OPERATOR,Synthetic audit event 21 for stack/undo and database demonstrations,Synthetic project audit record
-22,RESOURCE_STATUS_CHANGED,2026-08-02T17:34:00Z,RESOURCE,5,DISPATCH_OPERATOR,Synthetic audit event 22 for stack/undo and database demonstrations,Synthetic project audit record
-23,ROAD_BLOCK_UPDATED,2026-08-02T19:11:00Z,ROAD,54,DISPATCH_OPERATOR,Synthetic audit event 23 for stack/undo and database demonstrations,Synthetic project audit record
-24,UNDO_ACTION,2026-08-02T20:48:00Z,SERVICE_REQUEST,109,SYSTEM,Synthetic audit event 24 for stack/undo and database demonstrations,Synthetic project audit record
-25,REQUEST_CREATED,2026-08-02T22:25:00Z,SERVICE_REQUEST,126,DISPATCH_OPERATOR,Synthetic audit event 25 for stack/undo and database demonstrations,Synthetic project audit record
-26,REQUEST_ASSIGNED,2026-08-03T00:02:00Z,SERVICE_REQUEST,143,DISPATCH_OPERATOR,Synthetic audit event 26 for stack/undo and database demonstrations,Synthetic project audit record
-27,REQUEST_STATUS_CHANGED,2026-08-03T01:39:00Z,SERVICE_REQUEST,160,DISPATCH_OPERATOR,Synthetic audit event 27 for stack/undo and database demonstrations,Synthetic project audit record
-28,RESOURCE_STATUS_CHANGED,2026-08-03T03:16:00Z,RESOURCE,17,SYSTEM,Synthetic audit event 28 for stack/undo and database demonstrations,Synthetic project audit record
-29,ROAD_BLOCK_UPDATED,2026-08-03T04:53:00Z,ROAD,20,DISPATCH_OPERATOR,Synthetic audit event 29 for stack/undo and database demonstrations,Synthetic project audit record
-30,UNDO_ACTION,2026-08-03T06:30:00Z,SERVICE_REQUEST,211,DISPATCH_OPERATOR,Synthetic audit event 30 for stack/undo and database demonstrations,Synthetic project audit record
-31,REQUEST_CREATED,2026-08-03T08:07:00Z,SERVICE_REQUEST,228,DISPATCH_OPERATOR,Synthetic audit event 31 for stack/undo and database demonstrations,Synthetic project audit record
-32,REQUEST_ASSIGNED,2026-08-03T09:44:00Z,SERVICE_REQUEST,245,SYSTEM,Synthetic audit event 32 for stack/undo and database demonstrations,Synthetic project audit record
-33,REQUEST_STATUS_CHANGED,2026-08-03T11:21:00Z,SERVICE_REQUEST,262,DISPATCH_OPERATOR,Synthetic audit event 33 for stack/undo and database demonstrations,Synthetic project audit record
-34,RESOURCE_STATUS_CHANGED,2026-08-03T12:58:00Z,RESOURCE,29,DISPATCH_OPERATOR,Synthetic audit event 34 for stack/undo and database demonstrations,Synthetic project audit record
-35,ROAD_BLOCK_UPDATED,2026-08-03T14:35:00Z,ROAD,86,DISPATCH_OPERATOR,Synthetic audit event 35 for stack/undo and database demonstrations,Synthetic project audit record
-36,UNDO_ACTION,2026-08-03T16:12:00Z,SERVICE_REQUEST,13,SYSTEM,Synthetic audit event 36 for stack/undo and database demonstrations,Synthetic project audit record
-37,REQUEST_CREATED,2026-08-03T17:49:00Z,SERVICE_REQUEST,30,DISPATCH_OPERATOR,Synthetic audit event 37 for stack/undo and database demonstrations,Synthetic project audit record
-38,REQUEST_ASSIGNED,2026-08-03T19:26:00Z,SERVICE_REQUEST,47,DISPATCH_OPERATOR,Synthetic audit event 38 for stack/undo and database demonstrations,Synthetic project audit record
-39,REQUEST_STATUS_CHANGED,2026-08-03T21:03:00Z,SERVICE_REQUEST,64,DISPATCH_OPERATOR,Synthetic audit event 39 for stack/undo and database demonstrations,Synthetic project audit record
-40,RESOURCE_STATUS_CHANGED,2026-08-03T22:40:00Z,RESOURCE,11,SYSTEM,Synthetic audit event 40 for stack/undo and database demonstrations,Synthetic project audit record
-41,ROAD_BLOCK_UPDATED,2026-08-04T00:17:00Z,ROAD,52,DISPATCH_OPERATOR,Synthetic audit event 41 for stack/undo and database demonstrations,Synthetic project audit record
-42,UNDO_ACTION,2026-08-04T01:54:00Z,SERVICE_REQUEST,115,DISPATCH_OPERATOR,Synthetic audit event 42 for stack/undo and database demonstrations,Synthetic project audit record
-43,REQUEST_CREATED,2026-08-04T03:31:00Z,SERVICE_REQUEST,132,DISPATCH_OPERATOR,Synthetic audit event 43 for stack/undo and database demonstrations,Synthetic project audit record
-44,REQUEST_ASSIGNED,2026-08-04T05:08:00Z,SERVICE_REQUEST,149,SYSTEM,Synthetic audit event 44 for stack/undo and database demonstrations,Synthetic project audit record
-45,REQUEST_STATUS_CHANGED,2026-08-04T06:45:00Z,SERVICE_REQUEST,166,DISPATCH_OPERATOR,Synthetic audit event 45 for stack/undo and database demonstrations,Synthetic project audit record
-46,RESOURCE_STATUS_CHANGED,2026-08-04T08:22:00Z,RESOURCE,23,DISPATCH_OPERATOR,Synthetic audit event 46 for stack/undo and database demonstrations,Synthetic project audit record
-47,ROAD_BLOCK_UPDATED,2026-08-04T09:59:00Z,ROAD,18,DISPATCH_OPERATOR,Synthetic audit event 47 for stack/undo and database demonstrations,Synthetic project audit record
-48,UNDO_ACTION,2026-08-04T11:36:00Z,SERVICE_REQUEST,217,SYSTEM,Synthetic audit event 48 for stack/undo and database demonstrations,Synthetic project audit record
-49,REQUEST_CREATED,2026-08-04T13:13:00Z,SERVICE_REQUEST,234,DISPATCH_OPERATOR,Synthetic audit event 49 for stack/undo and database demonstrations,Synthetic project audit record
-50,REQUEST_ASSIGNED,2026-08-04T14:50:00Z,SERVICE_REQUEST,251,DISPATCH_OPERATOR,Synthetic audit event 50 for stack/undo and database demonstrations,Synthetic project audit record
-51,REQUEST_STATUS_CHANGED,2026-08-04T16:27:00Z,SERVICE_REQUEST,268,DISPATCH_OPERATOR,Synthetic audit event 51 for stack/undo and database demonstrations,Synthetic project audit record
-52,RESOURCE_STATUS_CHANGED,2026-08-04T18:04:00Z,RESOURCE,5,SYSTEM,Synthetic audit event 52 for stack/undo and database demonstrations,Synthetic project audit record
-53,ROAD_BLOCK_UPDATED,2026-08-04T19:41:00Z,ROAD,84,DISPATCH_OPERATOR,Synthetic audit event 53 for stack/undo and database demonstrations,Synthetic project audit record
-54,UNDO_ACTION,2026-08-04T21:18:00Z,SERVICE_REQUEST,19,DISPATCH_OPERATOR,Synthetic audit event 54 for stack/undo and database demonstrations,Synthetic project audit record
-55,REQUEST_CREATED,2026-08-04T22:55:00Z,SERVICE_REQUEST,36,DISPATCH_OPERATOR,Synthetic audit event 55 for stack/undo and database demonstrations,Synthetic project audit record
-56,REQUEST_ASSIGNED,2026-08-05T00:32:00Z,SERVICE_REQUEST,53,SYSTEM,Synthetic audit event 56 for stack/undo and database demonstrations,Synthetic project audit record
-57,REQUEST_STATUS_CHANGED,2026-08-05T02:09:00Z,SERVICE_REQUEST,70,DISPATCH_OPERATOR,Synthetic audit event 57 for stack/undo and database demonstrations,Synthetic project audit record
-58,RESOURCE_STATUS_CHANGED,2026-08-05T03:46:00Z,RESOURCE,17,DISPATCH_OPERATOR,Synthetic audit event 58 for stack/undo and database demonstrations,Synthetic project audit record
-59,ROAD_BLOCK_UPDATED,2026-08-05T05:23:00Z,ROAD,50,DISPATCH_OPERATOR,Synthetic audit event 59 for stack/undo and database demonstrations,Synthetic project audit record
-60,UNDO_ACTION,2026-08-05T07:00:00Z,SERVICE_REQUEST,121,SYSTEM,Synthetic audit event 60 for stack/undo and database demonstrations,Synthetic project audit record
+eventId,eventType,timestamp,entityType,entityId,actorType,details
+1,REQUEST_CREATED,2026-08-01T07:37:00Z,SERVICE_REQUEST,18,DISPATCH_OPERATOR,Request 18 created.
+2,REQUEST_ASSIGNED,2026-08-01T09:14:00Z,SERVICE_REQUEST,35,DISPATCH_OPERATOR,Request 35 assigned.
+3,REQUEST_STATUS_CHANGED,2026-08-01T10:51:00Z,SERVICE_REQUEST,52,DISPATCH_OPERATOR,Request 52 status changed.
+4,RESOURCE_STATUS_CHANGED,2026-08-01T12:28:00Z,RESOURCE,29,SYSTEM,Resource 29 status changed.
+5,ROAD_BLOCK_UPDATED,2026-08-01T14:05:00Z,ROAD,56,DISPATCH_OPERATOR,Road 56 blockage status updated.
+6,UNDO_ACTION,2026-08-01T15:42:00Z,SERVICE_REQUEST,103,DISPATCH_OPERATOR,Undo action recorded for request 103.
+7,REQUEST_CREATED,2026-08-01T17:19:00Z,SERVICE_REQUEST,120,DISPATCH_OPERATOR,Request 120 created.
+8,REQUEST_ASSIGNED,2026-08-01T18:56:00Z,SERVICE_REQUEST,137,SYSTEM,Request 137 assigned.
+9,REQUEST_STATUS_CHANGED,2026-08-01T20:33:00Z,SERVICE_REQUEST,154,DISPATCH_OPERATOR,Request 154 status changed.
+10,RESOURCE_STATUS_CHANGED,2026-08-01T22:10:00Z,RESOURCE,11,DISPATCH_OPERATOR,Resource 11 status changed.
+11,ROAD_BLOCK_UPDATED,2026-08-01T23:47:00Z,ROAD,22,DISPATCH_OPERATOR,Road 22 blockage status updated.
+12,UNDO_ACTION,2026-08-02T01:24:00Z,SERVICE_REQUEST,205,SYSTEM,Undo action recorded for request 205.
+13,REQUEST_CREATED,2026-08-02T03:01:00Z,SERVICE_REQUEST,222,DISPATCH_OPERATOR,Request 222 created.
+14,REQUEST_ASSIGNED,2026-08-02T04:38:00Z,SERVICE_REQUEST,239,DISPATCH_OPERATOR,Request 239 assigned.
+15,REQUEST_STATUS_CHANGED,2026-08-02T06:15:00Z,SERVICE_REQUEST,256,DISPATCH_OPERATOR,Request 256 status changed.
+16,RESOURCE_STATUS_CHANGED,2026-08-02T07:52:00Z,RESOURCE,23,SYSTEM,Resource 23 status changed.
+17,ROAD_BLOCK_UPDATED,2026-08-02T09:29:00Z,ROAD,88,DISPATCH_OPERATOR,Road 88 blockage status updated.
+18,UNDO_ACTION,2026-08-02T11:06:00Z,SERVICE_REQUEST,7,DISPATCH_OPERATOR,Undo action recorded for request 7.
+19,REQUEST_CREATED,2026-08-02T12:43:00Z,SERVICE_REQUEST,24,DISPATCH_OPERATOR,Request 24 created.
+20,REQUEST_ASSIGNED,2026-08-02T14:20:00Z,SERVICE_REQUEST,41,SYSTEM,Request 41 assigned.
+21,REQUEST_STATUS_CHANGED,2026-08-02T15:57:00Z,SERVICE_REQUEST,58,DISPATCH_OPERATOR,Request 58 status changed.
+22,RESOURCE_STATUS_CHANGED,2026-08-02T17:34:00Z,RESOURCE,5,DISPATCH_OPERATOR,Resource 5 status changed.
+23,ROAD_BLOCK_UPDATED,2026-08-02T19:11:00Z,ROAD,54,DISPATCH_OPERATOR,Road 54 blockage status updated.
+24,UNDO_ACTION,2026-08-02T20:48:00Z,SERVICE_REQUEST,109,SYSTEM,Undo action recorded for request 109.
+25,REQUEST_CREATED,2026-08-02T22:25:00Z,SERVICE_REQUEST,126,DISPATCH_OPERATOR,Request 126 created.
+26,REQUEST_ASSIGNED,2026-08-03T00:02:00Z,SERVICE_REQUEST,143,DISPATCH_OPERATOR,Request 143 assigned.
+27,REQUEST_STATUS_CHANGED,2026-08-03T01:39:00Z,SERVICE_REQUEST,160,DISPATCH_OPERATOR,Request 160 status changed.
+28,RESOURCE_STATUS_CHANGED,2026-08-03T03:16:00Z,RESOURCE,17,SYSTEM,Resource 17 status changed.
+29,ROAD_BLOCK_UPDATED,2026-08-03T04:53:00Z,ROAD,20,DISPATCH_OPERATOR,Road 20 blockage status updated.
+30,UNDO_ACTION,2026-08-03T06:30:00Z,SERVICE_REQUEST,211,DISPATCH_OPERATOR,Undo action recorded for request 211.
+31,REQUEST_CREATED,2026-08-03T08:07:00Z,SERVICE_REQUEST,228,DISPATCH_OPERATOR,Request 228 created.
+32,REQUEST_ASSIGNED,2026-08-03T09:44:00Z,SERVICE_REQUEST,245,SYSTEM,Request 245 assigned.
+33,REQUEST_STATUS_CHANGED,2026-08-03T11:21:00Z,SERVICE_REQUEST,262,DISPATCH_OPERATOR,Request 262 status changed.
+34,RESOURCE_STATUS_CHANGED,2026-08-03T12:58:00Z,RESOURCE,29,DISPATCH_OPERATOR,Resource 29 status changed.
+35,ROAD_BLOCK_UPDATED,2026-08-03T14:35:00Z,ROAD,86,DISPATCH_OPERATOR,Road 86 blockage status updated.
+36,UNDO_ACTION,2026-08-03T16:12:00Z,SERVICE_REQUEST,13,SYSTEM,Undo action recorded for request 13.
+37,REQUEST_CREATED,2026-08-03T17:49:00Z,SERVICE_REQUEST,30,DISPATCH_OPERATOR,Request 30 created.
+38,REQUEST_ASSIGNED,2026-08-03T19:26:00Z,SERVICE_REQUEST,47,DISPATCH_OPERATOR,Request 47 assigned.
+39,REQUEST_STATUS_CHANGED,2026-08-03T21:03:00Z,SERVICE_REQUEST,64,DISPATCH_OPERATOR,Request 64 status changed.
+40,RESOURCE_STATUS_CHANGED,2026-08-03T22:40:00Z,RESOURCE,11,SYSTEM,Resource 11 status changed.
+41,ROAD_BLOCK_UPDATED,2026-08-04T00:17:00Z,ROAD,52,DISPATCH_OPERATOR,Road 52 blockage status updated.
+42,UNDO_ACTION,2026-08-04T01:54:00Z,SERVICE_REQUEST,115,DISPATCH_OPERATOR,Undo action recorded for request 115.
+43,REQUEST_CREATED,2026-08-04T03:31:00Z,SERVICE_REQUEST,132,DISPATCH_OPERATOR,Request 132 created.
+44,REQUEST_ASSIGNED,2026-08-04T05:08:00Z,SERVICE_REQUEST,149,SYSTEM,Request 149 assigned.
+45,REQUEST_STATUS_CHANGED,2026-08-04T06:45:00Z,SERVICE_REQUEST,166,DISPATCH_OPERATOR,Request 166 status changed.
+46,RESOURCE_STATUS_CHANGED,2026-08-04T08:22:00Z,RESOURCE,23,DISPATCH_OPERATOR,Resource 23 status changed.
+47,ROAD_BLOCK_UPDATED,2026-08-04T09:59:00Z,ROAD,18,DISPATCH_OPERATOR,Road 18 blockage status updated.
+48,UNDO_ACTION,2026-08-04T11:36:00Z,SERVICE_REQUEST,217,SYSTEM,Undo action recorded for request 217.
+49,REQUEST_CREATED,2026-08-04T13:13:00Z,SERVICE_REQUEST,234,DISPATCH_OPERATOR,Request 234 created.
+50,REQUEST_ASSIGNED,2026-08-04T14:50:00Z,SERVICE_REQUEST,251,DISPATCH_OPERATOR,Request 251 assigned.
+51,REQUEST_STATUS_CHANGED,2026-08-04T16:27:00Z,SERVICE_REQUEST,268,DISPATCH_OPERATOR,Request 268 status changed.
+52,RESOURCE_STATUS_CHANGED,2026-08-04T18:04:00Z,RESOURCE,5,SYSTEM,Resource 5 status changed.
+53,ROAD_BLOCK_UPDATED,2026-08-04T19:41:00Z,ROAD,84,DISPATCH_OPERATOR,Road 84 blockage status updated.
+54,UNDO_ACTION,2026-08-04T21:18:00Z,SERVICE_REQUEST,19,DISPATCH_OPERATOR,Undo action recorded for request 19.
+55,REQUEST_CREATED,2026-08-04T22:55:00Z,SERVICE_REQUEST,36,DISPATCH_OPERATOR,Request 36 created.
+56,REQUEST_ASSIGNED,2026-08-05T00:32:00Z,SERVICE_REQUEST,53,SYSTEM,Request 53 assigned.
+57,REQUEST_STATUS_CHANGED,2026-08-05T02:09:00Z,SERVICE_REQUEST,70,DISPATCH_OPERATOR,Request 70 status changed.
+58,RESOURCE_STATUS_CHANGED,2026-08-05T03:46:00Z,RESOURCE,17,DISPATCH_OPERATOR,Resource 17 status changed.
+59,ROAD_BLOCK_UPDATED,2026-08-05T05:23:00Z,ROAD,50,DISPATCH_OPERATOR,Road 50 blockage status updated.
+60,UNDO_ACTION,2026-08-05T07:00:00Z,SERVICE_REQUEST,121,SYSTEM,Undo action recorded for request 121.

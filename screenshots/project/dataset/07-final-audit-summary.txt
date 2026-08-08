@@ -27,6 +27,16 @@ request_id,source_location_id,destination_location_id,category,urgency,time_subm
 resources.csv:
 resource_id,resource_type,home_location_id,capacity,availability_status
 
+Simplified final core schemas:
+- locations.csv adds operating_hours and source_url.
+- roads.csv adds route_label, road_type, traffic_level and is_blocked.
+- service_requests.csv adds required_resource_type and description.
+- resources.csv adds current_location_id, shift_start and shift_end.
+- Routing cost is calculated at runtime as travel_time_min * condition_weight.
+- Request priority is calculated by the application/algorithm layer and is not stored.
+- Repetitive per-row synthetic boilerplate has been removed from extension datasets.
+- Service-request descriptions retain their category meaning without disclaimer wording.
+
 Validation results:
 - CSV structural validation: PASS
 - Unique IDs: PASS
@@ -38,6 +48,7 @@ Validation results:
 - Blocked road IDs tested: 2, 6, 36, 37
 - All service-request deadlines after submission: PASS
 - Required resource types available: PASS
+- Service descriptions containing synthetic/fictional disclaimer phrases: 0
 - Fabricated benchmark measurements: NONE
 
 Algorithm run plan:
@@ -54,5 +65,6 @@ Localisation and privacy:
 - No real persons, incidents or live security-operation records are included.
 
 Final independent audit:
-Score: 100/100
-Verdict: READY TO ADD DATASET EVIDENCE
+Final dataset score: 99/100
+Final verdict: APPROVE DATASET FOR PR #12
+Evidence refresh: COMPLETE

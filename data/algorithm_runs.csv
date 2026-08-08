@@ -1,31 +1,31 @@
-runId,algorithmName,inputSize,timeNs,memoryKb,dateRun,status,experimentGroup,runNumber,dataNote
-1,BFS,50,,,,PLANNED,BFS_50,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-2,BFS,50,,,,PLANNED,BFS_50,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-3,BFS,50,,,,PLANNED,BFS_50,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-4,BFS,100,,,,PLANNED,BFS_100,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-5,BFS,100,,,,PLANNED,BFS_100,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-6,BFS,100,,,,PLANNED,BFS_100,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-7,BFS,200,,,,PLANNED,BFS_200,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-8,BFS,200,,,,PLANNED,BFS_200,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-9,BFS,200,,,,PLANNED,BFS_200,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-10,BFS,500,,,,PLANNED,BFS_500,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-11,BFS,500,,,,PLANNED,BFS_500,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-12,BFS,500,,,,PLANNED,BFS_500,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-13,DIJKSTRA,50,,,,PLANNED,DIJKSTRA_50,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-14,DIJKSTRA,50,,,,PLANNED,DIJKSTRA_50,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-15,DIJKSTRA,50,,,,PLANNED,DIJKSTRA_50,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-16,DIJKSTRA,100,,,,PLANNED,DIJKSTRA_100,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-17,DIJKSTRA,100,,,,PLANNED,DIJKSTRA_100,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-18,DIJKSTRA,100,,,,PLANNED,DIJKSTRA_100,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-19,DIJKSTRA,200,,,,PLANNED,DIJKSTRA_200,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-20,DIJKSTRA,200,,,,PLANNED,DIJKSTRA_200,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-21,DIJKSTRA,200,,,,PLANNED,DIJKSTRA_200,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-22,DIJKSTRA,500,,,,PLANNED,DIJKSTRA_500,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-23,DIJKSTRA,500,,,,PLANNED,DIJKSTRA_500,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-24,DIJKSTRA,500,,,,PLANNED,DIJKSTRA_500,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-25,KRUSKAL,50,,,,PLANNED,KRUSKAL_50,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-26,KRUSKAL,50,,,,PLANNED,KRUSKAL_50,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-27,KRUSKAL,50,,,,PLANNED,KRUSKAL_50,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
-28,KRUSKAL,100,,,,PLANNED,KRUSKAL_100,1,Populate from actual Java benchmark; do not submit placeholder values as measured results
-29,KRUSKAL,100,,,,PLANNED,KRUSKAL_100,2,Populate from actual Java benchmark; do not submit placeholder values as measured results
-30,KRUSKAL,100,,,,PLANNED,KRUSKAL_100,3,Populate from actual Java benchmark; do not submit placeholder values as measured results
+runId,algorithmName,inputSize,timeNs,memoryKb,dateRun,status,experimentGroup,runNumber
+1,BFS,50,,,,PLANNED,BFS_50,1
+2,BFS,50,,,,PLANNED,BFS_50,2
+3,BFS,50,,,,PLANNED,BFS_50,3
+4,BFS,100,,,,PLANNED,BFS_100,1
+5,BFS,100,,,,PLANNED,BFS_100,2
+6,BFS,100,,,,PLANNED,BFS_100,3
+7,BFS,200,,,,PLANNED,BFS_200,1
+8,BFS,200,,,,PLANNED,BFS_200,2
+9,BFS,200,,,,PLANNED,BFS_200,3
+10,BFS,500,,,,PLANNED,BFS_500,1
+11,BFS,500,,,,PLANNED,BFS_500,2
+12,BFS,500,,,,PLANNED,BFS_500,3
+13,DIJKSTRA,50,,,,PLANNED,DIJKSTRA_50,1
+14,DIJKSTRA,50,,,,PLANNED,DIJKSTRA_50,2
+15,DIJKSTRA,50,,,,PLANNED,DIJKSTRA_50,3
+16,DIJKSTRA,100,,,,PLANNED,DIJKSTRA_100,1
+17,DIJKSTRA,100,,,,PLANNED,DIJKSTRA_100,2
+18,DIJKSTRA,100,,,,PLANNED,DIJKSTRA_100,3
+19,DIJKSTRA,200,,,,PLANNED,DIJKSTRA_200,1
+20,DIJKSTRA,200,,,,PLANNED,DIJKSTRA_200,2
+21,DIJKSTRA,200,,,,PLANNED,DIJKSTRA_200,3
+22,DIJKSTRA,500,,,,PLANNED,DIJKSTRA_500,1
+23,DIJKSTRA,500,,,,PLANNED,DIJKSTRA_500,2
+24,DIJKSTRA,500,,,,PLANNED,DIJKSTRA_500,3
+25,KRUSKAL,50,,,,PLANNED,KRUSKAL_50,1
+26,KRUSKAL,50,,,,PLANNED,KRUSKAL_50,2
+27,KRUSKAL,50,,,,PLANNED,KRUSKAL_50,3
+28,KRUSKAL,100,,,,PLANNED,KRUSKAL_100,1
+29,KRUSKAL,100,,,,PLANNED,KRUSKAL_100,2
+30,KRUSKAL,100,,,,PLANNED,KRUSKAL_100,3

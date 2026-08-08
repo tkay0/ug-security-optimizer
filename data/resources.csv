@@ -1,31 +1,31 @@
-resource_id,resource_type,home_location_id,capacity,availability_status,resourceName,currentLocation,shiftStart,shiftEnd,dataNote
-1,PATROL_OFFICER,45,1,AVAILABLE,Patrol Officer Unit 01,45,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-2,PATROL_OFFICER,1,1,AVAILABLE,Patrol Officer Unit 02,1,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-3,PATROL_OFFICER,25,1,AVAILABLE,Patrol Officer Unit 03,25,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-4,PATROL_OFFICER,10,1,BUSY,Patrol Officer Unit 04,34,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-5,PATROL_OFFICER,14,1,AVAILABLE,Patrol Officer Unit 05,14,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-6,PATROL_OFFICER,45,1,OFF_DUTY,Patrol Officer Unit 06,45,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-7,PATROL_OFFICER,1,1,AVAILABLE,Patrol Officer Unit 07,1,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-8,PATROL_OFFICER,25,1,AVAILABLE,Patrol Officer Unit 08,25,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-9,PATROL_VEHICLE,25,4,MAINTENANCE,Patrol Vehicle 01,25,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-10,PATROL_VEHICLE,45,4,AVAILABLE,Patrol Vehicle 02,45,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-11,PATROL_VEHICLE,1,4,AVAILABLE,Patrol Vehicle 03,1,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-12,PATROL_VEHICLE,25,4,AVAILABLE,Patrol Vehicle 04,25,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-13,MOTORCYCLE_PATROL,45,1,AVAILABLE,Motorcycle Patrol 01,45,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-14,MOTORCYCLE_PATROL,1,1,BUSY,Motorcycle Patrol 02,26,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-15,MOTORCYCLE_PATROL,25,1,AVAILABLE,Motorcycle Patrol 03,25,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-16,MOTORCYCLE_PATROL,30,1,OFF_DUTY,Motorcycle Patrol 04,30,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-17,AMBULANCE,3,4,AVAILABLE,Ambulance 01,3,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-18,AMBULANCE,34,4,AVAILABLE,Ambulance 02,34,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-19,FIRST_AID_TEAM,3,3,MAINTENANCE,First Aid Team 01,3,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-20,FIRST_AID_TEAM,30,3,AVAILABLE,First Aid Team 02,30,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-21,FIRE_RESPONSE_UNIT,4,4,AVAILABLE,Fire Response Unit 01,4,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-22,FIRE_RESPONSE_UNIT,45,4,AVAILABLE,Fire Response Unit 02,45,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-23,CCTV_TECHNICIAN,44,1,AVAILABLE,CCTV Technician Unit 01,44,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-24,CCTV_TECHNICIAN,45,1,BUSY,CCTV Technician Unit 02,6,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-25,INVESTIGATION_TEAM,45,2,AVAILABLE,Investigation Team 01,45,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-26,INVESTIGATION_TEAM,2,2,OFF_DUTY,Investigation Team 02,2,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-27,CROWD_CONTROL_TEAM,45,6,AVAILABLE,Crowd Control Team 01,45,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-28,CROWD_CONTROL_TEAM,30,6,AVAILABLE,Crowd Control Team 02,30,14:00,22:00,Synthetic project resource; not a real person or live operational asset
-29,RAPID_RESPONSE_TEAM,45,4,MAINTENANCE,Rapid Response Team 01,45,06:00,14:00,Synthetic project resource; not a real person or live operational asset
-30,RAPID_RESPONSE_TEAM,1,4,AVAILABLE,Rapid Response Team 02,1,14:00,22:00,Synthetic project resource; not a real person or live operational asset
+resource_id,resource_type,home_location_id,capacity,availability_status,current_location_id,shift_start,shift_end
+1,PATROL_OFFICER,45,1,AVAILABLE,45,06:00,14:00
+2,PATROL_OFFICER,1,1,AVAILABLE,1,14:00,22:00
+3,PATROL_OFFICER,25,1,AVAILABLE,25,06:00,14:00
+4,PATROL_OFFICER,10,1,BUSY,34,14:00,22:00
+5,PATROL_OFFICER,14,1,AVAILABLE,14,06:00,14:00
+6,PATROL_OFFICER,45,1,OFF_DUTY,45,14:00,22:00
+7,PATROL_OFFICER,1,1,AVAILABLE,1,06:00,14:00
+8,PATROL_OFFICER,25,1,AVAILABLE,25,14:00,22:00
+9,PATROL_VEHICLE,25,4,MAINTENANCE,25,06:00,14:00
+10,PATROL_VEHICLE,45,4,AVAILABLE,45,14:00,22:00
+11,PATROL_VEHICLE,1,4,AVAILABLE,1,06:00,14:00
+12,PATROL_VEHICLE,25,4,AVAILABLE,25,14:00,22:00
+13,MOTORCYCLE_PATROL,45,1,AVAILABLE,45,06:00,14:00
+14,MOTORCYCLE_PATROL,1,1,BUSY,26,14:00,22:00
+15,MOTORCYCLE_PATROL,25,1,AVAILABLE,25,06:00,14:00
+16,MOTORCYCLE_PATROL,30,1,OFF_DUTY,30,14:00,22:00
+17,AMBULANCE,3,4,AVAILABLE,3,06:00,14:00
+18,AMBULANCE,34,4,AVAILABLE,34,14:00,22:00
+19,FIRST_AID_TEAM,3,3,MAINTENANCE,3,06:00,14:00
+20,FIRST_AID_TEAM,30,3,AVAILABLE,30,14:00,22:00
+21,FIRE_RESPONSE_UNIT,4,4,AVAILABLE,4,06:00,14:00
+22,FIRE_RESPONSE_UNIT,45,4,AVAILABLE,45,14:00,22:00
+23,CCTV_TECHNICIAN,44,1,AVAILABLE,44,06:00,14:00
+24,CCTV_TECHNICIAN,45,1,BUSY,6,14:00,22:00
+25,INVESTIGATION_TEAM,45,2,AVAILABLE,45,06:00,14:00
+26,INVESTIGATION_TEAM,2,2,OFF_DUTY,2,14:00,22:00
+27,CROWD_CONTROL_TEAM,45,6,AVAILABLE,45,06:00,14:00
+28,CROWD_CONTROL_TEAM,30,6,AVAILABLE,30,14:00,22:00
+29,RAPID_RESPONSE_TEAM,45,4,MAINTENANCE,45,06:00,14:00
+30,RAPID_RESPONSE_TEAM,1,4,AVAILABLE,1,14:00,22:00

@@ -1,6 +1,6 @@
 {
   "generatedDate": "2026-08-08",
-  "version": "2.1-official-template-alignment",
+  "version": "3.0-simplified-template-aligned",
   "project": "University of Ghana Campus Security and Emergency Response Optimizer",
   "counts": {
     "locations": 50,
@@ -17,12 +17,26 @@
     "serviceRequests": ["request_id", "source_location_id", "destination_location_id", "category", "urgency", "time_submitted", "deadline", "status"],
     "resources": ["resource_id", "resource_type", "home_location_id", "capacity", "availability_status"]
   },
-  "projectExtensionColumnsPreserved": true,
+  "coreSchemas": {
+    "locations": ["location_id", "name", "area", "location_type", "x_coord", "y_coord", "operating_hours", "source_url"],
+    "roads": ["road_id", "from_location_id", "to_location_id", "distance_km", "travel_time_min", "condition_weight", "route_label", "road_type", "traffic_level", "is_blocked"],
+    "serviceRequests": ["request_id", "source_location_id", "destination_location_id", "category", "urgency", "time_submitted", "deadline", "status", "required_resource_type", "description"],
+    "resources": ["resource_id", "resource_type", "home_location_id", "capacity", "availability_status", "current_location_id", "shift_start", "shift_end"]
+  },
+  "extensionSchemas": {
+    "roadScenarios": ["scenarioId", "scenarioName", "roadId", "routeLabel", "scenarioStart", "scenarioEnd", "isBlockedOverride", "conditionWeightMultiplier", "travelTimeMultiplier", "reason"],
+    "auditEvents": ["eventId", "eventType", "timestamp", "entityType", "entityId", "actorType", "details"],
+    "algorithmRuns": ["runId", "algorithmName", "inputSize", "timeNs", "memoryKb", "dateRun", "status", "experimentGroup", "runNumber"]
+  },
+  "intentionalProjectExtensionColumnsPresent": true,
+  "syntheticMetadataCentralizedInProvenance": true,
   "masterWorkbookStoredOutsideRepository": true,
   "roadModel": {
     "distinctTravelTimes": 60,
     "travelTimeMinMinutes": 0.33,
     "travelTimeMaxMinutes": 1.88,
+    "routingCostStored": false,
+    "routingCostFormula": "travel_time_min * condition_weight",
     "controlledBlockedRoads": [
       6,
       2,
@@ -31,6 +45,7 @@
     ],
     "blockageScenarioPreservesConnectivity": true
   },
+  "requestPriorityStored": false,
   "validationErrors": [],
   "algorithmRunStatus": "PLANNED_ONLY"
 }

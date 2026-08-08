@@ -17,11 +17,15 @@ Each core CSV begins with the exact columns and ordering from the lecturer-suppl
 - Actual `timeNs`, `memoryKb`, and `dateRun` must come from Java performance runs.
 
 ## Road-model improvements
-- `routeLabel` provides a readable endpoint-based route description.
+- `route_label` provides a readable endpoint-based route description.
 - Baseline `travel_time_min` now varies with distance, traffic class and junction delay.
-- `routingWeight` is derived from travel time and road-condition weight.
+- Routing cost is calculated at runtime as `travel_time_min * condition_weight`; it is not stored redundantly.
 - Baseline `roads.csv` stays unblocked.
 - `road_scenarios.csv` provides separate blockage/congestion/rain scenarios.
+
+## Request priority
+- Request priority is calculated by the application/algorithm layer from the final project rules and index-number-derived parameters.
+- No precomputed `priority_score` is stored in the seed dataset.
 
 ## Supporting documentation
 - `DATA_DICTIONARY.md`
@@ -31,3 +35,4 @@ Each core CSV begins with the exact columns and ordering from the lecturer-suppl
 
 ## Important
 Route labels, coordinates, links, travel times, conditions and scenario events are synthetic coursework data and must not be presented as official University of Ghana road/navigation information.
+Synthetic-data and privacy qualification is centralized in `DATASET_PROVENANCE.md` rather than repeated in individual CSV rows.
