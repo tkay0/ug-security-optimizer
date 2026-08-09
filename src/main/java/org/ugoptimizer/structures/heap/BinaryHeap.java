@@ -1,16 +1,19 @@
 package org.ugoptimizer.structures.heap;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class BinaryHeap<T> {
-    private final List<T> heap;
+    private static final int DEFAULT_CAPACITY = 16;
+
     private final Comparator<? super T> comparator;
+    private Object[] heap;
+    private int size;
 
     public BinaryHeap(Comparator<? super T> comparator) {
-        this.heap = new ArrayList<>();
+        this.heap = new Object[DEFAULT_CAPACITY];
+        this.size = 0;
         this.comparator = comparator;
     }
 
@@ -19,8 +22,10 @@ public class BinaryHeap<T> {
     }
 
     public void add(T value) {
-        heap.add(value);
-        siftUp(heap.size() - 1);
+        ensureCapacity(size + 1);
+        heap[size] = value;
+        size++;
+        siftUp(size - 1);
     }
 
     public T peek() {
@@ -28,7 +33,7 @@ public class BinaryHeap<T> {
             throw new NoSuchElementException("Heap is empty");
         }
 
-        return heap.get(0);
+        return get(0);
     }
 
     public T poll() {
@@ -36,11 +41,11 @@ public class BinaryHeap<T> {
             throw new NoSuchElementException("Heap is empty");
         }
 
-        T result = heap.get(0);
-        T last = heap.remove(heap.size() - 1);
+        T result = get(0);
+        T last = removeLast();
 
-        if (!heap.isEmpty()) {
-            heap.set(0, last);
+        if (size > 0) {
+            heap[0] = last;
             siftDown(0);
         }
 
@@ -48,19 +53,19 @@ public class BinaryHeap<T> {
     }
 
     public boolean remove(T value) {
-        int index = heap.indexOf(value);
+        int index = indexOf(value);
 
         if (index == -1) {
             return false;
         }
 
-        T last = heap.remove(heap.size() - 1);
+        T last = removeLast();
 
-        if (index < heap.size()) {
-            heap.set(index, last);
+        if (index < size) {
+            heap[index] = last;
 
             int parent = parent(index);
-            if (index > 0 && compare(heap.get(index), heap.get(parent)) < 0) {
+            if (index > 0 && compare(get(index), get(parent)) < 0) {
                 siftUp(index);
             } else {
                 siftDown(index);
@@ -71,22 +76,26 @@ public class BinaryHeap<T> {
     }
 
     public int size() {
-        return heap.size();
+        return size;
     }
 
     public boolean isEmpty() {
-        return heap.isEmpty();
+        return size == 0;
     }
 
     public void clear() {
-        heap.clear();
+        for (int i = 0; i < size; i++) {
+            heap[i] = null;
+        }
+
+        size = 0;
     }
 
     private void siftUp(int index) {
         while (index > 0) {
             int parent = parent(index);
 
-            if (compare(heap.get(index), heap.get(parent)) >= 0) {
+            if (compare(get(index), get(parent)) >= 0) {
                 break;
             }
 
@@ -101,11 +110,11 @@ public class BinaryHeap<T> {
             int right = rightChild(index);
             int smallest = index;
 
-            if (left < heap.size() && compare(heap.get(left), heap.get(smallest)) < 0) {
+            if (left < size && compare(get(left), get(smallest)) < 0) {
                 smallest = left;
             }
 
-            if (right < heap.size() && compare(heap.get(right), heap.get(smallest)) < 0) {
+            if (right < size && compare(get(right), get(smallest)) < 0) {
                 smallest = right;
             }
 
@@ -127,6 +136,47 @@ public class BinaryHeap<T> {
         return ((Comparable<? super T>) first).compareTo(second);
     }
 
+    @SuppressWarnings("unchecked")
+    private T get(int index) {
+        return (T) heap[index];
+    }
+
+    private int indexOf(T value) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(heap[i], value)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private T removeLast() {
+        T last = get(size - 1);
+        heap[size - 1] = null;
+        size--;
+
+        return last;
+    }
+
+    private void ensureCapacity(int required) {
+        if (required <= heap.length) {
+            return;
+        }
+
+        int capacity = heap.length * 2;
+        if (capacity < required) {
+            capacity = required;
+        }
+
+        Object[] grown = new Object[capacity];
+        for (int i = 0; i < size; i++) {
+            grown[i] = heap[i];
+        }
+
+        heap = grown;
+    }
+
     private int parent(int index) {
         return (index - 1) / 2;
     }
@@ -140,9 +190,8 @@ public class BinaryHeap<T> {
     }
 
     private void swap(int first, int second) {
-        T temp = heap.get(first);
-        heap.set(first, heap.get(second));
-        heap.set(second, temp);
+        Object temp = heap[first];
+        heap[first] = heap[second];
+        heap[second] = temp;
     }
 }
-
