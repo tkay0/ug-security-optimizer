@@ -110,6 +110,84 @@ class BTreeTest {
                 "no duplicate key should appear anywhere in the tree after the update");
     }
 
+    @Test
+    void updatingTheSmallestLeafKeyOverwritesInPlaceInsteadOfCorruptingLaterEntries() {
+        BTree<Integer, String> tree = new BTree<>();
+        tree.insert(10, "10");
+        tree.insert(20, "20");
+        tree.insert(30, "30");
+
+        tree.insert(10, "TEN");
+
+        assertEquals("TEN", tree.search(10));
+        assertEquals("20", tree.search(20));
+        assertEquals("30", tree.search(30), "shifting to locate key 10 must not displace 30 out of range");
+        assertEquals(3, tree.size());
+
+        List<Integer> visited = new ArrayList<>();
+        tree.inorderTraverse((key, value) -> visited.add(key));
+        assertEquals(List.of(10, 20, 30), visited);
+    }
+
+    @Test
+    void updatingTheMiddleLeafKeyOverwritesInPlace() {
+        BTree<Integer, String> tree = new BTree<>();
+        tree.insert(10, "10");
+        tree.insert(20, "20");
+        tree.insert(30, "30");
+
+        tree.insert(20, "TWENTY");
+
+        assertEquals("10", tree.search(10));
+        assertEquals("TWENTY", tree.search(20));
+        assertEquals("30", tree.search(30));
+        assertEquals(3, tree.size());
+    }
+
+    @Test
+    void updatingTheLargestLeafKeyOverwritesInPlace() {
+        BTree<Integer, String> tree = new BTree<>();
+        tree.insert(10, "10");
+        tree.insert(20, "20");
+        tree.insert(30, "30");
+
+        tree.insert(30, "THIRTY");
+
+        assertEquals("10", tree.search(10));
+        assertEquals("20", tree.search(20));
+        assertEquals("THIRTY", tree.search(30));
+        assertEquals(3, tree.size());
+    }
+
+    @Test
+    void repeatedRandomizedUpdatesNeverChangeSizeOrLoseAKey() {
+        BTree<Integer, String> tree = new BTree<>();
+        List<Integer> keys = new ArrayList<>();
+        for (int k = 0; k < 40; k++) {
+            keys.add(k * 3);
+            tree.insert(k * 3, "v" + (k * 3));
+        }
+        assertEquals(40, tree.size());
+
+        java.util.Random random = new java.util.Random(42);
+        for (int round = 0; round < 200; round++) {
+            int key = keys.get(random.nextInt(keys.size()));
+            String newValue = "round" + round + "-key" + key;
+
+            tree.insert(key, newValue);
+
+            assertEquals(newValue, tree.search(key), "update on round " + round + " for key " + key + " did not stick");
+            assertEquals(40, tree.size(), "size drifted after round " + round + " updating key " + key);
+        }
+
+        for (int k = 0; k < 40; k++) {
+            assertNotNull(tree.search(k * 3), "key " + (k * 3) + " went missing after randomized updates");
+        }
+        List<Integer> visited = new ArrayList<>();
+        tree.inorderTraverse((key, value) -> visited.add(key));
+        assertEquals(keys, visited, "no key should be duplicated or lost after randomized updates");
+    }
+
     // --- boundary cases ---
 
     @Test

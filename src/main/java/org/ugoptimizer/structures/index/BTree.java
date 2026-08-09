@@ -160,13 +160,15 @@ public class BTree<K extends Comparable<K>, V> {
 
         if (node.leaf) {
             while (i >= 0 && key.compareTo(node.keyAt(i)) < 0) {
-                node.keys[i + 1] = node.keys[i];
-                node.values[i + 1] = node.values[i];
                 i--;
             }
             if (i >= 0 && key.compareTo(node.keyAt(i)) == 0) {
                 node.values[i] = value;
                 return;
+            }
+            for (int j = node.numKeys - 1; j > i; j--) {
+                node.keys[j + 1] = node.keys[j];
+                node.values[j + 1] = node.values[j];
             }
             node.keys[i + 1] = key;
             node.values[i + 1] = value;
