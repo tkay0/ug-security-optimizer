@@ -84,6 +84,32 @@ class BTreeTest {
         assertEquals("40", tree.search(40));
     }
 
+    @Test
+    void updatingAPromotedInternalKeyOverwritesInPlaceInsteadOfDuplicating() {
+        BTree<Integer, String> tree = new BTree<>(2); // maxKeys per node = 3
+
+        tree.insert(10, "10");
+        tree.insert(20, "20");
+        tree.insert(30, "30");
+        tree.insert(40, "40"); // splits the root; 20 is promoted to the root
+
+        assertFalse(tree.isRootLeaf());
+        assertEquals(1, tree.rootKeyCount());
+        assertEquals(4, tree.size());
+
+        tree.insert(20, "TWENTY-UPDATED"); // 20 now lives only in the root, not a leaf
+
+        assertEquals("TWENTY-UPDATED", tree.search(20),
+                "updating a key that was promoted to an internal node must overwrite it in place");
+        assertEquals(4, tree.size(),
+                "updating an existing internal key must not silently insert a duplicate leaf entry");
+
+        List<Integer> visited = new ArrayList<>();
+        tree.inorderTraverse((key, value) -> visited.add(key));
+        assertEquals(List.of(10, 20, 30, 40), visited,
+                "no duplicate key should appear anywhere in the tree after the update");
+    }
+
     // --- boundary cases ---
 
     @Test

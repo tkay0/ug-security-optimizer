@@ -175,11 +175,11 @@ public class BTree<K extends Comparable<K>, V> {
             while (i >= 0 && key.compareTo(node.keyAt(i)) < 0) {
                 i--;
             }
-            i++;
-            if (i < node.numKeys && key.compareTo(node.keyAt(i)) == 0) {
+            if (i >= 0 && key.compareTo(node.keyAt(i)) == 0) {
                 node.values[i] = value;
                 return;
             }
+            i++;
             if (node.children[i].numKeys == maxKeys) {
                 splitChild(node, i);
                 int cmp = key.compareTo(node.keyAt(i));
