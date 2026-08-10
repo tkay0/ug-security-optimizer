@@ -9,9 +9,11 @@ import org.ugoptimizer.model.ServiceRequest;
  *
  * <p><b>Purpose</b></p>
  * <p>
- * When an incident (medical emergency, fire outbreak, theft, assault, lost
- * property, traffic accident) is reported, a response resource must be chosen
- * immediately. A greedy algorithm is used because it makes the locally best
+ * When an incident (medical emergency, fire alarm, theft report, welfare
+ * check, night patrol request, crowd control, suspicious activity, access
+ * control, security escort, road obstruction, emergency transport or CCTV
+ * fault) is reported, a response resource must be chosen immediately. A greedy
+ * algorithm is used because it makes the locally best
  * decision at each step without exploring every possible future combination —
  * which is exactly what emergency dispatch needs: a fast, deterministic answer
  * the moment an incident arrives.
@@ -26,8 +28,8 @@ import org.ugoptimizer.model.ServiceRequest;
  *       never assigned.</li>
  *   <li><b>Rule 2 — Type match:</b> the resource type must be able to respond
  *       to the incident (see {@link ServiceRequest#matchesResourceType(String)}),
- *       e.g. Medical Emergency → Ambulance, Fire → Fire Unit, Theft →
- *       Security Patrol.</li>
+ *       e.g. MEDICAL_EMERGENCY → AMBULANCE, FIRE_ALARM → FIRE_RESPONSE_UNIT,
+ *       THEFT_REPORT → INVESTIGATION_TEAM.</li>
  *   <li><b>Rule 3 — Response time:</b> among valid resources, the one with the
  *       smallest estimated response time wins.</li>
  *   <li><b>Rule 4 — Workload tie-break:</b> if response times are equal, the
@@ -89,7 +91,7 @@ import org.ugoptimizer.model.ServiceRequest;
  * </p>
  *
  * <p><b>Example Execution Trace</b></p>
- * <p>Incident: Medical Emergency. Resources:</p>
+ * <p>Incident: MEDICAL_EMERGENCY. Resources:</p>
  * <pre>
  * AMB001  available   responseTime = 7   workload = 3
  * AMB002  available   responseTime = 4   workload = 5

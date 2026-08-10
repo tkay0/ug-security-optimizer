@@ -4,25 +4,42 @@ package org.ugoptimizer.model;
  * Shared domain model for a campus security service request (incident)
  * reported to the Emergency Response Optimizer.
  *
- * <p>Represents a request such as a medical emergency, fire outbreak, theft,
- * assault, lost property report, or traffic accident. The type is what drives
- * resource matching: {@link #matchesResourceType(String)} maps a request type
- * to the resource type that can respond to it.</p>
+ * <p>Represents a request such as a medical emergency, fire alarm, theft
+ * report, welfare check, night patrol request, crowd control, suspicious
+ * activity, access control, security escort, road obstruction, emergency
+ * transport, or CCTV fault. The category is what drives resource matching:
+ * {@link #matchesResourceType(String)} maps a request category to the resource
+ * type that can respond to it.</p>
+ *
+ * <p>The canonical category values match the {@code category} column of the
+ * finalized {@code service_requests.csv} dataset.</p>
  */
 public class ServiceRequest {
 
-    /** Type for medical emergencies, handled by an ambulance. */
-    public static final String TYPE_MEDICAL = "Medical Emergency";
-    /** Type for fire outbreaks, handled by a fire unit. */
-    public static final String TYPE_FIRE = "Fire Outbreak";
-    /** Type for theft reports, handled by a security patrol. */
-    public static final String TYPE_THEFT = "Theft";
-    /** Type for assault reports, handled by a security patrol. */
-    public static final String TYPE_ASSAULT = "Assault";
-    /** Type for lost property reports, handled by a security patrol. */
-    public static final String TYPE_LOST_PROPERTY = "Lost Property";
-    /** Type for traffic accidents, handled by a security patrol. */
-    public static final String TYPE_TRAFFIC = "Traffic Accident";
+    /** Category for medical emergencies, handled by an ambulance. */
+    public static final String TYPE_MEDICAL = "MEDICAL_EMERGENCY";
+    /** Category for fire alarms, handled by a fire response unit. */
+    public static final String TYPE_FIRE = "FIRE_ALARM";
+    /** Category for theft reports, handled by an investigation team. */
+    public static final String TYPE_THEFT = "THEFT_REPORT";
+    /** Category for welfare checks, handled by a patrol officer. */
+    public static final String TYPE_WELFARE_CHECK = "WELFARE_CHECK";
+    /** Category for night patrol requests, handled by a motorcycle patrol. */
+    public static final String TYPE_NIGHT_PATROL = "NIGHT_PATROL_REQUEST";
+    /** Category for crowd control, handled by a crowd control team. */
+    public static final String TYPE_CROWD_CONTROL = "CROWD_CONTROL";
+    /** Category for suspicious activity, handled by a patrol officer. */
+    public static final String TYPE_SUSPICIOUS_ACTIVITY = "SUSPICIOUS_ACTIVITY";
+    /** Category for access control, handled by a patrol officer. */
+    public static final String TYPE_ACCESS_CONTROL = "ACCESS_CONTROL";
+    /** Category for security escorts, handled by a patrol officer. */
+    public static final String TYPE_SECURITY_ESCORT = "SECURITY_ESCORT";
+    /** Category for road obstructions, handled by a patrol vehicle. */
+    public static final String TYPE_ROAD_OBSTRUCTION = "ROAD_OBSTRUCTION";
+    /** Category for emergency transports, handled by a rapid response team. */
+    public static final String TYPE_EMERGENCY_TRANSPORT = "EMERGENCY_TRANSPORT";
+    /** Category for CCTV faults, handled by a CCTV technician. */
+    public static final String TYPE_CCTV_FAULT = "CCTV_FAULT";
 
     private String id;
     private String type;
@@ -55,15 +72,23 @@ public class ServiceRequest {
      * Determines whether a resource of the given type can respond to this
      * request.
      *
-     * <p>The mapping used by the dispatch system is:</p>
+     * <p>The mapping used by the dispatch system follows the finalized
+     * {@code service_requests.csv} dataset:</p>
      * <ul>
-     *   <li>Medical Emergency / Medical → {@code Ambulance}</li>
-     *   <li>Fire Outbreak / Fire → {@code Fire Unit}</li>
-     *   <li>Theft, Assault, Lost Property, Traffic Accident →
-     *       {@code Security Patrol}</li>
+     *   <li>{@code MEDICAL_EMERGENCY} → {@code AMBULANCE}</li>
+     *   <li>{@code FIRE_ALARM} → {@code FIRE_RESPONSE_UNIT}</li>
+     *   <li>{@code THEFT_REPORT} → {@code INVESTIGATION_TEAM}</li>
+     *   <li>{@code WELFARE_CHECK}, {@code SUSPICIOUS_ACTIVITY},
+     *       {@code ACCESS_CONTROL}, {@code SECURITY_ESCORT} →
+     *       {@code PATROL_OFFICER}</li>
+     *   <li>{@code NIGHT_PATROL_REQUEST} → {@code MOTORCYCLE_PATROL}</li>
+     *   <li>{@code CROWD_CONTROL} → {@code CROWD_CONTROL_TEAM}</li>
+     *   <li>{@code ROAD_OBSTRUCTION} → {@code PATROL_VEHICLE}</li>
+     *   <li>{@code EMERGENCY_TRANSPORT} → {@code RAPID_RESPONSE_TEAM}</li>
+     *   <li>{@code CCTV_FAULT} → {@code CCTV_TECHNICIAN}</li>
      * </ul>
      * <p>Comparison is case-insensitive and trims surrounding whitespace.
-     * Unknown request types match no resource type.</p>
+     * Unknown request categories match no resource type.</p>
      *
      * @param resourceType the resource type to test; may be {@code null}
      * @return {@code true} if a resource of {@code resourceType} can respond
@@ -74,14 +99,33 @@ public class ServiceRequest {
         }
         String normalizedType = type.trim();
         String normalizedResourceType = resourceType.trim();
-        if (matchesAny(normalizedType, TYPE_MEDICAL, "Medical")) {
-            return normalizedResourceType.equalsIgnoreCase("Ambulance");
+        if (matchesAny(normalizedType, TYPE_MEDICAL)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_AMBULANCE);
         }
-        if (matchesAny(normalizedType, TYPE_FIRE, "Fire")) {
-            return normalizedResourceType.equalsIgnoreCase("Fire Unit");
+        if (matchesAny(normalizedType, TYPE_FIRE)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_FIRE_RESPONSE_UNIT);
         }
-        if (matchesAny(normalizedType, TYPE_THEFT, TYPE_ASSAULT, TYPE_LOST_PROPERTY, TYPE_TRAFFIC)) {
-            return normalizedResourceType.equalsIgnoreCase("Security Patrol");
+        if (matchesAny(normalizedType, TYPE_THEFT)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_INVESTIGATION_TEAM);
+        }
+        if (matchesAny(normalizedType, TYPE_WELFARE_CHECK, TYPE_SUSPICIOUS_ACTIVITY,
+                TYPE_ACCESS_CONTROL, TYPE_SECURITY_ESCORT)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_PATROL_OFFICER);
+        }
+        if (matchesAny(normalizedType, TYPE_NIGHT_PATROL)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_MOTORCYCLE_PATROL);
+        }
+        if (matchesAny(normalizedType, TYPE_CROWD_CONTROL)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_CROWD_CONTROL_TEAM);
+        }
+        if (matchesAny(normalizedType, TYPE_ROAD_OBSTRUCTION)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_PATROL_VEHICLE);
+        }
+        if (matchesAny(normalizedType, TYPE_EMERGENCY_TRANSPORT)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_RAPID_RESPONSE_TEAM);
+        }
+        if (matchesAny(normalizedType, TYPE_CCTV_FAULT)) {
+            return normalizedResourceType.equalsIgnoreCase(Resource.TYPE_CCTV_TECHNICIAN);
         }
         return false;
     }

@@ -29,7 +29,7 @@ class GreedyAssignmentTest {
     }
 
     private static Resource fireUnit(String id, boolean available, int responseTime, int workload) {
-        return new Resource(id, Resource.TYPE_FIRE_UNIT, "IDLE", "Central", available, responseTime, workload);
+        return new Resource(id, Resource.TYPE_FIRE_RESPONSE_UNIT, "IDLE", "Central", available, responseTime, workload);
     }
 
     @Test
@@ -65,6 +65,38 @@ class GreedyAssignmentTest {
         Resource assigned = GreedyAssignment.assignBestResource(medicalIncident(), resources);
         assertNotNull(assigned);
         assertEquals("AMB001", assigned.getId());
+    }
+
+    @Test
+    void assignBestResourceMatchesEveryCanonicalDatasetCategory() {
+        String[][] canonicalMappings = {
+                {"THEFT_REPORT", "INVESTIGATION_TEAM"},
+                {"MEDICAL_EMERGENCY", "AMBULANCE"},
+                {"WELFARE_CHECK", "PATROL_OFFICER"},
+                {"NIGHT_PATROL_REQUEST", "MOTORCYCLE_PATROL"},
+                {"CROWD_CONTROL", "CROWD_CONTROL_TEAM"},
+                {"SUSPICIOUS_ACTIVITY", "PATROL_OFFICER"},
+                {"ACCESS_CONTROL", "PATROL_OFFICER"},
+                {"SECURITY_ESCORT", "PATROL_OFFICER"},
+                {"ROAD_OBSTRUCTION", "PATROL_VEHICLE"},
+                {"EMERGENCY_TRANSPORT", "RAPID_RESPONSE_TEAM"},
+                {"CCTV_FAULT", "CCTV_TECHNICIAN"},
+                {"FIRE_ALARM", "FIRE_RESPONSE_UNIT"}
+        };
+        for (String[] mapping : canonicalMappings) {
+            String category = mapping[0];
+            String resourceType = mapping[1];
+            ServiceRequest request = new ServiceRequest("REQ-" + category, category, "HIGH", "Hall 1", "OPEN", "2026-08-06T06:00:00Z");
+            Resource matching = new Resource("RES-" + resourceType, resourceType, "IDLE", "Central", true, 10, 0);
+            Resource[] resources = {
+                    matching,
+                    new Resource("AID001", Resource.TYPE_FIRST_AID_TEAM, "IDLE", "Central", true, 1, 0)
+            };
+            Resource assigned = GreedyAssignment.assignBestResource(request, resources);
+            assertNotNull(assigned, "No resource matched canonical category " + category);
+            assertEquals("RES-" + resourceType, assigned.getId(),
+                    "Category " + category + " must map to resource type " + resourceType);
+        }
     }
 
     @Test
