@@ -49,5 +49,50 @@ Every data structure and algorithm core is built **from scratch** without relyin
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/YOUR_ORGANIZATION/ug-security-optimizer.git](https://github.com/YOUR_ORGANIZATION/ug-security-optimizer.git)
+git clone https://github.com/tkay0/ug-security-optimizer.git
 cd ug-security-optimizer
+```
+
+---
+
+## 🗄️ Database Workflow
+
+SQLite provides persistent storage for the project. The workflow is:
+
+1. `database/schema.sql` initializes the seven project tables.
+2. The CSV files under `data/` are the canonical seed dataset.
+3. `CsvDatasetImporter` imports and validates all seven datasets in one transaction.
+4. The DAO classes provide persistent reads, inserts, searches, and focused updates.
+5. `DatabaseGraphLoader` reloads locations and roads through the DAOs into any
+   approved `WeightedGraph` implementation.
+
+Graph routing cost is derived at load time as:
+
+```text
+travelTimeMin * conditionWeight
+```
+
+The baseline loader omits roads marked as blocked. Runtime application of
+`road_scenarios` is intentionally deferred to a later integration checkpoint.
+Generated `*.db`, `*.sqlite`, and `*.sqlite3` files are ignored by Git.
+
+There is currently no application command that initializes and imports a
+database. The implemented workflow is exercised through the JUnit suite. A
+developer can follow the same API sequence in an isolated path:
+
+```java
+DatabaseManager manager = new DatabaseManager(databasePath);
+manager.initializeSchema();
+new CsvDatasetImporter(manager, Path.of("data")).importAll();
+
+LocationDao locationDao = new LocationDao(manager);
+RoadDao roadDao = new RoadDao(manager);
+DatabaseGraphLoader loader = new DatabaseGraphLoader(locationDao, roadDao);
+loader.loadInto(new AdjacencyListGraph());
+```
+
+Run the current database and integration tests with:
+
+```bash
+mvn test
+```
