@@ -22,6 +22,8 @@ public class BinaryHeap<T> {
     }
 
     public void add(T value) {
+        Objects.requireNonNull(value, "value cannot be null");
+
         ensureCapacity(size + 1);
         heap[size] = value;
         size++;

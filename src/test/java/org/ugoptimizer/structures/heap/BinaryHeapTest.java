@@ -16,15 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Unit tests for {@link BinaryHeap}.
- *
- * <p>Covers ordering under natural comparison and a custom comparator, the
- * {@code add}/{@code peek}/{@code poll} contract, arbitrary {@code remove}
- * (including the sift-up, sift-down and last-slot branches), duplicates,
- * {@code size}/{@code isEmpty}/{@code clear}, empty-heap error handling, and
- * growth of the backing array well past its initial capacity.</p>
- */
 class BinaryHeapTest {
 
     /** Larger than the heap's initial backing-array capacity, so growth is exercised. */
@@ -190,6 +181,38 @@ class BinaryHeapTest {
         BinaryHeap<Integer> heap = heapOf(10, 20, 30);
 
         assertFalse(heap.remove(null));
+        assertEquals(3, heap.size());
+    }
+
+    @Test
+    void addNullIsRejectedAndLeavesHeapUnchanged() {
+        BinaryHeap<Integer> heap = heapOf(30, 10, 20);
+
+        NullPointerException error = assertThrows(NullPointerException.class, () -> heap.add(null));
+        assertEquals("value cannot be null", error.getMessage());
+
+        assertEquals(3, heap.size());
+        assertEquals(10, heap.peek());
+        assertEquals(List.of(10, 20, 30), drain(heap));
+    }
+
+    @Test
+    void addNullToEmptyHeapLeavesItEmpty() {
+        BinaryHeap<Integer> heap = new BinaryHeap<>();
+
+        assertThrows(NullPointerException.class, () -> heap.add(null));
+        assertTrue(heap.isEmpty());
+        assertEquals(0, heap.size());
+        assertThrows(NoSuchElementException.class, heap::peek);
+    }
+
+    /** A rejected insertion must not leave the null parked in the backing array either. */
+    @Test
+    void rejectedNullAdditionDoesNotTouchBackingArray() throws Exception {
+        BinaryHeap<Integer> heap = heapOf(30, 10, 20);
+
+        assertThrows(NullPointerException.class, () -> heap.add(null));
+        assertUnusedSlotsAreNull(heap);
         assertEquals(3, heap.size());
     }
 
