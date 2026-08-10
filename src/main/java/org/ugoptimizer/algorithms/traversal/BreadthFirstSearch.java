@@ -1,6 +1,5 @@
 package org.ugoptimizer.algorithms.traversal;
 
-import java.util.Objects;
 
 import org.ugoptimizer.result.TraversalResult;
 import org.ugoptimizer.structures.graph.WeightedGraph;
@@ -33,7 +32,9 @@ public class BreadthFirstSearch {
      * @return a {@link TraversalResult} describing the traversal outcome
      */
     public TraversalResult traverse(WeightedGraph graph, int startVertexId) {
-        Objects.requireNonNull(graph, "graph cannot be null");
+        if (graph == null) {
+    throw new IllegalArgumentException("graph cannot be null");
+}
 
         int totalVertexCount = graph.getVertexCount();
 
