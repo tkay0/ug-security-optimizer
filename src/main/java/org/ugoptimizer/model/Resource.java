@@ -1,125 +1,89 @@
 package org.ugoptimizer.model;
 
-/**
- * Shared domain model for an emergency response resource available on campus.
- *
- * <p>Examples include security patrol officers, patrol vehicles, motorcycle
- * patrols, ambulances, first aid teams, fire response units, CCTV technicians,
- * investigation teams, crowd control teams and rapid response teams. Each
- * resource carries the attributes the greedy assignment algorithm needs:
- * availability, resource type, estimated response time and current workload.
- * Two resources are considered equal when their resource identifiers match.</p>
- *
- * <p>The canonical resource type values match the {@code resource_type} column
- * of the finalized {@code resources.csv} dataset.</p>
- */
-public class Resource {
+import java.time.LocalTime;
+import java.util.Objects;
 
-    /** Resource type for patrol officers. */
-    public static final String TYPE_PATROL_OFFICER = "PATROL_OFFICER";
-    /** Resource type for patrol vehicles. */
-    public static final String TYPE_PATROL_VEHICLE = "PATROL_VEHICLE";
-    /** Resource type for motorcycle patrols. */
-    public static final String TYPE_MOTORCYCLE_PATROL = "MOTORCYCLE_PATROL";
-    /** Resource type for ambulances. */
-    public static final String TYPE_AMBULANCE = "AMBULANCE";
-    /** Resource type for first aid teams. */
-    public static final String TYPE_FIRST_AID_TEAM = "FIRST_AID_TEAM";
-    /** Resource type for fire response units. */
-    public static final String TYPE_FIRE_RESPONSE_UNIT = "FIRE_RESPONSE_UNIT";
-    /** Resource type for CCTV technicians. */
-    public static final String TYPE_CCTV_TECHNICIAN = "CCTV_TECHNICIAN";
-    /** Resource type for investigation teams. */
-    public static final String TYPE_INVESTIGATION_TEAM = "INVESTIGATION_TEAM";
-    /** Resource type for crowd control teams. */
-    public static final String TYPE_CROWD_CONTROL_TEAM = "CROWD_CONTROL_TEAM";
-    /** Resource type for rapid response teams. */
-    public static final String TYPE_RAPID_RESPONSE_TEAM = "RAPID_RESPONSE_TEAM";
+/** Immutable dispatchable security or emergency resource. */
+public final class Resource {
 
-    private String id;
-    private String type;
-    private String status;
-    private String currentLocation;
-    private boolean available;
-    private int responseTime;
-    private int currentWorkload;
+    private final int resourceId;
+    private final String resourceType;
+    private final int homeLocationId;
+    private final int capacity;
+    private final String availabilityStatus;
+    private final Integer currentLocationId;
+    private final LocalTime shiftStart;
+    private final LocalTime shiftEnd;
 
-    /**
-     * Constructs a new resource.
-     *
-     * @param id              the unique resource identifier, e.g. {@code AMB001}
-     * @param type            the type of resource, e.g. {@link #TYPE_AMBULANCE}
-     * @param status          the operational status, e.g. {@code IDLE}
-     * @param currentLocation the current location of the resource
-     * @param available       whether the resource can be assigned right now
-     * @param responseTime    the estimated response time in minutes
-     * @param currentWorkload the number of active assignments carried
-     */
-    public Resource(String id, String type, String status, String currentLocation,
-                    boolean available, int responseTime, int currentWorkload) {
-        this.id = id;
-        this.type = type;
-        this.status = status;
-        this.currentLocation = currentLocation;
-        this.available = available;
-        this.responseTime = responseTime;
-        this.currentWorkload = currentWorkload;
+    /** Creates a resource; shift start and end must be supplied together. */
+    public Resource(
+            int resourceId,
+            String resourceType,
+            int homeLocationId,
+            int capacity,
+            String availabilityStatus,
+            Integer currentLocationId,
+            LocalTime shiftStart,
+            LocalTime shiftEnd) {
+        if (resourceId <= 0) {
+            throw new IllegalArgumentException("resourceId must be positive");
+        }
+        if (homeLocationId <= 0) {
+            throw new IllegalArgumentException("homeLocationId must be positive");
+        }
+        if (currentLocationId != null && currentLocationId <= 0) {
+            throw new IllegalArgumentException("currentLocationId must be positive when present");
+        }
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("capacity must be positive");
+        }
+        if ((shiftStart == null) != (shiftEnd == null)) {
+            throw new IllegalArgumentException("shiftStart and shiftEnd must both be present or null");
+        }
+
+        this.resourceId = resourceId;
+        this.resourceType = requiredText(resourceType, "resourceType");
+        this.homeLocationId = homeLocationId;
+        this.capacity = capacity;
+        this.availabilityStatus = validateAvailabilityStatus(availabilityStatus);
+        this.currentLocationId = currentLocationId;
+        this.shiftStart = shiftStart;
+        this.shiftEnd = shiftEnd;
     }
 
-    public String getId() {
-        return id;
+    public int getResourceId() {
+        return resourceId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getResourceType() {
+        return resourceType;
     }
 
-    public String getType() {
-        return type;
+    public int getHomeLocationId() {
+        return homeLocationId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public int getCapacity() {
+        return capacity;
     }
 
-    public String getStatus() {
-        return status;
+    public String getAvailabilityStatus() {
+        return availabilityStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    /** Returns the current location ID, or {@code null} when unknown. */
+    public Integer getCurrentLocationId() {
+        return currentLocationId;
     }
 
-    public String getCurrentLocation() {
-        return currentLocation;
+    /** Returns the shift start, or {@code null} when no shift is recorded. */
+    public LocalTime getShiftStart() {
+        return shiftStart;
     }
 
-    public void setCurrentLocation(String currentLocation) {
-        this.currentLocation = currentLocation;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public int getResponseTime() {
-        return responseTime;
-    }
-
-    public void setResponseTime(int responseTime) {
-        this.responseTime = responseTime;
-    }
-
-    public int getCurrentWorkload() {
-        return currentWorkload;
-    }
-
-    public void setCurrentWorkload(int currentWorkload) {
-        this.currentWorkload = currentWorkload;
+    /** Returns the shift end, or {@code null} when no shift is recorded. */
+    public LocalTime getShiftEnd() {
+        return shiftEnd;
     }
 
     @Override
@@ -127,29 +91,54 @@ public class Resource {
         if (this == other) {
             return true;
         }
-        if (!(other instanceof Resource that)) {
+        if (!(other instanceof Resource resource)) {
             return false;
         }
-        if (id == null) {
-            return that.id == null;
-        }
-        return id.equals(that.id);
+        return resourceId == resource.resourceId
+                && homeLocationId == resource.homeLocationId
+                && capacity == resource.capacity
+                && resourceType.equals(resource.resourceType)
+                && availabilityStatus.equals(resource.availabilityStatus)
+                && Objects.equals(currentLocationId, resource.currentLocationId)
+                && Objects.equals(shiftStart, resource.shiftStart)
+                && Objects.equals(shiftEnd, resource.shiftEnd);
     }
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id.hashCode();
+        return Objects.hash(
+                resourceId, resourceType, homeLocationId, capacity, availabilityStatus,
+                currentLocationId, shiftStart, shiftEnd);
     }
 
     @Override
     public String toString() {
-        return "Resource{id='" + id + '\''
-                + ", type='" + type + '\''
-                + ", status='" + status + '\''
-                + ", currentLocation='" + currentLocation + '\''
-                + ", available=" + available
-                + ", responseTime=" + responseTime
-                + ", currentWorkload=" + currentWorkload
+        return "Resource{"
+                + "resourceId=" + resourceId
+                + ", resourceType='" + resourceType + '\''
+                + ", homeLocationId=" + homeLocationId
+                + ", capacity=" + capacity
+                + ", availabilityStatus='" + availabilityStatus + '\''
+                + ", currentLocationId=" + currentLocationId
+                + ", shiftStart=" + shiftStart
+                + ", shiftEnd=" + shiftEnd
                 + '}';
+    }
+
+    private static String validateAvailabilityStatus(String value) {
+        requiredText(value, "availabilityStatus");
+        return switch (value) {
+            case "AVAILABLE", "BUSY", "MAINTENANCE", "OFF_DUTY" -> value;
+            default -> throw new IllegalArgumentException(
+                    "Unsupported availabilityStatus: " + value);
+        };
+    }
+
+    private static String requiredText(String value, String fieldName) {
+        Objects.requireNonNull(value, fieldName + " cannot be null");
+        if (value.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " cannot be blank");
+        }
+        return value;
     }
 }

@@ -1,48 +1,29 @@
 package org.ugoptimizer.service;
 
 import org.ugoptimizer.algorithms.GreedyAssignment;
-import org.ugoptimizer.model.Resource;
+import org.ugoptimizer.algorithms.assignment.AssignmentCandidate;
 import org.ugoptimizer.model.ServiceRequest;
 
 /**
- * Service facade for the greedy resource assignment flow.
+ * Delegates one runtime resource-selection decision to {@link GreedyAssignment}.
  *
- * <p>This class is the stable entry point used by the rest of the system. It
- * is responsible only for <b>validating inputs</b>, delegating the decision to
- * {@link GreedyAssignment}, and returning the assigned resource. Once a
- * resource is selected it is marked as dispatched using the shared
- * {@link Resource} model's state fields. It deliberately contains
- * <b>no algorithm logic</b> — all selection rules live in
- * {@link GreedyAssignment}.</p>
+ * <p>This compatibility service does not mutate canonical domain objects or
+ * perform persistence. Later workflow integration must transactionally change
+ * resource availability from AVAILABLE to BUSY, change the request from
+ * PENDING to ASSIGNED, and insert the corresponding audit event through the
+ * persistence layer.</p>
  */
-public class GreedyAssignmentService {
+public final class GreedyAssignmentService {
 
     /**
-     * Assigns the best available resource to {@code incident}.
+     * Selects the best runtime candidate without changing the request or resource.
      *
-     * <p>Invalid inputs (a {@code null} incident or a {@code null} resource
-     * array) are handled gracefully by returning {@code null}. A {@code null}
-     * return also means no suitable resource exists.</p>
-     *
-     * <p>When a resource is selected, its state is updated to reflect the
-     * assignment: it is marked unavailable, its workload is incremented, and
-     * its status is set to {@code DISPATCHED}.</p>
-     *
-     * @param incident  the incident requiring a resource; may be {@code null}
-     * @param resources the candidate resources; may be {@code null}
-     * @return the assigned resource with its state updated, or {@code null} if
-     *         none could be assigned
+     * @param request canonical service request; may be null
+     * @param candidates validated runtime candidates; may be null
+     * @return selected candidate, or null when no candidate is eligible
      */
-    public Resource assign(ServiceRequest incident, Resource[] resources) {
-        if (incident == null || resources == null) {
-            return null;
-        }
-        Resource assigned = GreedyAssignment.assignBestResource(incident, resources);
-        if (assigned != null) {
-            assigned.setAvailable(false);
-            assigned.setCurrentWorkload(assigned.getCurrentWorkload() + 1);
-            assigned.setStatus("DISPATCHED");
-        }
-        return assigned;
+    public AssignmentCandidate assign(
+            ServiceRequest request, AssignmentCandidate[] candidates) {
+        return GreedyAssignment.assignBestResource(request, candidates);
     }
 }
