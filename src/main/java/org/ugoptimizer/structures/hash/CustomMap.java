@@ -33,6 +33,10 @@ public class CustomMap<K, V> {
         return table.containsKey(key);
     }
 
+    public void clear() {
+        table.clear();
+    }
+
     public int size() {
         return table.size();
     }

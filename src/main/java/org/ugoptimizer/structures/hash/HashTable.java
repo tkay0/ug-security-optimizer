@@ -151,6 +151,17 @@ public class HashTable<K, V> {
         return size == 0;
     }
 
+    /**
+     * Removes every mapping, returning the table to its empty state while
+     * keeping its current bucket capacity.
+     */
+    @SuppressWarnings("unchecked")
+    public void clear() {
+        buckets = (Node<K, V>[]) new Node[buckets.length];
+        size = 0;
+        collisionCount = 0;
+    }
+
     public int getCapacity() {
         return buckets.length;
     }

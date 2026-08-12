@@ -41,6 +41,28 @@ public final class AuditEventDao {
         }
     }
 
+    public AuditEvent[] findAll() throws SQLException {
+        String sql = "SELECT " + COLUMNS
+                + " FROM audit_events ORDER BY event_timestamp, event_id";
+        try (Connection connection = databaseManager.openConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery()) {
+            AuditEvent[] buffer = new AuditEvent[INITIAL_RESULT_CAPACITY];
+            int count = 0;
+            while (resultSet.next()) {
+                if (count == buffer.length) {
+                    buffer = grow(buffer);
+                }
+                buffer[count++] = AuditEventMapper.map(resultSet);
+            }
+            AuditEvent[] result = new AuditEvent[count];
+            System.arraycopy(buffer, 0, result, 0, count);
+            return result;
+        } catch (SQLException exception) {
+            throw new SQLException("Failed to read all audit events", exception);
+        }
+    }
+
     public AuditEvent[] findByEntity(String entityType, int entityId) throws SQLException {
         validateEntityType(entityType);
         requirePositiveId(entityId, "entityId");
