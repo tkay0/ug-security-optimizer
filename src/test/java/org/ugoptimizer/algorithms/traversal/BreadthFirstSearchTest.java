@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
+import org.ugoptimizer.model.Edge;
 import org.ugoptimizer.result.TraversalResult;
 import org.ugoptimizer.structures.graph.AdjacencyListGraph;
 import org.ugoptimizer.structures.graph.AdjacencyMatrixGraph;
@@ -23,6 +24,9 @@ class BreadthFirstSearchTest {
         assertArrayEquals(
                 new int[]{1, 2, 3, 4},
                 result.getVisitOrder());
+        assertEquals(TraversalResult.Status.COMPLETE, result.getStatus());
+        assertEquals(4, result.getTotalVertexCount());
+        assertEquals(4, result.getVisitedCount());
     }
 
     @Test
@@ -135,6 +139,24 @@ class BreadthFirstSearchTest {
     }
 
     @Test
+    void bfsHandlesExtremeVertexIds() {
+        WeightedGraph graph = new AdjacencyMatrixGraph();
+        graph.addVertex(Integer.MIN_VALUE);
+        graph.addVertex(0);
+        graph.addVertex(Integer.MAX_VALUE);
+        graph.addEdge(Integer.MIN_VALUE, 0, 1.0);
+        graph.addEdge(0, Integer.MAX_VALUE, 1.0);
+
+        TraversalResult result =
+                new BreadthFirstSearch().traverse(graph, Integer.MIN_VALUE);
+
+        assertArrayEquals(
+                new int[]{Integer.MIN_VALUE, 0, Integer.MAX_VALUE},
+                result.getVisitOrder());
+        assertEquals(TraversalResult.Status.COMPLETE, result.getStatus());
+    }
+
+    @Test
     void bfsHandlesCyclesWithoutRepeatingVertices() {
         WeightedGraph graph = new AdjacencyListGraph();
 
@@ -173,6 +195,8 @@ class BreadthFirstSearchTest {
 
         int vertexCountBefore = graph.getVertexCount();
         int edgeCountBefore = graph.getEdgeCount();
+        int[] vertexIdsBefore = graph.getVertexIds();
+        Edge[] edgesBefore = graph.getEdges();
 
         BreadthFirstSearch bfs = new BreadthFirstSearch();
 
@@ -185,6 +209,8 @@ class BreadthFirstSearchTest {
         assertEquals(
                 edgeCountBefore,
                 graph.getEdgeCount());
+        assertArrayEquals(vertexIdsBefore, graph.getVertexIds());
+        assertArrayEquals(edgesBefore, graph.getEdges());
     }
 
     private static WeightedGraph createConnectedGraph(
