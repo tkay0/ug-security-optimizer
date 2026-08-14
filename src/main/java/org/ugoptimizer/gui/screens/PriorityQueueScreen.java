@@ -18,9 +18,12 @@ import org.ugoptimizer.gui.Screen;
 import org.ugoptimizer.gui.components.EmptyPanel;
 import org.ugoptimizer.gui.components.IncidentRowCard;
 import org.ugoptimizer.gui.components.StatCard;
+import org.ugoptimizer.gui.i18n.Messages;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.GuiWork;
 import org.ugoptimizer.gui.util.ResponseQueueBuilder;
+import org.ugoptimizer.model.RequestStatus;
 import org.ugoptimizer.model.ServiceRequest;
 
 /**
@@ -34,10 +37,10 @@ public final class PriorityQueueScreen extends JPanel implements Screen {
     private final AppContext appContext;
     private final JPanel queueList = new JPanel();
     private final JLabel summary = new JLabel();
-    private final StatCard waitingCard = new StatCard("Waiting in queue", GuiTheme.STATUS_WARN);
-    private final StatCard criticalCard = new StatCard("Critical (urgency 5)", GuiTheme.STATUS_DANGER);
-    private final StatCard highCard = new StatCard("High (urgency 4)", new Color(0xE8, 0x5D, 0x1F));
-    private final StatCard inProgressCard = new StatCard("In progress", GuiTheme.STATUS_INFO);
+    private final StatCard waitingCard = new StatCard(Messages.get("queue.waiting"), GuiTheme.STATUS_WARN);
+    private final StatCard criticalCard = new StatCard(Messages.get("queue.critical"), GuiTheme.STATUS_DANGER);
+    private final StatCard highCard = new StatCard(Messages.get("queue.high"), new Color(0xE8, 0x5D, 0x1F));
+    private final StatCard inProgressCard = new StatCard(Messages.get("queue.inProgress"), GuiTheme.STATUS_INFO);
 
     public PriorityQueueScreen(AppContext appContext) {
         this.appContext = appContext;
@@ -53,13 +56,12 @@ public final class PriorityQueueScreen extends JPanel implements Screen {
         JPanel header = new JPanel(new BorderLayout(0, 10));
         header.setOpaque(false);
 
-        JLabel title = new JLabel("Emergency Response Queue");
+        JLabel title = new JLabel(Messages.get("queue.title"));
         title.setFont(GuiTheme.FONT_TITLE);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
         JLabel subtitle = new JLabel(
-                "Open incidents prioritised by urgency, then earliest submission, "
-                        + "via a binary heap");
+                Messages.get("queue.subtitle"));
         subtitle.setFont(GuiTheme.FONT_BODY);
         subtitle.setForeground(GuiTheme.TEXT_SECONDARY);
 
@@ -118,7 +120,7 @@ public final class PriorityQueueScreen extends JPanel implements Screen {
     @Override
     public void refresh() {
         queueList.removeAll();
-        queueList.add(EmptyPanel.loading("Building response queue..."));
+        queueList.add(EmptyPanel.loading(Messages.get("queue.loading")));
         summary.setText("");
         revalidate();
         repaint();
@@ -130,7 +132,7 @@ public final class PriorityQueueScreen extends JPanel implements Screen {
                 (error, anchor) -> {
                     queueList.removeAll();
                     queueList.add(EmptyPanel.error(
-                            "Unable to build the response queue. " + error.getMessage()));
+                            Messages.format("queue.errorLoading", error.getMessage())));
                     queueList.revalidate();
                     queueList.repaint();
                 });
@@ -147,7 +149,7 @@ public final class PriorityQueueScreen extends JPanel implements Screen {
             if (request.getUrgency() == 4) {
                 high++;
             }
-            if ("IN_PROGRESS".equals(request.getStatus())) {
+            if (RequestStatus.IN_PROGRESS.name().equals(request.getStatus())) {
                 inProgress++;
             }
         }
@@ -156,11 +158,11 @@ public final class PriorityQueueScreen extends JPanel implements Screen {
         criticalCard.setValue(String.valueOf(critical));
         highCard.setValue(String.valueOf(high));
         inProgressCard.setValue(String.valueOf(inProgress));
-        summary.setText("Dispatch order from heap root: 1 = next to dispatch");
+        summary.setText(Messages.get("queue.dispatchOrder"));
 
         queueList.removeAll();
         if (ordered.length == 0) {
-            queueList.add(EmptyPanel.empty("No open incidents waiting for dispatch."));
+            queueList.add(EmptyPanel.empty(Messages.get("queue.noOpen")));
         } else {
             for (int index = 0; index < ordered.length; index++) {
                 ServiceRequest request = ordered[index];
@@ -187,7 +189,7 @@ public final class PriorityQueueScreen extends JPanel implements Screen {
                 positionBox.setOpaque(false);
                 positionBox.add(position, BorderLayout.NORTH);
                 if (index == 0) {
-                    JLabel next = new JLabel("NEXT");
+                    JLabel next = new JLabel(Messages.get("queue.next"));
                     next.setFont(GuiTheme.FONT_SMALL);
                     next.setForeground(GuiTheme.STATUS_DANGER);
                     next.setHorizontalAlignment(JLabel.CENTER);

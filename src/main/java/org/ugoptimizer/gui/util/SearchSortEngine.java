@@ -69,6 +69,27 @@ public final class SearchSortEngine {
         }
     }
 
+    /** Sort direction. */
+    public enum SortDirection {
+        ASCENDING("Ascending"),
+        DESCENDING("Descending");
+
+        private final String label;
+
+        SortDirection(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
     private SearchSortEngine() {
         throw new AssertionError("Utility class must not be instantiated");
     }

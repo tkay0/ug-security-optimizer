@@ -17,7 +17,9 @@ import org.ugoptimizer.gui.AppContext;
 import org.ugoptimizer.gui.Screen;
 import org.ugoptimizer.gui.components.EmptyPanel;
 import org.ugoptimizer.gui.components.StatCard;
+import org.ugoptimizer.gui.i18n.Messages;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.GuiWork;
 import org.ugoptimizer.gui.util.UiFormatters;
 import org.ugoptimizer.model.Location;
@@ -39,10 +41,10 @@ public final class NetworkScreen extends JPanel implements Screen {
     private final JTable locationTable = new JTable(locationModel);
     private final JTable roadTable = new JTable(roadModel);
     private final JLabel summary = new JLabel();
-    private final StatCard nodeCard = new StatCard("Locations", GuiTheme.STATUS_INFO);
-    private final StatCard edgeCard = new StatCard("Roads", GuiTheme.TEXT_PRIMARY);
-    private final StatCard blockedCard = new StatCard("Blocked", GuiTheme.STATUS_DANGER);
-    private final StatCard reachCard = new StatCard("Reachable from hub", GuiTheme.STATUS_OK);
+    private final StatCard nodeCard = new StatCard(Messages.get("network.locations"), GuiTheme.STATUS_INFO);
+    private final StatCard edgeCard = new StatCard(Messages.get("network.roads"), GuiTheme.TEXT_PRIMARY);
+    private final StatCard blockedCard = new StatCard(Messages.get("network.blocked"), GuiTheme.STATUS_DANGER);
+    private final StatCard reachCard = new StatCard(Messages.get("network.reachable"), GuiTheme.STATUS_OK);
 
     private Location[] locations = new Location[0];
     private Road[] roads = new Road[0];
@@ -61,13 +63,12 @@ public final class NetworkScreen extends JPanel implements Screen {
         JPanel header = new JPanel(new BorderLayout(0, 10));
         header.setOpaque(false);
 
-        JLabel title = new JLabel("Campus Network");
+        JLabel title = new JLabel(Messages.get("network.title"));
         title.setFont(GuiTheme.FONT_TITLE);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
         JLabel subtitle = new JLabel(
-                "The campus road graph loaded from the canonical dataset; "
-                        + "reachability uses BFS and DFS from the hub");
+                Messages.get("network.subtitle"));
         subtitle.setFont(GuiTheme.FONT_BODY);
         subtitle.setForeground(GuiTheme.TEXT_SECONDARY);
 
@@ -96,11 +97,11 @@ public final class NetworkScreen extends JPanel implements Screen {
         JPanel panel = new JPanel(new GridLayout(1, 2, 12, 0));
         panel.setOpaque(false);
 
-        panel.add(buildTablePanel(locationTable, "Campus Locations", new String[] {
-            "ID", "Name", "Area", "Type", "X", "Y", "Hours"
+        panel.add(buildTablePanel(locationTable, Messages.get("network.locationsTitle"), new String[] {
+            Messages.get("network.column.id"), Messages.get("network.column.name"), Messages.get("network.column.area"), Messages.get("network.column.type"), Messages.get("network.column.x"), Messages.get("network.column.y"), Messages.get("network.column.hours")
         }));
-        panel.add(buildTablePanel(roadTable, "Campus Roads", new String[] {
-            "ID", "Route", "From", "To", "Distance (km)", "Travel (min)", "Condition", "Blocked"
+        panel.add(buildTablePanel(roadTable, Messages.get("network.roadsTitle"), new String[] {
+            Messages.get("network.column.id"), Messages.get("network.column.route"), Messages.get("network.column.from"), Messages.get("network.column.to"), Messages.get("network.column.distance"), Messages.get("network.column.travel"), Messages.get("network.column.condition"), Messages.get("network.column.blocked")
         }));
         return panel;
     }
@@ -117,6 +118,9 @@ public final class NetworkScreen extends JPanel implements Screen {
         table.getTableHeader().setForeground(GuiTheme.TEXT_ON_DARK);
         table.getTableHeader().setFont(GuiTheme.FONT_BODY_BOLD);
         table.getTableHeader().setBorder(BorderFactory.createLineBorder(GuiTheme.SHELL_BORDER));
+
+        table.getAccessibleContext().setAccessibleName(heading);
+        table.getAccessibleContext().setAccessibleDescription(heading);
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(GuiTheme.PANEL_BACKGROUND);
@@ -162,11 +166,12 @@ public final class NetworkScreen extends JPanel implements Screen {
         reachCard.setValue(breadthFirst.getVisitedCount() + "/" + graph.getVertexCount());
 
         summary.setText(
-                "Hub: " + appContext.locationName(hubId)
-                        + "  |  BFS reachable " + breadthFirst.getVisitedCount()
-                        + " (" + breadthFirst.getStatus().name().toLowerCase() + ")"
-                        + "  |  DFS reachable " + depthFirst.getVisitedCount()
-                        + "  |  roads recorded " + allRoads.length);
+                Messages.format("network.hubSummary",
+                        appContext.locationName(hubId),
+                        breadthFirst.getVisitedCount(),
+                        breadthFirst.getStatus().name().toLowerCase(),
+                        depthFirst.getVisitedCount(),
+                        allRoads.length));
     }
 
     private int hubLocationId(Location[] allLocations) {
@@ -186,7 +191,7 @@ public final class NetworkScreen extends JPanel implements Screen {
 
     @Override
     public void refresh() {
-        summary.setText("Loading campus network...");
+        summary.setText(Messages.get("network.loading"));
         locationModel.setRows(new Location[0]);
         roadModel.setRows(new Road[0], appContext::locationName);
 
@@ -205,7 +210,7 @@ public final class NetworkScreen extends JPanel implements Screen {
                 (error, anchor) -> {
                     locationModel.setRows(new Location[0]);
                     roadModel.setRows(new Road[0], appContext::locationName);
-                    summary.setText("Unable to load campus network: " + error.getMessage());
+                    summary.setText(Messages.format("network.errorLoading", error.getMessage()));
                 });
     }
 
@@ -263,7 +268,7 @@ public final class NetworkScreen extends JPanel implements Screen {
                     String.format("%.2f", road.getDistanceKm()),
                     String.format("%.1f", road.getTravelTimeMin()),
                     String.format("%.1f", road.getConditionWeight()),
-                    road.isBlocked() ? "Blocked" : "Open"
+                     road.isBlocked() ? Messages.get("network.blockedStatus") : Messages.get("network.openStatus")
                 });
             }
         }

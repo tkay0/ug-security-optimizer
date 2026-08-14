@@ -7,6 +7,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.border.CompoundBorder;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.model.RequestStatus;
+import org.ugoptimizer.model.ResourceAvailability;
 
 /**
  * Compact text badge whose colour reinforces a state while the text remains

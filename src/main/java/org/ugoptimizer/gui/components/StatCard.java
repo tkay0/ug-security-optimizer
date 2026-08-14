@@ -45,7 +45,15 @@ public final class StatCard extends JPanel {
         valueLabel.setText(value);
     }
 
+    public String getValue() {
+        return valueLabel.getText();
+    }
+
     public void setCaption(String caption) {
         captionLabel.setText(caption);
+    }
+
+    public String getCaption() {
+        return captionLabel.getText();
     }
 }

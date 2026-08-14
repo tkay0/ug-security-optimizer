@@ -9,18 +9,28 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import org.ugoptimizer.gui.screens.ActivityScreen;
@@ -48,6 +58,7 @@ public final class SecurityControlRoom extends JFrame {
     private final Map<String, JButton> navButtons;
     private final JLabel clockLabel;
     private final JLabel statusLabel;
+    private String currentKey = "dashboard";
 
     public SecurityControlRoom(AppContext appContext) {
         super("UG Campus Security & Emergency Response Management System");
@@ -75,6 +86,7 @@ public final class SecurityControlRoom extends JFrame {
         clockTimer.start();
 
         refreshDatabaseStatus();
+        installKeyboardShortcuts();
     }
 
     private JPanel buildHeader() {
@@ -173,9 +185,30 @@ public final class SecurityControlRoom extends JFrame {
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         button.setHorizontalAlignment(JButton.LEADING);
         button.setBorder(new EmptyBorder(0, 16, 0, 16));
-        button.setFocusPainted(false);
+        button.setFocusPainted(true);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         button.addActionListener(event -> navigate(key));
+        button.getAccessibleContext().setAccessibleName("Navigate to " + label);
+        button.getAccessibleContext().setAccessibleDescription("Switch to the " + label + " screen");
+
+        Color defaultBg = GuiTheme.SHELL_BACKGROUND_ALT;
+        Color hoverBg = new Color(34, 42, 58);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (!key.equals(currentKey)) {
+                    button.setBackground(hoverBg);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!key.equals(currentKey)) {
+                    button.setBackground(defaultBg);
+                }
+            }
+        });
+
         navButtons.put(key, button);
         sidebar.add(button);
         sidebar.add(Box.createVerticalStrut(2));
@@ -224,6 +257,7 @@ public final class SecurityControlRoom extends JFrame {
         if (screen == null) {
             return;
         }
+        currentKey = key;
         contentLayout.show(contentPanel, key);
         for (Map.Entry<String, JButton> entry : navButtons.entrySet()) {
             boolean active = entry.getKey().equals(key);
@@ -235,6 +269,51 @@ public final class SecurityControlRoom extends JFrame {
                     : GuiTheme.TEXT_ON_DARK);
         }
         screen.refresh();
+    }
+
+    private void installKeyboardShortcuts() {
+        JRootPane rootPane = getRootPane();
+
+        String[] navKeys = {"dashboard", "incidents", "queue", "resources", "network", "activity"};
+        for (int i = 0; i < navKeys.length; i++) {
+            final String key = navKeys[i];
+            final int index = i;
+            KeyStroke keyStroke = KeyStroke.getKeyStroke(
+                    KeyEvent.VK_1 + index, KeyEvent.ALT_DOWN_MASK);
+            rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, "nav" + index);
+            rootPane.getActionMap().put("nav" + index, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    navigate(key);
+                }
+            });
+        }
+
+        KeyStroke refreshKey = KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0);
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(refreshKey, "refresh");
+        rootPane.getActionMap().put("refresh", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                refreshCurrentScreen();
+            }
+        });
+
+        KeyStroke escapeKey = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKey, "close");
+        rootPane.getActionMap().put("close", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispatchEvent(new java.awt.event.WindowEvent(
+                        SecurityControlRoom.this, java.awt.event.WindowEvent.WINDOW_CLOSING));
+            }
+        });
+    }
+
+    private void refreshCurrentScreen() {
+        Screen screen = screens.get(currentKey);
+        if (screen != null) {
+            screen.refresh();
+        }
     }
 
     private void updateClock() {

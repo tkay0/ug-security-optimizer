@@ -1,6 +1,7 @@
 package org.ugoptimizer.gui.util;
 
 import java.util.Comparator;
+import org.ugoptimizer.model.RequestStatus;
 import org.ugoptimizer.model.ServiceRequest;
 import org.ugoptimizer.structures.heap.BinaryHeap;
 
@@ -18,9 +19,9 @@ public final class ResponseQueueBuilder {
 
     public static boolean isOpen(ServiceRequest request) {
         String status = request.getStatus();
-        return "PENDING".equals(status)
-                || "ASSIGNED".equals(status)
-                || "IN_PROGRESS".equals(status);
+        return RequestStatus.PENDING.name().equals(status)
+                || RequestStatus.ASSIGNED.name().equals(status)
+                || RequestStatus.IN_PROGRESS.name().equals(status);
     }
 
     /** Heap ordering: most urgent first, earliest submission first on ties. */

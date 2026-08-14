@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.ugoptimizer.gui.AppContext;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.UiFormatters;
 import org.ugoptimizer.model.ServiceRequest;
 
@@ -46,6 +47,20 @@ public final class IncidentRowCard extends JPanel {
                 @Override
                 public void mouseClicked(MouseEvent event) {
                     onClick.accept(IncidentRowCard.this.request);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent event) {
+                    setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(GuiTheme.ACCENT, 1),
+                            BorderFactory.createEmptyBorder(10, 12, 10, 12)));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent event) {
+                    setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(GuiTheme.PANEL_BORDER, 1),
+                            BorderFactory.createEmptyBorder(10, 12, 10, 12)));
                 }
             };
             addMouseListener(open);

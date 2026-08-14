@@ -1,12 +1,16 @@
 package org.ugoptimizer.gui.screens;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,16 +20,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import org.ugoptimizer.algorithms.assignment.AssignmentCandidate;
 import org.ugoptimizer.gui.AppContext;
 import org.ugoptimizer.gui.AppContext.AssignmentRecommendation;
 import org.ugoptimizer.gui.components.EmptyPanel;
 import org.ugoptimizer.gui.components.StatusPill;
 import org.ugoptimizer.gui.components.UrgencyBadge;
+import org.ugoptimizer.gui.i18n.Messages;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.GuiWork;
 import org.ugoptimizer.gui.util.UiFormatters;
 import org.ugoptimizer.model.AuditEvent;
+import org.ugoptimizer.model.RequestStatus;
 import org.ugoptimizer.model.Resource;
 import org.ugoptimizer.model.ServiceRequest;
 
@@ -55,7 +63,7 @@ public final class IncidentDetailDialog extends JDialog {
         super();
         this.appContext = appContext;
         this.onChanged = onChanged;
-        setTitle("Incident #" + request.getRequestId());
+        setTitle(Messages.format("dialog.incidentTitle", request.getRequestId()));
         setModalityType(ModalityType.APPLICATION_MODAL);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -71,13 +79,22 @@ public final class IncidentDetailDialog extends JDialog {
         pack();
         setLocationRelativeTo(owner);
         loadHistory(request);
+
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "closeDialog");
+        getRootPane().getActionMap().put("closeDialog", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
     }
 
     private JPanel buildHeader(ServiceRequest request) {
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
 
-        JLabel title = new JLabel("Incident #" + request.getRequestId());
+        JLabel title = new JLabel(Messages.format("dialog.incidentTitle", request.getRequestId()));
         title.setFont(GuiTheme.FONT_TITLE);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
@@ -116,24 +133,24 @@ public final class IncidentDetailDialog extends JDialog {
         c.gridx = 0;
         c.gridy = 0;
 
-        field(details, c, "Source", appContext.locationName(request.getSourceLocationId()));
-        field(details, c, "Destination", appContext.locationName(request.getDestinationLocationId()));
-        field(details, c, "Submitted", UiFormatters.formatInstant(request.getTimeSubmitted()));
-        field(details, c, "Deadline", UiFormatters.formatInstant(request.getDeadline()));
-        field(details, c, "Required resource",
+        field(details, c, Messages.get("dialog.source"), appContext.locationName(request.getSourceLocationId()));
+        field(details, c, Messages.get("dialog.destination"), appContext.locationName(request.getDestinationLocationId()));
+        field(details, c, Messages.get("dialog.submitted"), UiFormatters.formatInstant(request.getTimeSubmitted()));
+        field(details, c, Messages.get("dialog.deadline"), UiFormatters.formatInstant(request.getDeadline()));
+        field(details, c, Messages.get("dialog.requiredResource"),
                 UiFormatters.humanize(request.getRequiredResourceType()));
-        field(details, c, "Status", UiFormatters.humanize(request.getStatus()));
+        field(details, c, Messages.get("dialog.status"), UiFormatters.humanize(request.getStatus()));
 
         c.gridx = 1;
         c.gridy = 0;
-        field(details, c, "Priority queue position",
+        field(details, c, Messages.get("dialog.queuePosition"),
                 requestQueuePosition(request));
-        field(details, c, "Urgency",
+        field(details, c, Messages.get("dialog.urgency"),
                 request.getUrgency() + " - " + UiFormatters.urgencyLabel(request.getUrgency()));
-        field(details, c, "Category", UiFormatters.humanize(request.getCategory()));
-        field(details, c, "Request ID", "#" + request.getRequestId());
-        field(details, c, "Actor", "DISPATCH_OPERATOR");
-        field(details, c, "Description", descriptionText(request));
+        field(details, c, Messages.get("dialog.category"), UiFormatters.humanize(request.getCategory()));
+        field(details, c, Messages.get("dialog.requestId"), "#" + request.getRequestId());
+        field(details, c, Messages.get("dialog.actor"), "DISPATCH_OPERATOR");
+        field(details, c, Messages.get("dialog.description"), descriptionText(request));
 
         body.add(details, BorderLayout.NORTH);
         body.add(buildActions(request), BorderLayout.CENTER);
@@ -153,10 +170,10 @@ public final class IncidentDetailDialog extends JDialog {
         }
         for (int index = 0; index < ordered.length; index++) {
             if (ordered[index].getRequestId() == request.getRequestId()) {
-                return "#" + (index + 1) + " of " + ordered.length;
+                return Messages.format("dialog.queuePositionFormat", (index + 1), ordered.length);
             }
         }
-        return "Not queued";
+        return Messages.get("dialog.notQueued");
     }
 
     private void field(
@@ -178,7 +195,7 @@ public final class IncidentDetailDialog extends JDialog {
 
     private String descriptionText(ServiceRequest request) {
         if (request.getDescription() == null || request.getDescription().isBlank()) {
-            return "No description recorded.";
+            return Messages.get("dialog.noDescription");
         }
         return request.getDescription();
     }
@@ -187,7 +204,7 @@ public final class IncidentDetailDialog extends JDialog {
         JPanel actions = new JPanel(new BorderLayout(0, 8));
         actions.setOpaque(false);
 
-        JLabel section = new JLabel("DISPATCH ACTIONS");
+        JLabel section = new JLabel(Messages.get("dialog.dispatchActions"));
         section.setFont(GuiTheme.FONT_SMALL);
         section.setForeground(GuiTheme.TEXT_MUTED);
         actions.add(section, BorderLayout.NORTH);
@@ -195,27 +212,39 @@ public final class IncidentDetailDialog extends JDialog {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         row.setOpaque(false);
 
-        JButton recommend = new JButton("Recommend resource");
+        JButton recommend = new JButton(Messages.get("dialog.recommend"));
         recommend.addActionListener(event -> recommend(request));
+        recommend.getAccessibleContext().setAccessibleName(Messages.get("dialog.recommend"));
+        recommend.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.recommend"));
+        HoverEffects.applyButtonHover(recommend, GuiTheme.ACCENT, GuiTheme.ACCENT_DARK, Color.WHITE, Color.WHITE);
         row.add(recommend);
 
         boolean open = isOpen(request);
-        boolean assigned = "ASSIGNED".equals(request.getStatus());
-        boolean inProgress = "IN_PROGRESS".equals(request.getStatus());
+        boolean assigned = RequestStatus.ASSIGNED.name().equals(request.getStatus());
+        boolean inProgress = RequestStatus.IN_PROGRESS.name().equals(request.getStatus());
 
-        JButton startWork = new JButton("Start work");
+        JButton startWork = new JButton(Messages.get("dialog.startWork"));
         startWork.setEnabled(assigned);
         startWork.addActionListener(event -> changeStatus(request, "IN_PROGRESS"));
+        startWork.getAccessibleContext().setAccessibleName(Messages.get("dialog.startWork"));
+        startWork.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.startWork"));
+        HoverEffects.applyButtonHover(startWork, GuiTheme.STATUS_OK, new Color(30, 120, 60), Color.WHITE, Color.WHITE);
         row.add(startWork);
 
-        JButton complete = new JButton("Mark completed");
+        JButton complete = new JButton(Messages.get("dialog.complete"));
         complete.setEnabled(assigned || inProgress);
         complete.addActionListener(event -> changeStatus(request, "COMPLETED"));
+        complete.getAccessibleContext().setAccessibleName(Messages.get("dialog.complete"));
+        complete.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.complete"));
+        HoverEffects.applyButtonHover(complete, GuiTheme.STATUS_INFO, GuiTheme.ACCENT_DARK, Color.WHITE, Color.WHITE);
         row.add(complete);
 
-        JButton cancel = new JButton("Cancel incident");
+        JButton cancel = new JButton(Messages.get("dialog.cancel"));
         cancel.setEnabled(open);
         cancel.addActionListener(event -> changeStatus(request, "CANCELLED"));
+        cancel.getAccessibleContext().setAccessibleName(Messages.get("dialog.cancel"));
+        cancel.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.cancel"));
+        HoverEffects.applyButtonHover(cancel, GuiTheme.STATUS_DANGER, new Color(0x8A, 0x2B, 0x20), Color.WHITE, Color.WHITE);
         row.add(cancel);
 
         actionButtons.removeAll();
@@ -236,7 +265,7 @@ public final class IncidentDetailDialog extends JDialog {
                 (error, anchor) -> {
                     recommendationArea.removeAll();
                     recommendationArea.add(EmptyPanel.error(
-                            "Recommendation failed. " + error.getMessage()));
+                            Messages.format("dialog.recommendationFailed", error.getMessage())));
                     recommendationArea.revalidate();
                     recommendationArea.repaint();
                 });
@@ -246,7 +275,7 @@ public final class IncidentDetailDialog extends JDialog {
         recommendationArea.removeAll();
         if (!recommendation.hasBest()) {
             recommendationArea.add(EmptyPanel.empty(
-                    "No AVAILABLE resource can be assigned to this incident."));
+                    Messages.get("dialog.noRecommendation")));
         } else {
             AssignmentCandidate best = recommendation.getBest();
             Resource resource = best.getResource();
@@ -258,12 +287,12 @@ public final class IncidentDetailDialog extends JDialog {
             copy.setOpaque(false);
             copy.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
 
-            JLabel resourceLabel = new JLabel("Recommended: " + resource.getResourceType()
+            JLabel resourceLabel = new JLabel(Messages.get("dialog.recommended") + " " + resource.getResourceType()
                     + " #" + resource.getResourceId());
             resourceLabel.setFont(GuiTheme.FONT_BODY_BOLD);
             resourceLabel.setForeground(GuiTheme.TEXT_PRIMARY);
 
-            JLabel estimate = new JLabel("Estimated response "
+            JLabel estimate = new JLabel(Messages.get("dialog.estimatedResponse")
                     + String.format("%.1f min", best.getResponseTime()));
             estimate.setFont(GuiTheme.FONT_SMALL);
             estimate.setForeground(GuiTheme.TEXT_SECONDARY);
@@ -274,8 +303,10 @@ public final class IncidentDetailDialog extends JDialog {
             text.add(estimate, BorderLayout.SOUTH);
             copy.add(text, BorderLayout.CENTER);
 
-            JButton assign = new JButton("Confirm assignment");
+            JButton assign = new JButton(Messages.get("dialog.confirmAssign"));
             assign.addActionListener(event -> confirmAssign(request, resource));
+            assign.getAccessibleContext().setAccessibleName(Messages.get("dialog.confirmAssign"));
+            assign.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.confirmAssign"));
             JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 6));
             right.setOpaque(false);
             right.add(assign);
@@ -347,7 +378,7 @@ public final class IncidentDetailDialog extends JDialog {
     }
 
     private void updateContent(ServiceRequest request) {
-        setTitle("Incident #" + request.getRequestId());
+        setTitle(Messages.format("dialog.incidentTitle", request.getRequestId()));
         JPanel root = (JPanel) getContentPane();
         root.removeAll();
         root.add(buildHeader(request), BorderLayout.NORTH);
@@ -362,14 +393,14 @@ public final class IncidentDetailDialog extends JDialog {
         JPanel footer = new JPanel(new BorderLayout());
         footer.setOpaque(false);
 
-        JLabel section = new JLabel("AUDIT HISTORY");
+        JLabel section = new JLabel(Messages.get("dialog.auditHistory"));
         section.setFont(GuiTheme.FONT_SMALL);
         section.setForeground(GuiTheme.TEXT_MUTED);
         footer.add(section, BorderLayout.NORTH);
 
         historyList.setLayout(new BoxLayout(historyList, BoxLayout.Y_AXIS));
         historyList.setOpaque(false);
-        historyList.add(EmptyPanel.loading("Loading audit history..."));
+        historyList.add(EmptyPanel.loading(Messages.get("dialog.loadingHistory")));
 
         JScrollPane scroll = new JScrollPane(historyList);
         scroll.setBorder(BorderFactory.createLineBorder(GuiTheme.PANEL_BORDER, 1));
@@ -385,8 +416,7 @@ public final class IncidentDetailDialog extends JDialog {
                 events -> renderHistory(events),
                 (error, anchor) -> {
                     historyList.removeAll();
-                    historyList.add(EmptyPanel.error("Unable to load history. "
-                            + error.getMessage()));
+                    historyList.add(EmptyPanel.error(Messages.format("dialog.errorHistory", error.getMessage())));
                     historyList.revalidate();
                     historyList.repaint();
                 });
@@ -395,7 +425,7 @@ public final class IncidentDetailDialog extends JDialog {
     private void renderHistory(AuditEvent[] events) {
         historyList.removeAll();
         if (events.length == 0) {
-            historyList.add(EmptyPanel.empty("No audit events recorded for this incident."));
+            historyList.add(EmptyPanel.empty(Messages.get("dialog.noEvents")));
         } else {
             for (AuditEvent event : events) {
                 JPanel row = new JPanel(new BorderLayout());
@@ -428,6 +458,8 @@ public final class IncidentDetailDialog extends JDialog {
                     details.setForeground(GuiTheme.TEXT_SECONDARY);
                     details.setBorder(null);
                     details.setOpaque(false);
+                    details.getAccessibleContext().setAccessibleName(Messages.get("dialog.description"));
+                    details.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.description"));
                     row.add(details, BorderLayout.CENTER);
                 }
 

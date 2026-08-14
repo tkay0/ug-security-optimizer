@@ -13,7 +13,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import org.ugoptimizer.gui.AppContext;
 import org.ugoptimizer.gui.Screen;
+import org.ugoptimizer.gui.i18n.Messages;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.GuiWork;
 import org.ugoptimizer.gui.util.UiFormatters;
 import org.ugoptimizer.model.AuditEvent;
@@ -52,13 +54,12 @@ public final class ActivityScreen extends JPanel implements Screen {
         JPanel header = new JPanel(new BorderLayout(0, 10));
         header.setOpaque(false);
 
-        JLabel title = new JLabel("Activity Log");
+        JLabel title = new JLabel(Messages.get("activity.title"));
         title.setFont(GuiTheme.FONT_TITLE);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
         JLabel subtitle = new JLabel(
-                "Persisted audit trail of assignment, request-status and "
-                        + "resource-availability events");
+                Messages.get("activity.subtitle"));
         subtitle.setFont(GuiTheme.FONT_BODY);
         subtitle.setForeground(GuiTheme.TEXT_SECONDARY);
 
@@ -69,9 +70,15 @@ public final class ActivityScreen extends JPanel implements Screen {
 
         JPanel filters = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         filters.setOpaque(false);
-        filters.add(new JLabel("Event type:"));
+        filters.add(new JLabel(Messages.get("activity.filter")));
         filters.add(filterBox);
         filterBox.addActionListener(event -> applyFilter());
+
+        filterBox.getAccessibleContext().setAccessibleName(Messages.get("activity.filter"));
+        filterBox.getAccessibleContext().setAccessibleDescription(Messages.get("activity.filter"));
+
+        table.getAccessibleContext().setAccessibleName(Messages.get("activity.title"));
+        table.getAccessibleContext().setAccessibleDescription(Messages.get("activity.title"));
 
         header.add(titles, BorderLayout.NORTH);
         header.add(filters, BorderLayout.CENTER);
@@ -106,7 +113,7 @@ public final class ActivityScreen extends JPanel implements Screen {
 
     private void applyFilter() {
         String selected = (String) filterBox.getSelectedItem();
-        String filter = "ALL".equals(selected) ? null : selected;
+        String filter = Messages.get("activity.filter.all").equals(selected) ? null : selected;
 
         AuditEvent[] visible = dataset;
         if (filter != null) {
@@ -127,8 +134,7 @@ public final class ActivityScreen extends JPanel implements Screen {
 
         model.setRows(visible);
         summary.setText(
-                visible.length + " event(s) shown of " + dataset.length
-                        + "  |  newest first");
+                Messages.format("activity.shown", visible.length, dataset.length));
     }
 
     @Override
@@ -139,7 +145,7 @@ public final class ActivityScreen extends JPanel implements Screen {
     @Override
     public void refresh() {
         model.setRows(new AuditEvent[0]);
-        summary.setText("Loading activity log...");
+        summary.setText(Messages.get("activity.loading"));
         GuiWork.run(
                 this,
                 () -> appContext.loadAuditEvents(),
@@ -150,7 +156,7 @@ public final class ActivityScreen extends JPanel implements Screen {
                 (error, anchor) -> {
                     dataset = new AuditEvent[0];
                     model.setRows(dataset);
-                    summary.setText("Unable to load activity log: " + error.getMessage());
+                    summary.setText(Messages.format("activity.errorLoading", error.getMessage()));
                 });
     }
 

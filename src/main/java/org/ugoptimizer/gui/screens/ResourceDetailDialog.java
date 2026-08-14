@@ -1,11 +1,15 @@
 package org.ugoptimizer.gui.screens;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,14 +20,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import org.ugoptimizer.gui.AppContext;
 import org.ugoptimizer.gui.components.EmptyPanel;
 import org.ugoptimizer.gui.components.StatusPill;
+import org.ugoptimizer.gui.i18n.Messages;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.GuiWork;
 import org.ugoptimizer.gui.util.UiFormatters;
 import org.ugoptimizer.model.AuditEvent;
 import org.ugoptimizer.model.Resource;
+import org.ugoptimizer.model.ResourceAvailability;
 
 /**
  * Modal detail view for one dispatch resource with availability updates and the
@@ -38,14 +46,14 @@ public final class ResourceDetailDialog extends JDialog {
     private final AppContext appContext;
     private final Runnable onChanged;
     private final JComboBox<String> availabilityBox = new JComboBox<>(AVAILABILITY_VALUES);
-    private final JButton applyButton = new JButton("Update availability");
+    private final JButton applyButton = new JButton(Messages.get("dialog.updateAvailability"));
     private final JPanel historyList = new JPanel();
 
     public ResourceDetailDialog(
             JComponent owner, AppContext appContext, Resource resource, Runnable onChanged) {
         this.appContext = appContext;
         this.onChanged = onChanged;
-        setTitle("Resource #" + resource.getResourceId());
+        setTitle(Messages.format("dialog.resourceTitle", resource.getResourceId()));
         setModalityType(ModalityType.APPLICATION_MODAL);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -61,13 +69,23 @@ public final class ResourceDetailDialog extends JDialog {
         pack();
         setLocationRelativeTo(owner);
         loadHistory(resource);
+
+        getRootPane().setDefaultButton(applyButton);
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "closeDialog");
+        getRootPane().getActionMap().put("closeDialog", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
     }
 
     private JPanel buildHeader(Resource resource) {
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
 
-        JLabel title = new JLabel("Resource #" + resource.getResourceId());
+        JLabel title = new JLabel(Messages.format("dialog.resourceTitle", resource.getResourceId()));
         title.setFont(GuiTheme.FONT_TITLE);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
@@ -102,33 +120,38 @@ public final class ResourceDetailDialog extends JDialog {
         c.gridx = 0;
         c.gridy = 0;
 
-        field(details, c, "Resource ID", "#" + resource.getResourceId());
-        field(details, c, "Type", UiFormatters.humanize(resource.getResourceType()));
-        field(details, c, "Capacity", String.valueOf(resource.getCapacity()));
-        field(details, c, "Home location",
+        field(details, c, Messages.get("dialog.resourceId"), "#" + resource.getResourceId());
+        field(details, c, Messages.get("dialog.type"), UiFormatters.humanize(resource.getResourceType()));
+        field(details, c, Messages.get("dialog.capacity"), String.valueOf(resource.getCapacity()));
+        field(details, c, Messages.get("dialog.homeLocation"),
                 appContext.locationName(resource.getHomeLocationId()));
-        field(details, c, "Current location",
+        field(details, c, Messages.get("dialog.currentLocation"),
                 resource.getCurrentLocationId() == null
-                        ? "Home base"
+                        ? Messages.get("resources.homeBase")
                         : appContext.locationName(resource.getCurrentLocationId()));
-        field(details, c, "Shift",
+        field(details, c, Messages.get("dialog.shift"),
                 UiFormatters.shiftText(
                         resource.getShiftStart() == null ? null : resource.getShiftStart().toString(),
                         resource.getShiftEnd() == null ? null : resource.getShiftEnd().toString()));
-        field(details, c, "Availability", resource.getAvailabilityStatus());
+        field(details, c, Messages.get("dialog.availability"), resource.getAvailabilityStatus());
 
         c.gridx = 1;
         c.gridy = 0;
-        field(details, c, "Dispatchable", dispatchableText(resource));
-        field(details, c, "Assigned to requests", assignedWorkText(resource));
+        field(details, c, Messages.get("dialog.dispatchable"), dispatchableText(resource));
+        field(details, c, Messages.get("dialog.assignedWork"), assignedWorkText(resource));
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 10));
         actions.setOpaque(false);
-        actions.add(new JLabel("Set availability:"));
+        actions.add(new JLabel(Messages.get("dialog.setAvailability")));
         availabilityBox.setSelectedItem(resource.getAvailabilityStatus());
         actions.add(availabilityBox);
+        availabilityBox.getAccessibleContext().setAccessibleName(Messages.get("dialog.setAvailability"));
+        availabilityBox.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.setAvailability"));
         actions.add(applyButton);
         applyButton.addActionListener(event -> updateAvailability(resource));
+        applyButton.getAccessibleContext().setAccessibleName(Messages.get("dialog.updateAvailability"));
+        applyButton.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.updateAvailability"));
+        HoverEffects.applyButtonHover(applyButton, GuiTheme.ACCENT, GuiTheme.ACCENT_DARK, Color.WHITE, Color.WHITE);
 
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -138,7 +161,7 @@ public final class ResourceDetailDialog extends JDialog {
     }
 
     private String dispatchableText(Resource resource) {
-        return "AVAILABLE".equals(resource.getAvailabilityStatus()) ? "Yes" : "No";
+        return ResourceAvailability.AVAILABLE.name().equals(resource.getAvailabilityStatus()) ? Messages.get("dialog.yes") : Messages.get("dialog.no");
     }
 
     private String assignedWorkText(Resource resource) {
@@ -154,7 +177,7 @@ public final class ResourceDetailDialog extends JDialog {
         } catch (Exception failure) {
             return "-";
         }
-        return assigned + " active";
+        return Messages.format("dialog.active", assigned);
     }
 
     private void field(JPanel panel, GridBagConstraints c, String labelText, String valueText) {
@@ -202,14 +225,14 @@ public final class ResourceDetailDialog extends JDialog {
         JPanel history = new JPanel(new BorderLayout());
         history.setOpaque(false);
 
-        JLabel section = new JLabel("RESOURCE AUDIT HISTORY");
+        JLabel section = new JLabel(Messages.get("dialog.resourceAuditHistory"));
         section.setFont(GuiTheme.FONT_SMALL);
         section.setForeground(GuiTheme.TEXT_MUTED);
         history.add(section, BorderLayout.NORTH);
 
         historyList.setLayout(new BoxLayout(historyList, BoxLayout.Y_AXIS));
         historyList.setOpaque(false);
-        historyList.add(EmptyPanel.loading("Loading resource history..."));
+        historyList.add(EmptyPanel.loading(Messages.get("dialog.loadingResourceHistory")));
 
         JScrollPane scroll = new JScrollPane(historyList);
         scroll.setBorder(BorderFactory.createLineBorder(GuiTheme.PANEL_BORDER, 1));
@@ -225,8 +248,7 @@ public final class ResourceDetailDialog extends JDialog {
                 events -> renderHistory(events),
                 (error, anchor) -> {
                     historyList.removeAll();
-                    historyList.add(EmptyPanel.error("Unable to load resource history. "
-                            + error.getMessage()));
+                    historyList.add(EmptyPanel.error(Messages.format("dialog.errorResourceHistory", error.getMessage())));
                     historyList.revalidate();
                     historyList.repaint();
                 });
@@ -235,7 +257,7 @@ public final class ResourceDetailDialog extends JDialog {
     private void renderHistory(AuditEvent[] events) {
         historyList.removeAll();
         if (events.length == 0) {
-            historyList.add(EmptyPanel.empty("No audit events recorded for this resource."));
+            historyList.add(EmptyPanel.empty(Messages.get("dialog.noResourceEvents")));
         } else {
             for (AuditEvent event : events) {
                 JPanel row = new JPanel(new BorderLayout());
@@ -268,6 +290,8 @@ public final class ResourceDetailDialog extends JDialog {
                     details.setForeground(GuiTheme.TEXT_SECONDARY);
                     details.setBorder(null);
                     details.setOpaque(false);
+                    details.getAccessibleContext().setAccessibleName(Messages.get("dialog.description"));
+                    details.getAccessibleContext().setAccessibleDescription(Messages.get("dialog.description"));
                     row.add(details, BorderLayout.CENTER);
                 }
 

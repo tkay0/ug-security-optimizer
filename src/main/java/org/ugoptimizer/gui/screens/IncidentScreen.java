@@ -1,13 +1,20 @@
 package org.ugoptimizer.gui.screens;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -17,12 +24,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import org.ugoptimizer.gui.AppContext;
 import org.ugoptimizer.gui.Screen;
 import org.ugoptimizer.gui.components.EmptyPanel;
+import org.ugoptimizer.gui.i18n.Messages;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.GuiWork;
 import org.ugoptimizer.gui.util.SearchSortEngine;
 import org.ugoptimizer.gui.util.SearchSortEngine.SortAlgorithm;
@@ -64,19 +74,43 @@ public final class IncidentScreen extends JPanel implements Screen {
 
         add(buildHeader(), BorderLayout.NORTH);
         add(buildTablePanel(), BorderLayout.CENTER);
+
+        installKeyboardShortcuts();
+    }
+
+    private void installKeyboardShortcuts() {
+        JComponent root = (JComponent) getTopLevelAncestor();
+        if (root == null) {
+            return;
+        }
+        root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK), "focusSearch");
+        root.getActionMap().put("focusSearch", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchField.requestFocusInWindow();
+            }
+        });
+
+        table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "openSelected");
+        table.getActionMap().put("openSelected", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openSelected();
+            }
+        });
     }
 
     private JPanel buildHeader() {
         JPanel header = new JPanel(new BorderLayout(0, 10));
         header.setOpaque(false);
 
-        JLabel title = new JLabel("Incident Register");
+        JLabel title = new JLabel(Messages.get("incidents.title"));
         title.setFont(GuiTheme.FONT_TITLE);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
         JLabel subtitle = new JLabel(
-                "Search and re-order the complete service-request dataset "
-                        + "using the project's existing algorithms");
+                Messages.get("incidents.subtitle"));
         subtitle.setFont(GuiTheme.FONT_BODY);
         subtitle.setForeground(GuiTheme.TEXT_SECONDARY);
 
@@ -88,7 +122,8 @@ public final class IncidentScreen extends JPanel implements Screen {
         JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         controls.setOpaque(false);
 
-        searchField.setToolTipText("Search by request ID or text (Enter to search by ID)");
+        searchField.setToolTipText(Messages.get("incidents.searchById"));
+        searchField.getAccessibleContext().setAccessibleName(Messages.get("incidents.find"));
         searchField.addActionListener(event -> searchById());
         searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
@@ -107,18 +142,20 @@ public final class IncidentScreen extends JPanel implements Screen {
             }
         });
 
-        JButton searchButton = new JButton("Search by ID");
+        JButton searchButton = new JButton(Messages.get("incidents.searchById"));
+        searchButton.getAccessibleContext().setAccessibleName(Messages.get("incidents.searchById"));
         searchButton.addActionListener(event -> searchById());
+        HoverEffects.applyButtonHover(searchButton, GuiTheme.SHELL_BACKGROUND_ALT, new Color(34, 42, 58), GuiTheme.TEXT_ON_DARK, GuiTheme.TEXT_ON_DARK);
 
         keyBox.addActionListener(event -> applySort());
         algorithmBox.addActionListener(event -> applySort());
         directionBox.addActionListener(event -> applySort());
 
-        controls.add(new JLabel("Find:"));
+        controls.add(new JLabel(Messages.get("incidents.find")));
         controls.add(searchField);
         controls.add(searchButton);
         controls.add(Box.createHorizontalStrut(10));
-        controls.add(new JLabel("Sort by:"));
+        controls.add(new JLabel(Messages.get("incidents.sortBy")));
         controls.add(keyBox);
         controls.add(algorithmBox);
         controls.add(directionBox);
@@ -146,6 +183,9 @@ public final class IncidentScreen extends JPanel implements Screen {
         table.getTableHeader().setFont(GuiTheme.FONT_BODY_BOLD);
         table.getTableHeader().setBorder(BorderFactory.createLineBorder(GuiTheme.SHELL_BORDER));
 
+        table.getAccessibleContext().setAccessibleName(Messages.get("incidents.title"));
+        table.getAccessibleContext().setAccessibleDescription(Messages.get("incidents.subtitle"));
+
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
@@ -155,8 +195,10 @@ public final class IncidentScreen extends JPanel implements Screen {
             }
         });
 
-        JButton openButton = new JButton("View / Dispatch");
+        JButton openButton = new JButton(Messages.get("incidents.viewDispatch"));
+        openButton.getAccessibleContext().setAccessibleName(Messages.get("incidents.viewDispatch"));
         openButton.addActionListener(event -> openSelected());
+        HoverEffects.applyButtonHover(openButton, GuiTheme.ACCENT, GuiTheme.ACCENT_DARK, Color.WHITE, Color.WHITE);
 
         JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 6));
         buttonBar.setOpaque(false);
@@ -196,8 +238,8 @@ public final class IncidentScreen extends JPanel implements Screen {
         if (index < 0) {
             JOptionPane.showMessageDialog(
                     this,
-                    "No incident found with request ID " + requestId + ".",
-                    "Search by ID",
+                    Messages.get("incidents.noResults"),
+                    Messages.get("incidents.searchById"),
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }

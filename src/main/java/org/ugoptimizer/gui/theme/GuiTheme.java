@@ -2,6 +2,7 @@ package org.ugoptimizer.gui.theme;
 
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.BorderFactory;
 
 /**
  * Central visual language for the UG Campus Security control room.
@@ -25,6 +26,7 @@ public final class GuiTheme {
     public static final Color WORKSPACE_BACKGROUND = new Color(0xF2, 0xF4, 0xF8);
     public static final Color PANEL_BACKGROUND = Color.WHITE;
     public static final Color PANEL_BORDER = new Color(0xDC, 0xE2, 0xEC);
+    public static final Color PANEL_SHADOW = new Color(0xE8, 0xEC, 0xF1);
     public static final Color TABLE_STRIPE = new Color(0xF7, 0xF9, 0xFC);
     public static final Color TABLE_SELECTION = new Color(0xC9, 0xE2, 0xF9);
 
@@ -59,4 +61,10 @@ public final class GuiTheme {
     public static final Font FONT_BODY_BOLD = new Font("Segoe UI", Font.BOLD, 13);
     public static final Font FONT_SMALL = new Font("Segoe UI", Font.PLAIN, 11);
     public static final Font FONT_MONO = new Font("Consolas", Font.PLAIN, 12);
+
+    public static javax.swing.border.Border shadowBorder() {
+        return BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PANEL_SHADOW, 1),
+                BorderFactory.createEmptyBorder(12, 14, 12, 14));
+    }
 }

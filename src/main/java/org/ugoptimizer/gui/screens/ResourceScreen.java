@@ -1,6 +1,7 @@
 package org.ugoptimizer.gui.screens;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -18,10 +19,13 @@ import javax.swing.table.DefaultTableModel;
 import org.ugoptimizer.gui.AppContext;
 import org.ugoptimizer.gui.Screen;
 import org.ugoptimizer.gui.components.StatCard;
+import org.ugoptimizer.gui.i18n.Messages;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.GuiWork;
 import org.ugoptimizer.gui.util.UiFormatters;
 import org.ugoptimizer.model.Resource;
+import org.ugoptimizer.model.ResourceAvailability;
 
 /**
  * Dispatchable resource register with live availability counts. Opening a row
@@ -38,10 +42,10 @@ public final class ResourceScreen extends JPanel implements Screen {
     private final ResourceTableModel model = new ResourceTableModel();
     private final JTable table = new JTable(model);
     private final JLabel summary = new JLabel();
-    private final StatCard availableCard = new StatCard("Available", GuiTheme.STATUS_OK);
-    private final StatCard busyCard = new StatCard("Busy", GuiTheme.STATUS_INFO);
-    private final StatCard maintenanceCard = new StatCard("Maintenance", GuiTheme.STATUS_WARN);
-    private final StatCard offDutyCard = new StatCard("Off duty", GuiTheme.STATUS_NEUTRAL);
+    private final StatCard availableCard = new StatCard(Messages.get("resources.available"), GuiTheme.STATUS_OK);
+    private final StatCard busyCard = new StatCard(Messages.get("resources.busy"), GuiTheme.STATUS_INFO);
+    private final StatCard maintenanceCard = new StatCard(Messages.get("resources.maintenance"), GuiTheme.STATUS_WARN);
+    private final StatCard offDutyCard = new StatCard(Messages.get("resources.offDuty"), GuiTheme.STATUS_NEUTRAL);
 
     private Resource[] dataset = new Resource[0];
 
@@ -59,13 +63,12 @@ public final class ResourceScreen extends JPanel implements Screen {
         JPanel header = new JPanel(new BorderLayout(0, 10));
         header.setOpaque(false);
 
-        JLabel title = new JLabel("Dispatch Resources");
+        JLabel title = new JLabel(Messages.get("resources.title"));
         title.setFont(GuiTheme.FONT_TITLE);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
         JLabel subtitle = new JLabel(
-                "Security and emergency resources with live availability, "
-                        + "updated through persisted workflow actions");
+                Messages.get("resources.subtitle"));
         subtitle.setFont(GuiTheme.FONT_BODY);
         subtitle.setForeground(GuiTheme.TEXT_SECONDARY);
 
@@ -103,6 +106,10 @@ public final class ResourceScreen extends JPanel implements Screen {
         table.getTableHeader().setFont(GuiTheme.FONT_BODY_BOLD);
         table.getTableHeader().setBorder(BorderFactory.createLineBorder(GuiTheme.SHELL_BORDER));
 
+        table.getAccessibleContext().setAccessibleName(Messages.get("resources.title"));
+        table.getAccessibleContext().setAccessibleDescription(
+                Messages.get("resources.title") + " - " + Messages.get("resources.selectFirst"));
+
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
@@ -112,8 +119,21 @@ public final class ResourceScreen extends JPanel implements Screen {
             }
         });
 
-        JButton openButton = new JButton("View resource");
+        table.getInputMap(javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0), "openSelected");
+        table.getActionMap().put("openSelected", new javax.swing.AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                openSelected();
+            }
+        });
+
+        JButton openButton = new JButton(Messages.get("resources.view"));
         openButton.addActionListener(event -> openSelected());
+        openButton.getAccessibleContext().setAccessibleName(Messages.get("resources.view"));
+        openButton.getAccessibleContext().setAccessibleDescription(
+                Messages.get("resources.view") + " - " + Messages.get("resources.selectFirst"));
+        HoverEffects.applyButtonHover(openButton, GuiTheme.ACCENT, GuiTheme.ACCENT_DARK, Color.WHITE, Color.WHITE);
 
         JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 6));
         buttonBar.setOpaque(false);
@@ -129,9 +149,9 @@ public final class ResourceScreen extends JPanel implements Screen {
     private void openSelected() {
         int row = table.getSelectedRow();
         if (row < 0) {
-            JOptionPane.showMessageDialog(
-                    this, "Select a resource row first.", "Dispatch Resources",
-                    JOptionPane.INFORMATION_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(
+                    this, Messages.get("resources.selectFirst"), Messages.get("resources.title"),
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int resourceId = (Integer) model.getValueAt(row, 0);
@@ -153,7 +173,7 @@ public final class ResourceScreen extends JPanel implements Screen {
     @Override
     public void refresh() {
         model.setRows(new Resource[0], appContext::locationName);
-        summary.setText("Loading resources...");
+        summary.setText(Messages.get("resources.loading"));
         GuiWork.run(
                 this,
                 () -> appContext.loadResources(),
@@ -164,7 +184,7 @@ public final class ResourceScreen extends JPanel implements Screen {
                 (error, anchor) -> {
                     dataset = new Resource[0];
                     model.setRows(dataset, appContext::locationName);
-                    summary.setText("Unable to load resources: " + error.getMessage());
+                    summary.setText(Messages.format("resources.errorLoading", error.getMessage()));
                 });
     }
 
@@ -187,8 +207,7 @@ public final class ResourceScreen extends JPanel implements Screen {
         busyCard.setValue(String.valueOf(busy));
         maintenanceCard.setValue(String.valueOf(maintenance));
         offDutyCard.setValue(String.valueOf(offDuty));
-        summary.setText(resources.length + " resource(s) registered  |  "
-                + available + " dispatchable now");
+        summary.setText(Messages.format("resources.summary", resources.length, available));
 
         model.setRows(resources, appContext::locationName);
     }
@@ -210,7 +229,7 @@ public final class ResourceScreen extends JPanel implements Screen {
                     resource.getCapacity(),
                     names.apply(resource.getHomeLocationId()),
                     resource.getCurrentLocationId() == null
-                            ? "Home base"
+                            ? Messages.get("resources.homeBase")
                             : names.apply(resource.getCurrentLocationId()),
                     UiFormatters.humanize(resource.getAvailabilityStatus()),
                     UiFormatters.shiftText(

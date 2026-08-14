@@ -18,11 +18,15 @@ import org.ugoptimizer.gui.Screen;
 import org.ugoptimizer.gui.components.EmptyPanel;
 import org.ugoptimizer.gui.components.IncidentRowCard;
 import org.ugoptimizer.gui.components.StatCard;
+import org.ugoptimizer.gui.i18n.Messages;
 import org.ugoptimizer.gui.theme.GuiTheme;
+import org.ugoptimizer.gui.theme.HoverEffects;
 import org.ugoptimizer.gui.util.GuiWork;
 import org.ugoptimizer.gui.util.ResponseQueueBuilder;
 import org.ugoptimizer.model.Location;
 import org.ugoptimizer.model.Resource;
+import org.ugoptimizer.model.RequestStatus;
+import org.ugoptimizer.model.ResourceAvailability;
 import org.ugoptimizer.model.ServiceRequest;
 
 /**
@@ -32,14 +36,14 @@ import org.ugoptimizer.model.ServiceRequest;
 public final class DashboardScreen extends JPanel implements Screen {
 
     private final AppContext appContext;
-    private final StatCard totalCard = new StatCard("Total incidents", GuiTheme.TEXT_PRIMARY);
-    private final StatCard openCard = new StatCard("Open incidents", GuiTheme.STATUS_WARN);
-    private final StatCard criticalCard = new StatCard("Critical (urgency 5)", GuiTheme.STATUS_DANGER);
-    private final StatCard highCard = new StatCard("High (urgency 4)", new Color(0xE8, 0x5D, 0x1F));
-    private final StatCard completedCard = new StatCard("Completed", GuiTheme.STATUS_OK);
-    private final StatCard cancelledCard = new StatCard("Cancelled", GuiTheme.STATUS_NEUTRAL);
-    private final StatCard availableCard = new StatCard("Resources available", GuiTheme.STATUS_OK);
-    private final StatCard busyCard = new StatCard("Resources busy", GuiTheme.STATUS_INFO);
+    private final StatCard totalCard = new StatCard(Messages.get("dashboard.total"), GuiTheme.TEXT_PRIMARY);
+    private final StatCard openCard = new StatCard(Messages.get("dashboard.open"), GuiTheme.STATUS_WARN);
+    private final StatCard criticalCard = new StatCard(Messages.get("dashboard.critical"), GuiTheme.STATUS_DANGER);
+    private final StatCard highCard = new StatCard(Messages.get("dashboard.high"), new Color(0xE8, 0x5D, 0x1F));
+    private final StatCard completedCard = new StatCard(Messages.get("dashboard.completed"), GuiTheme.STATUS_OK);
+    private final StatCard cancelledCard = new StatCard(Messages.get("dashboard.cancelled"), GuiTheme.STATUS_NEUTRAL);
+    private final StatCard availableCard = new StatCard(Messages.get("dashboard.available"), GuiTheme.STATUS_OK);
+    private final StatCard busyCard = new StatCard(Messages.get("dashboard.busy"), GuiTheme.STATUS_INFO);
 
     private final JPanel queueList = new JPanel();
     private final JPanel recentList = new JPanel();
@@ -60,12 +64,12 @@ public final class DashboardScreen extends JPanel implements Screen {
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
 
-        JLabel title = new JLabel("Security Operations Dashboard");
+        JLabel title = new JLabel(Messages.get("dashboard.title"));
         title.setFont(GuiTheme.FONT_TITLE);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
         JLabel subtitle = new JLabel(
-                "Live state of the campus response system from the canonical dataset");
+                Messages.get("dashboard.subtitle"));
         subtitle.setFont(GuiTheme.FONT_BODY);
         subtitle.setForeground(GuiTheme.TEXT_SECONDARY);
 
@@ -106,11 +110,9 @@ public final class DashboardScreen extends JPanel implements Screen {
     private JPanel buildQueuePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(GuiTheme.PANEL_BACKGROUND);
-        panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(GuiTheme.PANEL_BORDER, 1),
-                BorderFactory.createEmptyBorder(12, 12, 12, 12)));
+        panel.setBorder(GuiTheme.shadowBorder());
 
-        JLabel title = new JLabel("Response Queue");
+        JLabel title = new JLabel(Messages.get("dashboard.queue"));
         title.setFont(GuiTheme.FONT_SECTION);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
@@ -139,11 +141,9 @@ public final class DashboardScreen extends JPanel implements Screen {
     private JPanel buildRecentPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(GuiTheme.PANEL_BACKGROUND);
-        panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(GuiTheme.PANEL_BORDER, 1),
-                BorderFactory.createEmptyBorder(12, 12, 12, 12)));
+        panel.setBorder(GuiTheme.shadowBorder());
 
-        JLabel title = new JLabel("Recent Incidents");
+        JLabel title = new JLabel(Messages.get("dashboard.recent"));
         title.setFont(GuiTheme.FONT_SECTION);
         title.setForeground(GuiTheme.TEXT_PRIMARY);
 
@@ -177,9 +177,9 @@ public final class DashboardScreen extends JPanel implements Screen {
     @Override
     public void refresh() {
         queueList.removeAll();
-        queueList.add(EmptyPanel.loading("Loading response queue..."));
+        queueList.add(EmptyPanel.loading(Messages.get("dashboard.loadingQueue")));
         recentList.removeAll();
-        recentList.add(EmptyPanel.loading("Loading recent incidents..."));
+        recentList.add(EmptyPanel.loading(Messages.get("dashboard.loadingRecent")));
         queueSummary.setText("");
         recentSummary.setText("");
         revalidate();
@@ -196,7 +196,7 @@ public final class DashboardScreen extends JPanel implements Screen {
                 this::render,
                 (error, anchor) -> {
                     queueList.removeAll();
-                    queueList.add(EmptyPanel.error("Unable to load dashboard data. " + error.getMessage()));
+                    queueList.add(EmptyPanel.error(Messages.format("dashboard.errorLoading", error.getMessage())));
                     recentList.removeAll();
                     revalidate();
                     repaint();
@@ -214,10 +214,10 @@ public final class DashboardScreen extends JPanel implements Screen {
             if (ResponseQueueBuilder.isOpen(request)) {
                 open++;
             }
-            if ("COMPLETED".equals(request.getStatus())) {
+            if (RequestStatus.COMPLETED.name().equals(request.getStatus())) {
                 completed++;
             }
-            if ("CANCELLED".equals(request.getStatus())) {
+            if (RequestStatus.CANCELLED.name().equals(request.getStatus())) {
                 cancelled++;
             }
             if (request.getUrgency() == 5 && ResponseQueueBuilder.isOpen(request)) {
@@ -231,9 +231,9 @@ public final class DashboardScreen extends JPanel implements Screen {
         int available = 0;
         int busy = 0;
         for (Resource resource : data.resources) {
-            if ("AVAILABLE".equals(resource.getAvailabilityStatus())) {
+            if (ResourceAvailability.AVAILABLE.name().equals(resource.getAvailabilityStatus())) {
                 available++;
-            } else if ("BUSY".equals(resource.getAvailabilityStatus())) {
+            } else if (ResourceAvailability.BUSY.name().equals(resource.getAvailabilityStatus())) {
                 busy++;
             }
         }
@@ -253,10 +253,10 @@ public final class DashboardScreen extends JPanel implements Screen {
 
     private void renderQueue(ServiceRequest[] requests) {
         ServiceRequest[] ordered = ResponseQueueBuilder.orderedOpenRequests(requests);
-        queueSummary.setText(ordered.length + " waiting");
+        queueSummary.setText(Messages.format("dashboard.waiting", ordered.length));
         queueList.removeAll();
         if (ordered.length == 0) {
-            queueList.add(EmptyPanel.empty("No open incidents in the response queue."));
+            queueList.add(EmptyPanel.empty(Messages.get("dashboard.noOpen")));
         } else {
             int shown = Math.min(ordered.length, 6);
             for (int index = 0; index < shown; index++) {
@@ -272,7 +272,7 @@ public final class DashboardScreen extends JPanel implements Screen {
     private void renderRecent(ServiceRequest[] requests) {
         ServiceRequest[] sorted = requests.clone();
         Arrays.sort(sorted, (a, b) -> b.getTimeSubmitted().compareTo(a.getTimeSubmitted()));
-        recentSummary.setText(sorted.length + " recorded");
+        recentSummary.setText(Messages.format("dashboard.recorded", sorted.length));
         recentList.removeAll();
         int shown = Math.min(sorted.length, 6);
         for (int index = 0; index < shown; index++) {

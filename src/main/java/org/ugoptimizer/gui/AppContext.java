@@ -21,6 +21,8 @@ import org.ugoptimizer.model.Location;
 import org.ugoptimizer.model.Resource;
 import org.ugoptimizer.model.Road;
 import org.ugoptimizer.model.ServiceRequest;
+import org.ugoptimizer.model.RequestStatus;
+import org.ugoptimizer.model.ResourceAvailability;
 import org.ugoptimizer.service.GreedyAssignmentService;
 import org.ugoptimizer.structures.graph.AdjacencyListGraph;
 import org.ugoptimizer.structures.graph.WeightedGraph;
@@ -185,7 +187,7 @@ public final class AppContext {
         Resource[] allResources = resourceDao.findAll();
         int availableCount = 0;
         for (Resource resource : allResources) {
-            if ("AVAILABLE".equals(resource.getAvailabilityStatus())) {
+            if (ResourceAvailability.AVAILABLE.name().equals(resource.getAvailabilityStatus())) {
                 availableCount++;
             }
         }
@@ -193,7 +195,7 @@ public final class AppContext {
         AssignmentCandidate[] candidates = new AssignmentCandidate[availableCount];
         int index = 0;
         for (Resource resource : allResources) {
-            if (!"AVAILABLE".equals(resource.getAvailabilityStatus())) {
+            if (!ResourceAvailability.AVAILABLE.name().equals(resource.getAvailabilityStatus())) {
                 continue;
             }
             candidates[index++] = new AssignmentCandidate(
@@ -238,8 +240,8 @@ public final class AppContext {
         try (Connection connection = databaseManager.openConnection()) {
             connection.setAutoCommit(false);
             try {
-                updateResourceAvailabilityTx(connection, resource.getResourceId(), "BUSY");
-                updateRequestStatusTx(connection, request.getRequestId(), "ASSIGNED");
+                updateResourceAvailabilityTx(connection, resource.getResourceId(), ResourceAvailability.BUSY.name());
+                updateRequestStatusTx(connection, request.getRequestId(), RequestStatus.ASSIGNED.name());
                 insertAuditTx(
                         connection,
                         nextAuditEventId(connection),
@@ -401,22 +403,20 @@ public final class AppContext {
 
     private static void validateRequestStatus(String status) {
         Objects.requireNonNull(status, "status cannot be null");
-        switch (status) {
-            case "PENDING", "ASSIGNED", "IN_PROGRESS", "COMPLETED", "CANCELLED" -> {
-                return;
-            }
-            default -> throw new IllegalArgumentException("Unsupported request status: " + status);
+        try {
+            RequestStatus.valueOf(status);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Unsupported request status: " + status, ex);
         }
     }
 
     private static void validateAvailabilityStatus(String status) {
         Objects.requireNonNull(status, "availabilityStatus cannot be null");
-        switch (status) {
-            case "AVAILABLE", "BUSY", "MAINTENANCE", "OFF_DUTY" -> {
-                return;
-            }
-            default -> throw new IllegalArgumentException(
-                    "Unsupported availabilityStatus: " + status);
+        try {
+            ResourceAvailability.valueOf(status);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException(
+                    "Unsupported availabilityStatus: " + status, ex);
         }
     }
 
