@@ -1,115 +1,93 @@
 package org.ugoptimizer.database.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.Instant;
 import java.util.Objects;
 import org.ugoptimizer.database.DatabaseManager;
 import org.ugoptimizer.model.AuditEvent;
+import org.ugoptimizer.model.RequestStatusHistory;
 
-/** Performs atomic request-status and audit-event persistence for workflow services. */
+/** Persists workflow changes, history, audit, and terminal resource release atomically. */
 public final class WorkflowDao {
+  private final DatabaseManager manager;
 
-    private final DatabaseManager databaseManager;
+  public WorkflowDao(DatabaseManager manager) {
+    this.manager = Objects.requireNonNull(manager, "databaseManager cannot be null");
+  }
 
-    public WorkflowDao(DatabaseManager databaseManager) {
-        this.databaseManager = Objects.requireNonNull(
-                databaseManager, "databaseManager cannot be null");
-    }
-
-    /**
-     * Atomically changes a request from the expected status and records its
-     * audit event. The expected-status predicate prevents stale UI actions from
-     * overwriting a concurrent workflow transition.
-     */
-    public AuditEvent transitionStatus(
-            int requestId,
-            String expectedStatus,
-            String newStatus,
-            Instant timestamp,
-            String actorType,
-            String details) throws SQLException {
-        requirePositiveId(requestId);
-        requireText(expectedStatus, "expectedStatus");
-        requireText(newStatus, "newStatus");
-        Objects.requireNonNull(timestamp, "timestamp cannot be null");
-
-        try (Connection connection = databaseManager.openConnection()) {
-            connection.setAutoCommit(false);
-            try {
-                updateExpectedStatus(connection, requestId, expectedStatus, newStatus);
-                AuditEvent event = new AuditEvent(
-                        nextAuditEventId(connection),
-                        "REQUEST_STATUS_CHANGED",
-                        timestamp,
-                        "SERVICE_REQUEST",
-                        requestId,
-                        actorType,
-                        details);
-                AuditEventDao.insertEvent(connection, event);
-                connection.commit();
-                return event;
-            } catch (SQLException | RuntimeException failure) {
-                rollback(connection, failure);
-                throw failure;
-            }
-        } catch (SQLException exception) {
-            throw new SQLException(
-                    "Failed to transition service request " + requestId
-                            + " from " + expectedStatus + " to " + newStatus,
-                    exception);
+  public AuditEvent transitionStatus(
+      int requestId, String expected, String next, Instant at, String actor, String details)
+      throws SQLException {
+    try (Connection c = manager.openConnection()) {
+      c.setAutoCommit(false);
+      try {
+        AssignmentDao.updateExpected(
+            c, "service_requests", "status", next, "request_id", requestId, expected);
+        int[] active = findActive(c, requestId);
+        Integer assignmentId = null;
+        if (("COMPLETED".equals(next) || "CANCELLED".equals(next)) && active != null) {
+          assignmentId = active[0];
+          try (PreparedStatement s =
+              c.prepareStatement(
+                  "UPDATE assignments SET status='RELEASED', released_at=? WHERE assignment_id=?"
+                      + " AND status='ACTIVE'")) {
+            s.setString(1, at.toString());
+            s.setInt(2, active[0]);
+            if (s.executeUpdate() != 1)
+              throw new SQLException("Active assignment changed concurrently");
+          }
+          AssignmentDao.updateExpected(
+              c, "resources", "availability_status", "AVAILABLE", "resource_id", active[1], "BUSY");
+          AssignmentDao.audit(
+              c,
+              "RESOURCE_RELEASED",
+              "RESOURCE",
+              active[1],
+              actor,
+              "Released from request " + requestId,
+              at);
         }
+        RequestStatusHistory h =
+            new RequestStatusHistory(
+                RequestStatusHistoryDao.nextHistoryId(c),
+                requestId,
+                expected,
+                next,
+                actor,
+                at,
+                RequestStatusHistory.STATUS_CHANGE,
+                assignmentId,
+                null,
+                details);
+        RequestStatusHistoryDao.insertHistory(c, h);
+        AuditEvent event =
+            new AuditEvent(
+                AuditEventDao.nextEventId(c),
+                "REQUEST_STATUS_CHANGED",
+                at,
+                "SERVICE_REQUEST",
+                requestId,
+                actor,
+                details);
+        AuditEventDao.insertEvent(c, event);
+        c.commit();
+        return event;
+      } catch (SQLException | RuntimeException f) {
+        AssignmentDao.rollback(c, f);
+        throw f;
+      }
     }
+  }
 
-    private static void updateExpectedStatus(
-            Connection connection, int requestId, String expectedStatus, String newStatus)
-            throws SQLException {
-        String sql = "UPDATE service_requests SET status = ?"
-                + " WHERE request_id = ? AND status = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, newStatus);
-            statement.setInt(2, requestId);
-            statement.setString(3, expectedStatus);
-            int affected = statement.executeUpdate();
-            if (affected != 1) {
-                throw new SQLException(
-                        "Request is missing or no longer has expected status " + expectedStatus);
-            }
-        }
+  private static int[] findActive(Connection c, int requestId) throws SQLException {
+    try (PreparedStatement s =
+        c.prepareStatement(
+            "SELECT assignment_id,resource_id FROM assignments WHERE request_id=? AND"
+                + " status='ACTIVE'")) {
+      s.setInt(1, requestId);
+      try (ResultSet r = s.executeQuery()) {
+        return r.next() ? new int[] {r.getInt(1), r.getInt(2)} : null;
+      }
     }
-
-    private static int nextAuditEventId(Connection connection) throws SQLException {
-        String sql = "SELECT COALESCE(MAX(event_id), 0) + 1 FROM audit_events";
-        try (PreparedStatement statement = connection.prepareStatement(sql);
-                ResultSet resultSet = statement.executeQuery()) {
-            if (!resultSet.next()) {
-                throw new SQLException("Could not allocate an audit event ID");
-            }
-            return resultSet.getInt(1);
-        }
-    }
-
-    private static void rollback(Connection connection, Throwable failure) {
-        try {
-            connection.rollback();
-        } catch (SQLException rollbackException) {
-            failure.addSuppressed(rollbackException);
-        }
-    }
-
-    private static void requirePositiveId(int requestId) {
-        if (requestId <= 0) {
-            throw new IllegalArgumentException("requestId must be positive");
-        }
-    }
-
-    private static String requireText(String value, String fieldName) {
-        Objects.requireNonNull(value, fieldName + " cannot be null");
-        if (value.isBlank()) {
-            throw new IllegalArgumentException(fieldName + " cannot be blank");
-        }
-        return value;
-    }
+  }
 }
