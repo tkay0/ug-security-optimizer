@@ -1,5 +1,0 @@
-]633;E;echo "Adjacency-list prohibited-token scan";de002b69-416e-43ee-9767-e40eeaec598f]633;CAdjacency-list prohibited-token scan
-Date: Wed Aug  5 02:01:34 AM GMT 2026
-
-
-RESULT: PASS — no prohibited tokens found.
