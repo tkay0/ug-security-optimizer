@@ -1,0 +1,13 @@
+scenarioId,scenarioName,roadId,routeLabel,scenarioStart,scenarioEnd,isBlockedOverride,conditionWeightMultiplier,travelTimeMultiplier,reason
+1,ACCESS_BLOCKAGE_DRILL,6,University of Ghana Fire Station - Bush Canteen,2026-08-07T16:00:00Z,2026-08-07T18:00:00Z,True,1.0,1.0,Temporary access closure used to test rerouting while keeping the overall graph connected
+2,ACCESS_BLOCKAGE_DRILL,2,Main University Gate - University of Ghana Hospital,2026-08-07T16:10:00Z,2026-08-07T18:10:00Z,True,1.0,1.0,Temporary access closure used to test rerouting while keeping the overall graph connected
+3,ACCESS_BLOCKAGE_DRILL,36,Jubilee Hall - Banking Square,2026-08-07T16:20:00Z,2026-08-07T18:20:00Z,True,1.0,1.0,Temporary access closure used to test rerouting while keeping the overall graph connected
+4,ACCESS_BLOCKAGE_DRILL,37,Jubilee Hall - Night Market,2026-08-07T16:30:00Z,2026-08-07T18:30:00Z,True,1.0,1.0,Temporary access closure used to test rerouting while keeping the overall graph connected
+5,EVENT_CROWD,1,Main University Gate - Legon Police Station,2026-08-08T17:00:00Z,2026-08-08T20:00:00Z,False,1.05,1.5,Crowd/event congestion used to test time-sensitive routing
+6,EVENT_CROWD,3,Main University Gate - University of Ghana Fire Station,2026-08-08T17:00:00Z,2026-08-08T20:00:00Z,False,1.05,1.6,Crowd/event congestion used to test time-sensitive routing
+7,EVENT_CROWD,5,University of Ghana Hospital - Bush Canteen,2026-08-08T17:00:00Z,2026-08-08T20:00:00Z,False,1.05,1.7,Crowd/event congestion used to test time-sensitive routing
+8,EVENT_CROWD,7,Bush Canteen - University Basic School,2026-08-08T17:00:00Z,2026-08-08T20:00:00Z,False,1.05,1.8,Crowd/event congestion used to test time-sensitive routing
+9,RAINY_EVENING,4,University of Ghana Hospital - University of Ghana Fire Station,2026-08-09T17:00:00Z,2026-08-09T21:00:00Z,False,1.2,1.15,Wet-road conditions used to test road-condition penalties
+10,RAINY_EVENING,30,Volta Hall - VALCO Trust Hostel,2026-08-09T17:00:00Z,2026-08-09T21:00:00Z,False,1.28,1.2,Wet-road conditions used to test road-condition penalties
+11,RAINY_EVENING,55,Alexander Adum Kwapong Hall - Noguchi Memorial Institute for Medical Research,2026-08-09T17:00:00Z,2026-08-09T21:00:00Z,False,1.36,1.25,Wet-road conditions used to test road-condition penalties
+12,RAINY_EVENING,78,University of Ghana Sports Stadium - School of Pharmacy,2026-08-09T17:00:00Z,2026-08-09T21:00:00Z,False,1.44,1.3,Wet-road conditions used to test road-condition penalties
