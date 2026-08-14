@@ -11,9 +11,20 @@ import org.ugoptimizer.structures.graph.WeightedGraph;
  * classes. Each active vertex has a corresponding neighbour index, allowing
  * neighbours to be explored one at a time in the same way as recursive DFS.
  *
- * <p>Time complexity is O(V + E) for the traversal, excluding the binary
- * searches used to locate vertex IDs. Space complexity is O(V), where V is
- * the number of vertices.
+ * <p>Let {@code V} be the total vertex count, {@code R} the reachable vertex
+ * count, and {@code A} the number of directed adjacency entries examined for
+ * reachable vertices. Each visited vertex requests one neighbour snapshot.
+ * With {@code AdjacencyListGraph}, the traversal kernel costs
+ * {@code O(V + (R + A) log V)}; with {@code AdjacencyMatrixGraph}, it costs
+ * {@code O(V + RV + (R + A) log V)} because each neighbour request scans a
+ * matrix row. These bounds include binary searches that map vertex IDs to
+ * dense visited-array indexes.</p>
+ *
+ * <p>The manual stack arrays use {@code O(V)} space. Cached neighbour
+ * snapshots for active frames use up to {@code O(A)} additional space, so
+ * peak traversal-kernel auxiliary space is {@code O(V + A)}. Constructing
+ * the current {@link TraversalResult} additionally validates duplicates in
+ * {@code O(R^2)} time and stores an {@code O(R)} result snapshot.</p>
  */
 public class DepthFirstSearch {
 
@@ -44,9 +55,10 @@ public class DepthFirstSearch {
         int[] visitOrder = new int[vertexIds.length];
 
         // Each stack position represents an active DFS vertex.
-        // stackNextNeighbor stores the next neighbour to examine.
-        int[] stackVertices = new int[vertexIds.length];
+        // Each frame caches its neighbor snapshot and next index so the graph
+        // is queried exactly once for every visited vertex.
         int[] stackNextNeighbor = new int[vertexIds.length];
+        int[][] stackNeighborIds = new int[vertexIds.length][];
 
         int top = 0;
         int visitedCount = 0;
@@ -54,14 +66,13 @@ public class DepthFirstSearch {
         int startIndex = indexOfVertex(vertexIds, startVertexId);
         visited[startIndex] = true;
 
-        stackVertices[top] = startVertexId;
         stackNextNeighbor[top] = 0;
+        stackNeighborIds[top] = graph.getNeighborIds(startVertexId);
 
         visitOrder[visitedCount++] = startVertexId;
 
         while (top >= 0) {
-            int currentVertexId = stackVertices[top];
-            int[] neighborIds = graph.getNeighborIds(currentVertexId);
+            int[] neighborIds = stackNeighborIds[top];
 
             if (stackNextNeighbor[top] < neighborIds.length) {
                 int neighborId = neighborIds[stackNextNeighbor[top]];
@@ -73,12 +84,13 @@ public class DepthFirstSearch {
                     visited[neighborIndex] = true;
 
                     top++;
-                    stackVertices[top] = neighborId;
                     stackNextNeighbor[top] = 0;
+                    stackNeighborIds[top] = graph.getNeighborIds(neighborId);
 
                     visitOrder[visitedCount++] = neighborId;
                 }
             } else {
+                stackNeighborIds[top] = null;
                 top--;
             }
         }
