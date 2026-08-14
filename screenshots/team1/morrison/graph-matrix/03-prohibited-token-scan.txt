@@ -1,5 +1,0 @@
-Adjacency-matrix prohibited-token scan
-Date: Thu Aug  6 01:34:11 AM GMT 2026
-
-
-RESULT: PASS — no prohibited tokens found.
