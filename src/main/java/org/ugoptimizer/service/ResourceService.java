@@ -1,9 +1,19 @@
 package org.ugoptimizer.service;
 
-/**
- * Service for managing security resources (teams, vehicles).
- */
-public class ResourceService {
+import java.util.List;
+import org.ugoptimizer.model.Resource;
 
-    // TODO: Implement resource availability and assignment tracking
+/**
+ * Provides dispatchable resources to the UI. A real implementation wraps
+ * {@code ResourceDao}; {@code InMemoryResourceService} exists for development
+ * before that lands.
+ */
+public interface ResourceService {
+
+    List<Resource> findAll();
+
+    /** Returns the ID the next added resource should use (mirrors DB auto-increment). */
+    int nextResourceId();
+
+    Resource add(Resource resource);
 }
