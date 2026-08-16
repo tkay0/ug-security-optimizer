@@ -1,5 +1,6 @@
 package org.ugoptimizer.ui.menu;
 
+import org.ugoptimizer.model.Edge;
 import org.ugoptimizer.model.Location;
 import org.ugoptimizer.result.PathResult;
 import org.ugoptimizer.result.TraversalResult;
@@ -27,7 +28,10 @@ import java.util.Objects;
  * this menu no longer depends on the concrete {@link LocationRoadMenu} class.
  * BFS, DFS, and shortest-path (Dijkstra, minimizing total road travel time)
  * are all wired up. {@link LocationService} is only used here to look up a
- * visited vertex's display name.
+ * visited vertex's display name. For a found shortest path, the result table
+ * also shows the specific road (by travel time) used to reach each stop, not
+ * just the destination sequence -- BFS/DFS only carry visit order, not
+ * per-edge weights, so that column is a placeholder for those two.
  */
 public class RoutingMenu extends JPanel {
 
@@ -59,7 +63,8 @@ public class RoutingMenu extends JPanel {
         resultTable = new DataTablePanel<>(List.of(
                 new Column<>("Order", s -> String.valueOf(s.order())),
                 new Column<>("Location ID", s -> String.valueOf(s.locationId())),
-                new Column<>("Name", VisitStep::name)
+                new Column<>("Name", VisitStep::name),
+                new Column<>("Via Road (travel time)", VisitStep::viaRoad)
         ), List.of());
 
         bfsButton.addActionListener(e -> runTraversal(routeService::bfs));
@@ -93,7 +98,7 @@ public class RoutingMenu extends JPanel {
         List<VisitStep> steps = new ArrayList<>();
         int[] order = result.getVisitOrder();
         for (int i = 0; i < order.length; i++) {
-            steps.add(new VisitStep(i + 1, order[i], nameOf(order[i])));
+            steps.add(new VisitStep(i + 1, order[i], nameOf(order[i]), "—"));
         }
         resultTable.setRows(steps);
 
@@ -133,8 +138,10 @@ public class RoutingMenu extends JPanel {
             case FOUND -> {
                 List<VisitStep> steps = new ArrayList<>();
                 int[] path = result.getVertexIds();
+                Edge[] edges = result.getEdges();
                 for (int i = 0; i < path.length; i++) {
-                    steps.add(new VisitStep(i + 1, path[i], nameOf(path[i])));
+                    String viaRoad = i == 0 ? "(start)" : edges[i - 1].getWeight() + " min";
+                    steps.add(new VisitStep(i + 1, path[i], nameOf(path[i]), viaRoad));
                 }
                 resultTable.setRows(steps);
                 MessagePrinter.showInfo(this, "Shortest path found: " + path.length + " location(s), "
@@ -153,6 +160,8 @@ public class RoutingMenu extends JPanel {
         return "(unknown)";
     }
 
-    private record VisitStep(int order, int locationId, String name) {
+    /** {@code viaRoad} is the incoming road's travel time for a shortest-path step, or a
+     *  placeholder for BFS/DFS steps (which only carry visit order, not per-edge weights). */
+    private record VisitStep(int order, int locationId, String name, String viaRoad) {
     }
 }

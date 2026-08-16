@@ -6,6 +6,7 @@ import org.ugoptimizer.algorithms.MergeSort;
 import org.ugoptimizer.algorithms.QuickSort;
 import org.ugoptimizer.algorithms.SelectionSort;
 import org.ugoptimizer.algorithms.assignment.AssignmentCandidate;
+import org.ugoptimizer.algorithms.assignment.PlaceholderResponseMetrics;
 import org.ugoptimizer.model.Resource;
 import org.ugoptimizer.model.ServiceRequest;
 import org.ugoptimizer.service.ResourceService;
@@ -36,12 +37,12 @@ import java.util.Random;
  * implemented algorithms are demonstrated.
  *
  * <p>Candidate resources come from an injected {@link ResourceService}
- * instead of a hardcoded array. {@link Resource} has no persisted
- * response-time or workload fields (those are request-specific runtime
- * inputs, not stored resource attributes), so this screen synthesizes
- * placeholder values per resource until a real response-time/workload data
- * source exists &mdash; that's a gap for whoever implements real dispatch
- * metrics, not solved here.
+ * instead of a hardcoded array, refreshed on demand via the Refresh
+ * Candidates button since resources can be added on another tab after this
+ * screen is built. {@link Resource} has no persisted response-time or
+ * workload fields (those are request-specific runtime inputs, not stored
+ * resource attributes); {@link PlaceholderResponseMetrics} synthesizes
+ * stand-in values until a real estimate is wired through a service.
  */
 public class OptimizationMenu extends JPanel {
 
@@ -50,6 +51,8 @@ public class OptimizationMenu extends JPanel {
     private final ResourceService resourceService;
     private final ServiceRequest sampleRequest;
 
+    private DataTablePanel<AssignmentCandidate> candidateTable;
+    private List<AssignmentCandidate> candidates;
     private Integer[] currentArray;
     private JLabel arrayLabel;
 
@@ -70,8 +73,8 @@ public class OptimizationMenu extends JPanel {
                 "Greedy Resource Assignment — request: " + sampleRequest.getCategory()
                         + " (needs " + sampleRequest.getRequiredResourceType() + ")"));
 
-        List<AssignmentCandidate> candidates = buildCandidates();
-        DataTablePanel<AssignmentCandidate> candidateTable = new DataTablePanel<>(List.of(
+        candidates = buildCandidates();
+        candidateTable = new DataTablePanel<>(List.of(
                 new Column<>("Resource ID", c -> String.valueOf(c.getResource().getResourceId())),
                 new Column<>("Type", c -> c.getResource().getResourceType()),
                 new Column<>("Availability", c -> c.getResource().getAvailabilityStatus()),
@@ -80,7 +83,14 @@ public class OptimizationMenu extends JPanel {
         ), candidates);
         panel.add(candidateTable, BorderLayout.CENTER);
 
+        JButton refreshButton = new JButton("Refresh Candidates");
         JButton runButton = new JButton("Run Greedy Assignment");
+
+        refreshButton.addActionListener(e -> {
+            candidates = buildCandidates();
+            candidateTable.setRows(candidates);
+        });
+
         runButton.addActionListener(e -> {
             AssignmentCandidate[] array = candidates.toArray(new AssignmentCandidate[0]);
             AssignmentCandidate best = GreedyAssignment.assignBestResource(sampleRequest, array);
@@ -96,6 +106,7 @@ public class OptimizationMenu extends JPanel {
         });
 
         JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        controls.add(refreshButton);
         controls.add(runButton);
         panel.add(controls, BorderLayout.SOUTH);
         return panel;
@@ -162,14 +173,15 @@ public class OptimizationMenu extends JPanel {
                 "PENDING", "MEDICAL_TEAM", "Sample request for greedy assignment demo");
     }
 
-    /** Wraps each current resource with a placeholder response time/workload (see class doc). */
+    /** Wraps each current resource with a {@link PlaceholderResponseMetrics} estimate. */
     private List<AssignmentCandidate> buildCandidates() {
-        List<AssignmentCandidate> candidates = new ArrayList<>();
+        List<AssignmentCandidate> built = new ArrayList<>();
         for (Resource resource : resourceService.findAll()) {
-            double placeholderResponseTime = 2.0 + resource.getResourceId();
-            int placeholderWorkload = resource.getCapacity() > 2 ? 1 : 0;
-            candidates.add(new AssignmentCandidate(resource, placeholderResponseTime, placeholderWorkload));
+            built.add(new AssignmentCandidate(
+                    resource,
+                    PlaceholderResponseMetrics.responseTime(resource),
+                    PlaceholderResponseMetrics.workload(resource)));
         }
-        return candidates;
+        return built;
     }
 }
