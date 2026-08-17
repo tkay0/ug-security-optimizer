@@ -3,6 +3,7 @@ package org.ugoptimizer.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.*;
 import org.ugoptimizer.app.BackendContext;
@@ -37,6 +38,8 @@ class ReportPerformanceScenarioTest {
     PerformanceMeasurement<Integer> m =
         p.measureAndRecord(
             1,
+            "BFS",
+            50,
             () -> {
               int sum = 0;
               for (int i = 0; i < 100; i++) sum += i;
@@ -47,6 +50,42 @@ class ReportPerformanceScenarioTest {
     assertNotNull(m.getAlgorithmRun().getTimeNs());
     assertEquals(1, p.getRunsByStatus("MEASURED").length);
     assertEquals(30, p.getAllRuns().length);
+  }
+
+  @Test
+  void validatesPlannedRunMetadataBeforeExecutingOrOverwriting() throws Exception {
+    PerformanceService performance = new PerformanceService(manager);
+    AtomicBoolean executed = new AtomicBoolean();
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> performance.measureAndRecord(1, "DIJKSTRA", 50, () -> executed.getAndSet(true)));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> performance.measureAndRecord(1, "BFS", 100, () -> executed.getAndSet(true)));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> performance.measureAndRecord(999, "BFS", 50, () -> executed.getAndSet(true)));
+    assertFalse(executed.get());
+    assertEquals("PLANNED", performance.requireRun(1).getStatus());
+
+    assertThrows(
+        Exception.class,
+        () ->
+            performance.measureAndRecord(
+                1,
+                "BFS",
+                50,
+                () -> {
+                  throw new Exception("operation failed");
+                }));
+    assertEquals("PLANNED", performance.requireRun(1).getStatus());
+
+    performance.measureAndRecord(1, "BFS", 50, () -> 1);
+    assertThrows(
+        IllegalStateException.class,
+        () -> performance.measureAndRecord(1, "BFS", 50, () -> executed.getAndSet(true)));
+    assertFalse(executed.get());
   }
 
   @Test
