@@ -208,6 +208,19 @@ CREATE TABLE IF NOT EXISTS algorithm_runs (
 );
 
 -- ------------------------------------------------------------
+-- Frontend-compatible ID reservations
+-- ------------------------------------------------------------
+-- Domain models currently require a positive ID before construction. This
+-- sequence table lets a frontend reserve those IDs atomically without relying
+-- on a race-prone SELECT MAX(id) + 1 performed outside a write statement.
+CREATE TABLE IF NOT EXISTS id_sequences (
+    entity_name TEXT PRIMARY KEY CHECK (
+        entity_name IN ('LOCATION', 'ROAD', 'SERVICE_REQUEST', 'RESOURCE', 'ALGORITHM_RUN')
+    ),
+    next_id INTEGER NOT NULL CHECK (next_id > 0)
+);
+
+-- ------------------------------------------------------------
 -- Query and integrity indexes
 -- ------------------------------------------------------------
 CREATE INDEX IF NOT EXISTS idx_roads_from_location

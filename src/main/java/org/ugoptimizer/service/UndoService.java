@@ -37,4 +37,9 @@ public final class UndoService {
     requests.requireRequest(requestId);
     return history.findByRequestId(requestId);
   }
+
+  public Optional<RequestStatusHistory> findLatestReversible(int requestId) throws SQLException {
+    requests.requireRequest(requestId);
+    return history.findLatestReversible(requestId);
+  }
 }

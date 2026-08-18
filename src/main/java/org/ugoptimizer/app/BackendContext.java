@@ -22,6 +22,7 @@ public final class BackendContext {
   private final OptimizationService optimization;
   private final PerformanceService performance;
   private final ReportService reports;
+  private final IdService ids;
 
   private BackendContext(DatabaseManager d) {
     locations = new LocationService(d);
@@ -36,6 +37,7 @@ public final class BackendContext {
     optimization = new OptimizationService();
     performance = new PerformanceService(d);
     reports = new ReportService(d);
+    ids = new IdService(d);
   }
 
   public static BackendContext initialize(Path path) throws IOException, SQLException {
@@ -112,5 +114,9 @@ public final class BackendContext {
 
   public ReportService getReportService() {
     return reports;
+  }
+
+  public IdService getIdService() {
+    return ids;
   }
 }
