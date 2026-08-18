@@ -1,6 +1,5 @@
 package org.ugoptimizer.algorithms.traversal;
 
-
 import org.ugoptimizer.result.TraversalResult;
 import org.ugoptimizer.structures.graph.WeightedGraph;
 
@@ -20,6 +19,19 @@ import org.ugoptimizer.structures.graph.WeightedGraph;
  *       {@link WeightedGraph#getNeighborIds(int)}, so output is deterministic.</li>
  *   <li>The supplied graph is never mutated and nothing is printed.</li>
  * </ul>
+ *
+ * <p>Let {@code V} be the total vertex count, {@code R} the reachable vertex
+ * count, and {@code A} the number of directed adjacency entries examined for
+ * reachable vertices. With {@code AdjacencyListGraph}, the traversal kernel
+ * costs {@code O(V + (R + A) log V)}; with
+ * {@code AdjacencyMatrixGraph}, it costs
+ * {@code O(V + RV + (R + A) log V)} because each visited vertex requires a
+ * matrix-row scan. The logarithmic terms come from mapping vertex IDs to
+ * dense visited-array indexes with binary search.</p>
+ *
+ * <p>Traversal-kernel auxiliary space is {@code O(V)}. Constructing the
+ * current {@link TraversalResult} additionally validates duplicates in
+ * {@code O(R^2)} time and stores an {@code O(R)} result snapshot.</p>
  */
 public class BreadthFirstSearch {
 
@@ -30,11 +42,12 @@ public class BreadthFirstSearch {
      * @param graph         the graph to traverse; must not be {@code null}
      * @param startVertexId the vertex to begin the traversal from
      * @return a {@link TraversalResult} describing the traversal outcome
+     * @throws IllegalArgumentException if {@code graph} is {@code null}
      */
     public TraversalResult traverse(WeightedGraph graph, int startVertexId) {
         if (graph == null) {
-    throw new IllegalArgumentException("graph cannot be null");
-}
+            throw new IllegalArgumentException("graph cannot be null");
+        }
 
         int totalVertexCount = graph.getVertexCount();
 

@@ -86,11 +86,29 @@ public final class CsvDatasetImporter {
      * @throws SQLException for schema, constraint, or transaction failures
      */
     public void importAll() throws IOException, SQLException {
+        importAll(false);
+    }
+
+    /**
+     * Imports the canonical dataset only when every seed table is empty.
+     *
+     * @return {@code true} when data was imported, or {@code false} when an existing dataset was
+     *         left untouched
+     */
+    public boolean importAllIfEmpty() throws IOException, SQLException {
+        return importAll(true);
+    }
+
+    private boolean importAll(boolean skipExistingDataset) throws IOException, SQLException {
         try (Connection connection = databaseManager.openConnection()) {
             boolean originalAutoCommit = connection.getAutoCommit();
             Throwable failure = null;
             connection.setAutoCommit(false);
             try {
+                if (skipExistingDataset && containsSeedData(connection)) {
+                    connection.rollback();
+                    return false;
+                }
                 requireEmptySeedTables(connection);
                 importLocations(connection);
                 importRoads(connection);
@@ -100,6 +118,7 @@ public final class CsvDatasetImporter {
                 importAuditEvents(connection);
                 importAlgorithmRuns(connection);
                 connection.commit();
+                return true;
             } catch (IOException | SQLException | RuntimeException exception) {
                 failure = exception;
                 rollback(connection, exception);
@@ -116,6 +135,20 @@ public final class CsvDatasetImporter {
                 }
             }
         }
+    }
+
+    private static boolean containsSeedData(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            for (String table : SEED_TABLES) {
+                try (ResultSet resultSet =
+                        statement.executeQuery("SELECT 1 FROM " + table + " LIMIT 1")) {
+                    if (resultSet.next()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private void importLocations(Connection connection) throws IOException, SQLException {

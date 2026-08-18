@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.ugoptimizer.model.Resource;
-import org.ugoptimizer.service.ResourceService;
+import org.ugoptimizer.frontend.ResourceService;
 
 /**
  * In-memory {@link ResourceService} seeded with the same sample resources

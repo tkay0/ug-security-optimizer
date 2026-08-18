@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import org.ugoptimizer.model.ServiceRequest;
-import org.ugoptimizer.service.PriorityService;
-import org.ugoptimizer.service.RequestService;
+import org.ugoptimizer.frontend.PriorityService;
+import org.ugoptimizer.frontend.RequestService;
 import org.ugoptimizer.structures.heap.BinaryHeap;
 
 /**

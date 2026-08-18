@@ -61,7 +61,7 @@ class InMemoryRequestServiceTest {
 
         // Simulates two screens (e.g. RequestResourceMenu and SearchSortMenu) holding
         // the same injected RequestService instance.
-        org.ugoptimizer.service.RequestService secondScreenReference = service;
+        org.ugoptimizer.frontend.RequestService secondScreenReference = service;
         service.add(new ServiceRequest(service.nextRequestId(), 1, 2, "THEFT_REPORT", 1,
                 Instant.now(), Instant.now().plus(1, ChronoUnit.HOURS),
                 "PENDING", "PATROL_TEAM", "test"));

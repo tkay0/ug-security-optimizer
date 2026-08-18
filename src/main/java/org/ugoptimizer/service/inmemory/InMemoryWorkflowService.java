@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.ugoptimizer.model.AuditEvent;
-import org.ugoptimizer.service.WorkflowService;
+import org.ugoptimizer.frontend.WorkflowService;
 
 /**
  * In-memory {@link WorkflowService}. Replace with a real DAO-backed

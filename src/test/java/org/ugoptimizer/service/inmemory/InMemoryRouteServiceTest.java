@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.ugoptimizer.result.PathResult;
 import org.ugoptimizer.result.TraversalResult;
-import org.ugoptimizer.service.LocationService;
-import org.ugoptimizer.service.RouteService;
+import org.ugoptimizer.frontend.LocationService;
+import org.ugoptimizer.frontend.RouteService;
 
 /**
  * Seeded graph: 1&lt;-&gt;2 unblocked (6.0 min), 2&lt;-&gt;3 unblocked (4.0 min),

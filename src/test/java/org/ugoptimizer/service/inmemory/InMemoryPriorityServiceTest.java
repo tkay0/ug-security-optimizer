@@ -9,8 +9,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.ugoptimizer.model.ServiceRequest;
-import org.ugoptimizer.service.PriorityService;
-import org.ugoptimizer.service.RequestService;
+import org.ugoptimizer.frontend.PriorityService;
+import org.ugoptimizer.frontend.RequestService;
 
 class InMemoryPriorityServiceTest {
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.ugoptimizer.model.ServiceRequest;
-import org.ugoptimizer.service.RequestService;
+import org.ugoptimizer.frontend.RequestService;
 
 /**
  * In-memory {@link RequestService} shared by every screen that touches

@@ -2,7 +2,7 @@ package org.ugoptimizer.ui.menu;
 
 import org.ugoptimizer.model.Location;
 import org.ugoptimizer.model.Road;
-import org.ugoptimizer.service.LocationService;
+import org.ugoptimizer.frontend.LocationService;
 import org.ugoptimizer.ui.display.Column;
 import org.ugoptimizer.ui.display.DataTablePanel;
 import org.ugoptimizer.ui.display.MessagePrinter;

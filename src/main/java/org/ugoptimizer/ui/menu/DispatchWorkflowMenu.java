@@ -2,8 +2,8 @@ package org.ugoptimizer.ui.menu;
 
 import org.ugoptimizer.model.AuditEvent;
 import org.ugoptimizer.model.ServiceRequest;
-import org.ugoptimizer.service.RequestService;
-import org.ugoptimizer.service.WorkflowService;
+import org.ugoptimizer.frontend.RequestService;
+import org.ugoptimizer.frontend.WorkflowService;
 import org.ugoptimizer.structures.stack.CustomStack;
 import org.ugoptimizer.ui.display.Column;
 import org.ugoptimizer.ui.display.DataTablePanel;

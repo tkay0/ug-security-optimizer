@@ -1,7 +1,7 @@
 package org.ugoptimizer.ui.menu;
 
 import org.ugoptimizer.model.ServiceRequest;
-import org.ugoptimizer.service.PriorityService;
+import org.ugoptimizer.frontend.PriorityService;
 import org.ugoptimizer.ui.display.Column;
 import org.ugoptimizer.ui.display.DataTablePanel;
 

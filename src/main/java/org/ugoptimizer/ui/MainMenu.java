@@ -1,12 +1,12 @@
 package org.ugoptimizer.ui;
 
-import org.ugoptimizer.service.LocationService;
-import org.ugoptimizer.service.PriorityService;
-import org.ugoptimizer.service.ReportService;
-import org.ugoptimizer.service.RequestService;
-import org.ugoptimizer.service.ResourceService;
-import org.ugoptimizer.service.RouteService;
-import org.ugoptimizer.service.WorkflowService;
+import org.ugoptimizer.frontend.LocationService;
+import org.ugoptimizer.frontend.PriorityService;
+import org.ugoptimizer.frontend.ReportService;
+import org.ugoptimizer.frontend.RequestService;
+import org.ugoptimizer.frontend.ResourceService;
+import org.ugoptimizer.frontend.RouteService;
+import org.ugoptimizer.frontend.WorkflowService;
 import org.ugoptimizer.ui.menu.DispatchWorkflowMenu;
 import org.ugoptimizer.ui.menu.LocationRoadMenu;
 import org.ugoptimizer.ui.menu.OptimizationMenu;

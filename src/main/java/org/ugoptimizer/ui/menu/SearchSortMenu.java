@@ -3,7 +3,7 @@ package org.ugoptimizer.ui.menu;
 import org.ugoptimizer.algorithms.BinarySearch;
 import org.ugoptimizer.algorithms.LinearSearch;
 import org.ugoptimizer.model.ServiceRequest;
-import org.ugoptimizer.service.RequestService;
+import org.ugoptimizer.frontend.RequestService;
 import org.ugoptimizer.ui.display.Column;
 import org.ugoptimizer.ui.display.DataTablePanel;
 import org.ugoptimizer.ui.display.MessagePrinter;

@@ -9,7 +9,7 @@ import org.ugoptimizer.algorithms.assignment.AssignmentCandidate;
 import org.ugoptimizer.algorithms.assignment.PlaceholderResponseMetrics;
 import org.ugoptimizer.model.Resource;
 import org.ugoptimizer.model.ServiceRequest;
-import org.ugoptimizer.service.ResourceService;
+import org.ugoptimizer.frontend.ResourceService;
 import org.ugoptimizer.ui.display.Column;
 import org.ugoptimizer.ui.display.DataTablePanel;
 import org.ugoptimizer.ui.display.MessagePrinter;

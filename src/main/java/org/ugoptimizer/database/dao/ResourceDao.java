@@ -63,6 +63,31 @@ public final class ResourceDao {
         }
     }
 
+    public void insert(Resource resource) throws SQLException {
+        Objects.requireNonNull(resource, "resource cannot be null");
+        String sql = "INSERT INTO resources (" + COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = databaseManager.openConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, resource.getResourceId());
+            statement.setString(2, resource.getResourceType());
+            statement.setInt(3, resource.getHomeLocationId());
+            statement.setInt(4, resource.getCapacity());
+            statement.setString(5, resource.getAvailabilityStatus());
+            if (resource.getCurrentLocationId() == null) {
+                statement.setNull(6, Types.INTEGER);
+            } else {
+                statement.setInt(6, resource.getCurrentLocationId());
+            }
+            setNullableText(statement, 7,
+                    resource.getShiftStart() == null ? null : resource.getShiftStart().toString());
+            setNullableText(statement, 8,
+                    resource.getShiftEnd() == null ? null : resource.getShiftEnd().toString());
+            requireSingleInsert(statement.executeUpdate());
+        } catch (SQLException exception) {
+            throw new SQLException("Failed to insert resource " + resource.getResourceId(), exception);
+        }
+    }
+
     public boolean updateAvailability(int resourceId, String availabilityStatus)
             throws SQLException {
         requirePositiveId(resourceId);
@@ -115,6 +140,21 @@ public final class ResourceDao {
             throw new SQLException(operation + " affected more than one row");
         }
         return affectedRows == 1;
+    }
+
+    private static void setNullableText(PreparedStatement statement, int index, String value)
+            throws SQLException {
+        if (value == null) {
+            statement.setNull(index, Types.VARCHAR);
+        } else {
+            statement.setString(index, value);
+        }
+    }
+
+    private static void requireSingleInsert(int affectedRows) throws SQLException {
+        if (affectedRows != 1) {
+            throw new SQLException("Resource insert affected " + affectedRows + " rows");
+        }
     }
 
     private static void requirePositiveId(int resourceId) {

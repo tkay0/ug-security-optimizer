@@ -115,6 +115,27 @@ CREATE TABLE IF NOT EXISTS resources (
         OR (shift_start IS NOT NULL AND shift_end IS NOT NULL)
     )
 );
+CREATE TABLE IF NOT EXISTS assignments (
+ assignment_id INTEGER PRIMARY KEY CHECK(assignment_id>0), request_id INTEGER NOT NULL,
+ resource_id INTEGER NOT NULL, assigned_at TEXT NOT NULL CHECK(julianday(assigned_at) IS NOT NULL),
+ released_at TEXT, status TEXT NOT NULL CHECK(status IN('ACTIVE','RELEASED')),
+ estimated_response_time_min REAL NOT NULL CHECK(estimated_response_time_min>=0),
+ FOREIGN KEY(request_id) REFERENCES service_requests(request_id),
+ FOREIGN KEY(resource_id) REFERENCES resources(resource_id),
+ CHECK((status='ACTIVE' AND released_at IS NULL) OR (status='RELEASED' AND julianday(released_at) IS NOT NULL))
+);
+CREATE TABLE IF NOT EXISTS request_status_history (
+ history_id INTEGER PRIMARY KEY CHECK(history_id>0), request_id INTEGER NOT NULL,
+ previous_status TEXT NOT NULL CHECK(previous_status IN('PENDING','ASSIGNED','IN_PROGRESS','COMPLETED','CANCELLED')),
+ new_status TEXT NOT NULL CHECK(new_status IN('PENDING','ASSIGNED','IN_PROGRESS','COMPLETED','CANCELLED')),
+ actor_type TEXT NOT NULL CHECK(trim(actor_type)<>''),
+ event_timestamp TEXT NOT NULL CHECK(julianday(event_timestamp) IS NOT NULL),
+ change_type TEXT NOT NULL CHECK(change_type IN('STATUS_CHANGE','ASSIGNMENT','UNDO')),
+ assignment_id INTEGER, reversed_history_id INTEGER UNIQUE, details TEXT,
+ FOREIGN KEY(request_id) REFERENCES service_requests(request_id), FOREIGN KEY(assignment_id) REFERENCES assignments(assignment_id),
+ FOREIGN KEY(reversed_history_id) REFERENCES request_status_history(history_id),
+ CHECK(previous_status<>new_status), CHECK((change_type='UNDO' AND reversed_history_id IS NOT NULL) OR (change_type<>'UNDO' AND reversed_history_id IS NULL))
+);
 
 -- ------------------------------------------------------------
 -- Controlled road blockage and condition scenarios
@@ -187,6 +208,19 @@ CREATE TABLE IF NOT EXISTS algorithm_runs (
 );
 
 -- ------------------------------------------------------------
+-- Frontend-compatible ID reservations
+-- ------------------------------------------------------------
+-- Domain models currently require a positive ID before construction. This
+-- sequence table lets a frontend reserve those IDs atomically without relying
+-- on a race-prone SELECT MAX(id) + 1 performed outside a write statement.
+CREATE TABLE IF NOT EXISTS id_sequences (
+    entity_name TEXT PRIMARY KEY CHECK (
+        entity_name IN ('LOCATION', 'ROAD', 'SERVICE_REQUEST', 'RESOURCE', 'ALGORITHM_RUN')
+    ),
+    next_id INTEGER NOT NULL CHECK (next_id > 0)
+);
+
+-- ------------------------------------------------------------
 -- Query and integrity indexes
 -- ------------------------------------------------------------
 CREATE INDEX IF NOT EXISTS idx_roads_from_location
@@ -215,6 +249,10 @@ CREATE INDEX IF NOT EXISTS idx_resources_type_availability
 
 CREATE INDEX IF NOT EXISTS idx_resources_current_location
     ON resources (current_location_id);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_assignments_active_request ON assignments(request_id) WHERE status='ACTIVE';
+CREATE UNIQUE INDEX IF NOT EXISTS uq_assignments_active_resource ON assignments(resource_id) WHERE status='ACTIVE';
+CREATE INDEX IF NOT EXISTS idx_assignments_request ON assignments(request_id,assigned_at);
+CREATE INDEX IF NOT EXISTS idx_status_history_request ON request_status_history(request_id,event_timestamp,history_id);
 
 CREATE INDEX IF NOT EXISTS idx_road_scenarios_road
     ON road_scenarios (road_id);

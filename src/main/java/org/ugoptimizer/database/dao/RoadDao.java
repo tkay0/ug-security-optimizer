@@ -4,13 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Objects;
 import java.util.Optional;
 import org.ugoptimizer.database.DatabaseManager;
 import org.ugoptimizer.database.mapper.RoadMapper;
 import org.ugoptimizer.model.Road;
 
-/** Provides read-only persistent access to baseline roads. */
+/** Provides persistent access to baseline roads. */
 public final class RoadDao {
 
     private static final String COLUMNS =
@@ -60,6 +61,27 @@ public final class RoadDao {
         }
     }
 
+    public void insert(Road road) throws SQLException {
+        Objects.requireNonNull(road, "road cannot be null");
+        String sql = "INSERT INTO roads (" + COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = databaseManager.openConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, road.getRoadId());
+            statement.setInt(2, road.getFromLocationId());
+            statement.setInt(3, road.getToLocationId());
+            statement.setDouble(4, road.getDistanceKm());
+            statement.setDouble(5, road.getTravelTimeMin());
+            statement.setDouble(6, road.getConditionWeight());
+            statement.setString(7, road.getRouteLabel());
+            setNullableText(statement, 8, road.getRoadType());
+            setNullableText(statement, 9, road.getTrafficLevel());
+            statement.setInt(10, road.isBlocked() ? 1 : 0);
+            requireSingleInsert(statement.executeUpdate());
+        } catch (SQLException exception) {
+            throw new SQLException("Failed to insert road " + road.getRoadId(), exception);
+        }
+    }
+
     private static Road[] grow(Road[] current) throws SQLException {
         if (current.length > Integer.MAX_VALUE / 2) {
             throw new SQLException("Road result exceeds supported array capacity");
@@ -72,6 +94,21 @@ public final class RoadDao {
     private static void requirePositiveId(int roadId) {
         if (roadId <= 0) {
             throw new IllegalArgumentException("roadId must be positive");
+        }
+    }
+
+    private static void setNullableText(PreparedStatement statement, int index, String value)
+            throws SQLException {
+        if (value == null) {
+            statement.setNull(index, Types.VARCHAR);
+        } else {
+            statement.setString(index, value);
+        }
+    }
+
+    private static void requireSingleInsert(int affectedRows) throws SQLException {
+        if (affectedRows != 1) {
+            throw new SQLException("Road insert affected " + affectedRows + " rows");
         }
     }
 }

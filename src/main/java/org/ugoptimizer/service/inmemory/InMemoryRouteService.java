@@ -8,8 +8,8 @@ import org.ugoptimizer.model.Location;
 import org.ugoptimizer.model.Road;
 import org.ugoptimizer.result.PathResult;
 import org.ugoptimizer.result.TraversalResult;
-import org.ugoptimizer.service.LocationService;
-import org.ugoptimizer.service.RouteService;
+import org.ugoptimizer.frontend.LocationService;
+import org.ugoptimizer.frontend.RouteService;
 import org.ugoptimizer.structures.graph.AdjacencyListGraph;
 import org.ugoptimizer.structures.graph.WeightedGraph;
 

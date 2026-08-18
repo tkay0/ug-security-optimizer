@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.ugoptimizer.model.AlgorithmRun;
-import org.ugoptimizer.service.ReportService;
+import org.ugoptimizer.frontend.ReportService;
 
 /**
  * In-memory {@link ReportService}. Replace with a real DAO-backed

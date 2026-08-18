@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import org.ugoptimizer.model.Location;
 import org.ugoptimizer.model.Road;
-import org.ugoptimizer.service.LocationService;
+import org.ugoptimizer.frontend.LocationService;
 
 /**
  * In-memory {@link LocationService} seeded with the same sample campus data

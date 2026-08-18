@@ -1,29 +1,9 @@
 package org.ugoptimizer.app;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import javax.swing.JOptionPane;
+import java.util.Objects;
 import javax.swing.SwingUtilities;
-import org.ugoptimizer.database.DatabaseManager;
-import org.ugoptimizer.database.importers.CsvDatasetImporter;
-import org.ugoptimizer.service.LocationService;
-import org.ugoptimizer.service.PriorityService;
-import org.ugoptimizer.service.ReportService;
-import org.ugoptimizer.service.RequestService;
-import org.ugoptimizer.service.ResourceService;
-import org.ugoptimizer.service.RouteService;
-import org.ugoptimizer.service.WorkflowService;
-import org.ugoptimizer.service.inmemory.InMemoryLocationService;
-import org.ugoptimizer.service.inmemory.InMemoryPriorityService;
-import org.ugoptimizer.service.inmemory.InMemoryReportService;
-import org.ugoptimizer.service.inmemory.InMemoryRequestService;
-import org.ugoptimizer.service.inmemory.InMemoryResourceService;
-import org.ugoptimizer.service.inmemory.InMemoryRouteService;
-import org.ugoptimizer.service.inmemory.InMemoryWorkflowService;
+import org.ugoptimizer.frontend.BackendFrontendServices;
 import org.ugoptimizer.ui.MainMenu;
 
 /**
@@ -31,84 +11,70 @@ import org.ugoptimizer.ui.MainMenu;
  */
 public final class Main {
 
-    private static final Path DATABASE_PATH = Path.of("database", "campus.db");
-    private static final Path CANONICAL_DATA_DIRECTORY = Path.of("data");
-    private static final String[] SEED_TABLES = {
-        "locations", "roads", "resources", "service_requests", "road_scenarios",
-        "audit_events", "algorithm_runs"
-    };
+    private static final Path DEFAULT_DATABASE = Path.of("database", "ug-security-optimizer.db");
+    private static final Path DEFAULT_DATASET = Path.of("data");
 
     private Main() {
-        throw new AssertionError("Utility class must not be instantiated");
+    }
+
+    /** Frontend handoff that keeps presentation code dependent only on public backend services. */
+    @FunctionalInterface
+    public interface FrontendLauncher {
+        void launch(BackendContext backend) throws Exception;
     }
 
     public static void main(String[] args) {
         try {
-            bootstrapDatabase();
-        } catch (IOException | SQLException failure) {
-            System.err.println("Database bootstrap failed: " + failure.getMessage());
-            failure.printStackTrace();
-            JOptionPane.showMessageDialog(
-                    null,
-                    "The database could not be initialized:\n\n" + failure.getMessage()
-                            + "\n\nContinuing with in-memory sample data.",
-                    "UG Campus Security Optimizer",
-                    JOptionPane.WARNING_MESSAGE);
-            // Non-fatal: nothing below reads the database yet (see the comment
-            // on the in-memory services), so a failed bootstrap shouldn't block
-            // the app from launching against its existing in-memory data.
+            start(args, Main::launchSwingFrontend);
+        } catch (Exception exception) {
+            System.err.println("Application startup failed: " + usefulMessage(exception));
+            System.exit(1);
         }
+    }
 
-        // Swap any InMemoryXService below for a real DAO-backed implementation of
-        // the same interface once the database team's work lands -- MainMenu and
-        // every ui/menu/* screen depend only on the interfaces, not on these
-        // in-memory classes, so no UI code needs to change. The database
-        // bootstrapped above isn't read by any of these yet.
-        LocationService locationService = new InMemoryLocationService();
-        RequestService requestService = new InMemoryRequestService();
-        ResourceService resourceService = new InMemoryResourceService();
-        RouteService routeService = new InMemoryRouteService(locationService);
-        WorkflowService workflowService = new InMemoryWorkflowService();
-        ReportService reportService = new InMemoryReportService();
-        PriorityService priorityService = new InMemoryPriorityService(requestService);
+    /** Starts the backend and hands its service composition root to the selected frontend. */
+    public static void start(String[] args, FrontendLauncher frontend) throws Exception {
+        Objects.requireNonNull(args, "args cannot be null");
+        if (args.length > 2) {
+            throw new IllegalArgumentException(
+                    "Usage: Main [database-file] [canonical-dataset-directory]");
+        }
+        Path database = args.length >= 1 ? Path.of(args[0]) : DEFAULT_DATABASE;
+        Path dataset = args.length == 2 ? Path.of(args[1]) : DEFAULT_DATASET;
+        start(database, dataset, frontend);
+    }
 
-        SwingUtilities.invokeLater(() -> new MainMenu(
-                locationService,
-                requestService,
-                resourceService,
-                routeService,
-                workflowService,
-                reportService,
-                priorityService).setVisible(true));
+    /** Testable/configurable startup overload used by a frontend integration point. */
+    public static void start(Path database, Path dataset, FrontendLauncher frontend)
+            throws Exception {
+        Objects.requireNonNull(frontend, "frontend cannot be null");
+        BackendContext backend = BackendContext.initializeApplication(database, dataset);
+        frontend.launch(backend);
     }
 
     /**
-     * Initializes the SQLite schema and imports the canonical CSVs exactly
-     * once (only when every seed table is empty) -- the same bootstrap
-     * sequence used on the {@code feature/team2-gui} branch. Safe to call on
-     * every launch: a database that already has data is left untouched.
+     * Adapts the backend composition root into the Swing-facing
+     * {@code org.ugoptimizer.frontend} contracts and launches {@link MainMenu}
+     * on the event-dispatch thread.
      */
-    private static void bootstrapDatabase() throws IOException, SQLException {
-        DatabaseManager manager = new DatabaseManager(DATABASE_PATH);
-        manager.initializeSchema();
+    private static void launchSwingFrontend(BackendContext backend) {
+        Objects.requireNonNull(backend);
+        BackendFrontendServices services = BackendFrontendServices.from(backend);
 
-        if (seedTablesAreEmpty(manager)) {
-            new CsvDatasetImporter(manager, CANONICAL_DATA_DIRECTORY).importAll();
-        }
+        SwingUtilities.invokeLater(() -> new MainMenu(
+                services.locations(),
+                services.requests(),
+                services.resources(),
+                services.routes(),
+                services.workflow(),
+                services.reports(),
+                services.priority()).setVisible(true));
     }
 
-    private static boolean seedTablesAreEmpty(DatabaseManager manager) throws SQLException {
-        try (Connection connection = manager.openConnection();
-                Statement statement = connection.createStatement()) {
-            for (String table : SEED_TABLES) {
-                try (ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM " + table)) {
-                    resultSet.next();
-                    if (resultSet.getInt(1) != 0) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
+    private static String usefulMessage(Exception exception) {
+        String message = exception.getMessage();
+        return message == null || message.isBlank()
+                ? exception.getClass().getSimpleName()
+                : message;
     }
 }
