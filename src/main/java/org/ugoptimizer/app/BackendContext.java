@@ -57,6 +57,15 @@ public final class BackendContext {
     return new BackendContext(manager);
   }
 
+  /** Opens the application database and imports canonical data only when it is empty. */
+  public static BackendContext initializeApplication(
+      Path databasePath, Path datasetDirectory) throws IOException, SQLException {
+    DatabaseManager manager = new DatabaseManager(Objects.requireNonNull(databasePath));
+    manager.initializeSchema();
+    new CsvDatasetImporter(manager, Objects.requireNonNull(datasetDirectory)).importAllIfEmpty();
+    return new BackendContext(manager);
+  }
+
   public LocationService getLocationService() {
     return locations;
   }
