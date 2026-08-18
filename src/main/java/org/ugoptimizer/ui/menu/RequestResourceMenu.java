@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.TreeSet;
 
 /**
  * Menu for submitting and managing service requests (incidents) and the
@@ -26,7 +27,16 @@ import java.util.Objects;
  * <p>Backed by injected {@link RequestService} and {@link ResourceService}
  * instances. The {@code RequestService} instance is shared with
  * {@link SearchSortMenu}, so a request added here is immediately searchable
- * there.
+ * there. Both tables have a Refresh button since a real backend now mutates
+ * request/resource state from other tabs too (e.g. Dispatch Workflow's
+ * PENDING-to-ASSIGNED transition flips a resource's availability) -- neither
+ * table re-fetches on its own just from being switched to.
+ *
+ * <p>{@code Resource.resourceType} has no fixed enum in the domain model (only
+ * a non-blank check), so the resource-type dropdowns are populated from the
+ * distinct types actually present in {@link ResourceService#findAll()} at
+ * construction time, instead of a hardcoded guess that can drift from
+ * whatever the canonical dataset actually contains.
  */
 public class RequestResourceMenu extends JPanel {
 
@@ -36,11 +46,11 @@ public class RequestResourceMenu extends JPanel {
             "ROAD_OBSTRUCTION", "SECURITY_ESCORT", "SUSPICIOUS_ACTIVITY",
             "THEFT_REPORT", "WELFARE_CHECK"};
     private static final String[] STATUSES = {"PENDING", "ASSIGNED", "IN_PROGRESS", "COMPLETED", "CANCELLED"};
-    private static final String[] RESOURCE_TYPES = {"PATROL_TEAM", "MEDICAL_TEAM", "FIRE_TEAM", "ESCORT_VEHICLE"};
     private static final String[] AVAILABILITY = {"AVAILABLE", "BUSY", "MAINTENANCE", "OFF_DUTY"};
 
     private final RequestService requestService;
     private final ResourceService resourceService;
+    private final String[] resourceTypes;
 
     private DataTablePanel<ServiceRequest> requestTable;
     private DataTablePanel<Resource> resourceTable;
@@ -49,11 +59,20 @@ public class RequestResourceMenu extends JPanel {
         super(new BorderLayout());
         this.requestService = Objects.requireNonNull(requestService, "requestService cannot be null");
         this.resourceService = Objects.requireNonNull(resourceService, "resourceService cannot be null");
+        this.resourceTypes = distinctResourceTypes();
 
         JTabbedPane subTabs = new JTabbedPane();
         subTabs.addTab("Requests", buildRequestsPanel());
         subTabs.addTab("Resources", buildResourcesPanel());
         add(subTabs, BorderLayout.CENTER);
+    }
+
+    private String[] distinctResourceTypes() {
+        TreeSet<String> types = new TreeSet<>();
+        for (Resource resource : resourceService.findAll()) {
+            types.add(resource.getResourceType());
+        }
+        return types.toArray(new String[0]);
     }
 
     private JPanel buildRequestsPanel() {
@@ -74,8 +93,12 @@ public class RequestResourceMenu extends JPanel {
                 .addDropdownField("Category", CATEGORIES)
                 .addTextField("Urgency (1-5)")
                 .addDropdownField("Status", STATUSES)
-                .addDropdownField("Required Resource Type", RESOURCE_TYPES)
+                .addDropdownField("Required Resource Type", resourceTypes)
                 .addTextField("Description");
+
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(e -> requestTable.setRows(requestService.findAll()));
+        panel.add(refreshButton, BorderLayout.NORTH);
 
         JButton addButton = new JButton("Add Request");
         addButton.addActionListener(e -> {
@@ -119,10 +142,14 @@ public class RequestResourceMenu extends JPanel {
         panel.add(resourceTable, BorderLayout.CENTER);
 
         InputReader form = new InputReader()
-                .addDropdownField("Type", RESOURCE_TYPES)
+                .addDropdownField("Type", resourceTypes)
                 .addTextField("Home Location ID")
                 .addTextField("Capacity")
                 .addDropdownField("Availability", AVAILABILITY);
+
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(e -> resourceTable.setRows(resourceService.findAll()));
+        panel.add(refreshButton, BorderLayout.NORTH);
 
         JButton addButton = new JButton("Add Resource");
         addButton.addActionListener(e -> {

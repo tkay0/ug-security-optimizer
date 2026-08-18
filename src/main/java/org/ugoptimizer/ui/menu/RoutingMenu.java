@@ -140,13 +140,15 @@ public class RoutingMenu extends JPanel {
                 int[] path = result.getVertexIds();
                 Edge[] edges = result.getEdges();
                 for (int i = 0; i < path.length; i++) {
-                    String viaRoad = i == 0 ? "(start)" : edges[i - 1].getWeight() + " min";
+                    String viaRoad = i == 0
+                            ? "(start)"
+                            : String.format("%.2f min", edges[i - 1].getWeight());
                     steps.add(new VisitStep(i + 1, path[i], nameOf(path[i]), viaRoad));
                 }
                 resultTable.setRows(steps);
                 MessagePrinter.showInfo(this, "Shortest path found: " + path.length + " location(s), "
                         + result.getEdgeCount() + " road(s), total travel time "
-                        + result.getTotalWeight().orElse(0.0d) + " minutes.");
+                        + String.format("%.2f", result.getTotalWeight().orElse(0.0d)) + " minutes.");
             }
         }
     }

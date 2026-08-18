@@ -23,11 +23,16 @@ import java.util.Objects;
  * cancelling it, and undoing the most recent change.
  *
  * <p>Status changes go through the shared {@link RequestService} (the same
- * instance {@link RequestResourceMenu} and {@link SearchSortMenu} use), and
- * every change is logged as a real {@link AuditEvent} through
- * {@link WorkflowService}. Undo is still backed by the project's own
- * {@link CustomStack} kept locally here &mdash; that's UI workflow control,
- * not persisted state, so it doesn't belong in a service.
+ * instance {@link RequestResourceMenu} and {@link SearchSortMenu} use).
+ * {@code requestService.updateStatus(...)} already records its own
+ * {@link AuditEvent}(s) as part of that call on a real backend (e.g. a
+ * PENDING-to-ASSIGNED transition logs both a REQUEST_ASSIGNED and a
+ * RESOURCE_ASSIGNED event) -- this menu only re-reads
+ * {@link WorkflowService#findAuditLog()} afterward to refresh what it
+ * displays, it does not also write its own duplicate entry. Undo is still
+ * backed by the project's own {@link CustomStack} kept locally here
+ * &mdash; that's UI workflow control, not persisted state, so it doesn't
+ * belong in a service.
  */
 public class DispatchWorkflowMenu extends JPanel {
 
@@ -95,7 +100,7 @@ public class DispatchWorkflowMenu extends JPanel {
                     + " is already " + selected.getStatus() + " and cannot advance further.");
             return;
         }
-        applyStatusChange(selected, next, "STATUS_CHANGE");
+        applyStatusChange(selected, next);
     }
 
     private void cancelSelected() {
@@ -109,17 +114,16 @@ public class DispatchWorkflowMenu extends JPanel {
                     + " is already " + selected.getStatus() + ".");
             return;
         }
-        applyStatusChange(selected, "CANCELLED", "CANCELLATION");
+        applyStatusChange(selected, "CANCELLED");
     }
 
-    private void applyStatusChange(ServiceRequest original, String newStatus, String eventType) {
+    private void applyStatusChange(ServiceRequest original, String newStatus) {
         String oldStatus = original.getStatus();
         requestService.updateStatus(original.getRequestId(), newStatus);
         undoStack.push(new UndoEntry(original.getRequestId(), oldStatus));
 
-        logEvent(eventType, original.getRequestId(),
-                "Status changed from " + oldStatus + " to " + newStatus);
         requestTable.setRows(requestService.findAll());
+        refreshAuditLog();
     }
 
     private void undoLast() {
@@ -135,13 +139,12 @@ public class DispatchWorkflowMenu extends JPanel {
         }
         requestService.updateStatus(entry.requestId(), entry.previousStatus());
 
-        logEvent("UNDO", entry.requestId(),
-                "Reverted status from " + revertedFrom + " to " + entry.previousStatus());
         requestTable.setRows(requestService.findAll());
+        refreshAuditLog();
     }
 
-    private void logEvent(String eventType, int entityId, String details) {
-        workflowService.logEvent(eventType, entityId, details);
+    /** Re-reads the audit log rather than writing to it -- {@code updateStatus} already did. */
+    private void refreshAuditLog() {
         auditTable.setRows(workflowService.findAuditLog());
     }
 
