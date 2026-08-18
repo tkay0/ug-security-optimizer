@@ -72,6 +72,15 @@ public final class PerformanceService {
     return dao.findByExperimentGroup(g);
   }
 
+  /** Records a measurement already performed by an external caller such as a frontend action. */
+  public AlgorithmRun recordMeasuredRun(AlgorithmRun measurement) throws SQLException {
+    Objects.requireNonNull(measurement, "measurement cannot be null");
+    if (!"MEASURED".equals(measurement.getStatus())) {
+      throw new IllegalArgumentException("Only MEASURED algorithm runs can be recorded");
+    }
+    return dao.insertGeneratedMeasurement(measurement);
+  }
+
   private static void requireText(String value, String fieldName) {
     Objects.requireNonNull(value, fieldName + " cannot be null");
     if (value.isBlank()) throw new IllegalArgumentException(fieldName + " cannot be blank");

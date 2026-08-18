@@ -57,4 +57,25 @@ public final class LocationService {
         return findRoadById(roadId).orElseThrow(
                 () -> new NoSuchElementException("Road does not exist: " + roadId));
     }
+
+    public Location createLocation(Location location) throws SQLException {
+        Objects.requireNonNull(location, "location cannot be null");
+        locationDao.insert(location);
+        return requireLocation(location.getLocationId());
+    }
+
+    public Road createRoad(Road road) throws SQLException {
+        Objects.requireNonNull(road, "road cannot be null");
+        requireExistingLocation(road.getFromLocationId(), "from");
+        requireExistingLocation(road.getToLocationId(), "to");
+        roadDao.insert(road);
+        return requireRoad(road.getRoadId());
+    }
+
+    private void requireExistingLocation(int locationId, String role) throws SQLException {
+        if (!locationExists(locationId)) {
+            throw new IllegalArgumentException(
+                    "Road " + role + " location does not exist: " + locationId);
+        }
+    }
 }

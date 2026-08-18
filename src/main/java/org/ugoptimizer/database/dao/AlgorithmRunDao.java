@@ -98,6 +98,40 @@ public final class AlgorithmRunDao {
     }
   }
 
+  /**
+   * Persists a completed measurement with a database-reserved ID and the next run number in its
+   * experiment group.
+   */
+  public AlgorithmRun insertGeneratedMeasurement(AlgorithmRun measurement) throws SQLException {
+    Objects.requireNonNull(measurement, "measurement cannot be null");
+    if (!"MEASURED".equals(measurement.getStatus())) {
+      throw new IllegalArgumentException("Only MEASURED algorithm runs can be recorded");
+    }
+    try (Connection connection = databaseManager.openConnection()) {
+      connection.setAutoCommit(false);
+      try {
+        int runId = IdSequenceDao.reserveNext(connection, IdSequenceDao.Entity.ALGORITHM_RUN);
+        int runNumber = insertGeneratedMeasurement(connection, runId, measurement);
+        connection.commit();
+        return new AlgorithmRun(
+            runId,
+            measurement.getAlgorithmName(),
+            measurement.getInputSize(),
+            measurement.getTimeNs(),
+            measurement.getMemoryKb(),
+            measurement.getDateRun(),
+            measurement.getStatus(),
+            measurement.getExperimentGroup(),
+            runNumber);
+      } catch (SQLException | RuntimeException exception) {
+        rollback(connection, exception);
+        throw exception;
+      }
+    } catch (SQLException exception) {
+      throw new SQLException("Failed to insert measured algorithm run", exception);
+    }
+  }
+
   public AlgorithmRun[] findAll() throws SQLException {
     return query("SELECT " + COLUMNS + " FROM algorithm_runs ORDER BY run_id", null);
   }
@@ -138,6 +172,39 @@ public final class AlgorithmRunDao {
     AlgorithmRun[] expanded = new AlgorithmRun[current.length * 2];
     System.arraycopy(current, 0, expanded, 0, current.length);
     return expanded;
+  }
+
+  private static int insertGeneratedMeasurement(
+      Connection connection, int runId, AlgorithmRun measurement) throws SQLException {
+    String sql =
+        "INSERT INTO algorithm_runs ("
+            + COLUMNS
+            + ") SELECT ?, ?, ?, ?, ?, ?, 'MEASURED', ?, COALESCE(MAX(run_number), 0) + 1"
+            + " FROM algorithm_runs WHERE experiment_group = ? RETURNING run_number";
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+      statement.setInt(1, runId);
+      statement.setString(2, measurement.getAlgorithmName());
+      statement.setInt(3, measurement.getInputSize());
+      statement.setLong(4, measurement.getTimeNs());
+      statement.setDouble(5, measurement.getMemoryKb());
+      statement.setString(6, measurement.getDateRun().toString());
+      statement.setString(7, measurement.getExperimentGroup());
+      statement.setString(8, measurement.getExperimentGroup());
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (!resultSet.next()) {
+          throw new SQLException("Measured algorithm-run insert returned no run number");
+        }
+        return resultSet.getInt(1);
+      }
+    }
+  }
+
+  private static void rollback(Connection connection, Throwable failure) {
+    try {
+      connection.rollback();
+    } catch (SQLException rollbackException) {
+      failure.addSuppressed(rollbackException);
+    }
   }
 
   private static void requirePositiveId(int runId) {

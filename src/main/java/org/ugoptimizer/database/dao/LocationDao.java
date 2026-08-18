@@ -10,7 +10,7 @@ import org.ugoptimizer.database.DatabaseManager;
 import org.ugoptimizer.database.mapper.LocationMapper;
 import org.ugoptimizer.model.Location;
 
-/** Provides read-only persistent access to campus locations. */
+/** Provides persistent access to campus locations. */
 public final class LocationDao {
 
     private static final String COLUMNS =
@@ -62,6 +62,25 @@ public final class LocationDao {
         }
     }
 
+    public void insert(Location location) throws SQLException {
+        Objects.requireNonNull(location, "location cannot be null");
+        String sql = "INSERT INTO locations (" + COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = databaseManager.openConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, location.getLocationId());
+            statement.setString(2, location.getName());
+            statement.setString(3, location.getArea());
+            statement.setString(4, location.getLocationType());
+            statement.setInt(5, location.getXCoord());
+            statement.setInt(6, location.getYCoord());
+            statement.setString(7, location.getOperatingHours());
+            statement.setString(8, location.getSourceUrl());
+            requireSingleInsert(statement.executeUpdate());
+        } catch (SQLException exception) {
+            throw new SQLException("Failed to insert location " + location.getLocationId(), exception);
+        }
+    }
+
     private static Location[] grow(Location[] current) throws SQLException {
         if (current.length > Integer.MAX_VALUE / 2) {
             throw new SQLException("Location result exceeds supported array capacity");
@@ -74,6 +93,12 @@ public final class LocationDao {
     private static void requirePositiveId(int locationId) {
         if (locationId <= 0) {
             throw new IllegalArgumentException("locationId must be positive");
+        }
+    }
+
+    private static void requireSingleInsert(int affectedRows) throws SQLException {
+        if (affectedRows != 1) {
+            throw new SQLException("Location insert affected " + affectedRows + " rows");
         }
     }
 }
