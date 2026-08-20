@@ -12,7 +12,11 @@ import org.ugoptimizer.model.RequestStatusHistory;
 import org.ugoptimizer.model.Resource;
 import org.ugoptimizer.model.Road;
 import org.ugoptimizer.model.ServiceRequest;
+import org.ugoptimizer.algorithms.assignment.AssignmentCandidate;
 import org.ugoptimizer.result.PathResult;
+import org.ugoptimizer.result.OptimizationComparison;
+import org.ugoptimizer.result.RequestOptimizationCandidate;
+import org.ugoptimizer.result.RequestOptimizationResult;
 import org.ugoptimizer.result.TraversalResult;
 
 /**
@@ -34,6 +38,7 @@ public final class BackendFrontendServices {
   private final WorkflowService workflow;
   private final ReportService reports;
   private final PriorityService priority;
+  private final OptimizationService optimization;
 
   private BackendFrontendServices(BackendContext backend) {
     locations = new LocationAdapter(backend);
@@ -43,6 +48,7 @@ public final class BackendFrontendServices {
     workflow = new WorkflowAdapter(backend);
     reports = new ReportAdapter(backend);
     priority = new PriorityAdapter(backend);
+    optimization = new OptimizationAdapter(backend);
   }
 
   public static BackendFrontendServices from(BackendContext backend) {
@@ -76,6 +82,11 @@ public final class BackendFrontendServices {
   public PriorityService priority() {
     return priority;
   }
+
+  public OptimizationService optimization() {
+    return optimization;
+  }
+
 
   private static final class LocationAdapter implements LocationService {
     private final BackendContext backend;
@@ -252,6 +263,11 @@ public final class BackendFrontendServices {
     }
 
     @Override
+    public org.ugoptimizer.result.SystemReport generateSystemReport() {
+      return call("generate system report", () -> backend.getReportService().generateSystemReport());
+    }
+
+    @Override
     public List<AlgorithmRun> findAll() {
       return call("load algorithm runs", () -> list(backend.getPerformanceService().getAllRuns()));
     }
@@ -267,6 +283,68 @@ public final class BackendFrontendServices {
     @Override
     public List<ServiceRequest> priorityOrder() {
       return call("load priority queue", () -> list(backend.getPriorityService().getDispatchQueue()));
+    }
+  }
+
+  private static final class OptimizationAdapter implements OptimizationService {
+    private static final int MAX_EXACT_CANDIDATES = 24;
+    private final BackendContext backend;
+
+    private OptimizationAdapter(BackendContext backend) {
+      this.backend = backend;
+    }
+
+    @Override
+    public int getBudget() {
+      return backend.getOptimizationService().getApprovedBudget();
+    }
+
+    @Override
+    public List<RequestOptimizationCandidate> pendingRequestCandidates() {
+      List<RequestOptimizationCandidate> candidates = new java.util.ArrayList<>();
+      for (ServiceRequest request : requests(backend)) {
+        if (org.ugoptimizer.service.WorkflowService.PENDING.equals(request.getStatus())) {
+          // ServiceRequest has no cost field: one unit of budget per request and
+          // urgency as the real domain benefit keeps the mapping explicit.
+          candidates.add(new RequestOptimizationCandidate(request, 1, request.getUrgency()));
+          if (candidates.size() == MAX_EXACT_CANDIDATES) {
+            break;
+          }
+        }
+      }
+      return List.copyOf(candidates);
+    }
+
+    @Override
+    public RequestOptimizationResult runDynamicProgramming(
+        List<RequestOptimizationCandidate> candidates) {
+      return backend.getOptimizationService().optimizeRequestsWithDynamicProgramming(
+          candidates.toArray(new RequestOptimizationCandidate[0]));
+    }
+
+    @Override
+    public RequestOptimizationResult runBruteForce(List<RequestOptimizationCandidate> candidates) {
+      return backend.getOptimizationService().optimizeRequestsWithBruteForce(
+          candidates.toArray(new RequestOptimizationCandidate[0]));
+    }
+
+    @Override
+    public OptimizationComparison compare(List<RequestOptimizationCandidate> candidates) {
+      return backend.getOptimizationService().compareExact(
+          candidates.toArray(new RequestOptimizationCandidate[0]));
+    }
+
+    @Override
+    public AssignmentCandidate recommendResource(int requestId) {
+      return call("recommend a resource", () -> backend.getAssignmentService().recommendResource(requestId));
+    }
+
+    private static ServiceRequest[] requests(BackendContext backend) throws FrontendServiceException {
+      try {
+        return backend.getRequestService().getAllRequests();
+      } catch (SQLException exception) {
+        throw new FrontendServiceException("Unable to load optimization requests", exception);
+      }
     }
   }
 

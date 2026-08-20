@@ -2,6 +2,9 @@ package org.ugoptimizer.app;
 
 import java.nio.file.Path;
 import java.util.Objects;
+import javax.swing.SwingUtilities;
+import org.ugoptimizer.frontend.BackendFrontendServices;
+import org.ugoptimizer.ui.MainMenu;
 
 /**
  * Application entry point for the UG Campus Security &amp; Emergency Response Optimizer.
@@ -22,7 +25,7 @@ public final class Main {
 
     public static void main(String[] args) {
         try {
-            start(args, Main::reportBackendReady);
+            start(args, Main::launchSwingFrontend);
         } catch (Exception exception) {
             System.err.println("Application startup failed: " + usefulMessage(exception));
             System.exit(1);
@@ -49,10 +52,24 @@ public final class Main {
         frontend.launch(backend);
     }
 
-    private static void reportBackendReady(BackendContext backend) {
+    /**
+     * Adapts the backend composition root into the Swing-facing
+     * {@code org.ugoptimizer.frontend} contracts and launches {@link MainMenu}
+     * on the event-dispatch thread.
+     */
+    private static void launchSwingFrontend(BackendContext backend) {
         Objects.requireNonNull(backend);
-        System.out.println("UG Campus Security & Emergency Response Optimizer");
-        System.out.println("Backend services initialized; frontend handoff is ready.");
+        BackendFrontendServices services = BackendFrontendServices.from(backend);
+
+        SwingUtilities.invokeLater(() -> new MainMenu(
+                services.locations(),
+                services.requests(),
+                services.resources(),
+                services.routes(),
+                services.workflow(),
+                services.reports(),
+                services.priority(),
+                services.optimization()).setVisible(true));
     }
 
     private static String usefulMessage(Exception exception) {
