@@ -10,6 +10,8 @@ import org.ugoptimizer.algorithms.assignment.PlaceholderResponseMetrics;
 import org.ugoptimizer.model.AlgorithmRun;
 import org.ugoptimizer.model.Resource;
 import org.ugoptimizer.model.ServiceRequest;
+import org.ugoptimizer.result.LabelCount;
+import org.ugoptimizer.result.SystemReport;
 import org.ugoptimizer.frontend.LocationService;
 import org.ugoptimizer.frontend.ReportService;
 import org.ugoptimizer.frontend.ResourceService;
@@ -22,6 +24,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.time.Instant;
@@ -61,6 +65,7 @@ public class ReportMenu extends JPanel {
     private JTextField sizeField;
     private JTextField routeStartField;
     private JTextField routeDestinationField;
+    private JTextArea systemReportArea;
 
     public ReportMenu(
             ReportService reportService,
@@ -76,12 +81,14 @@ public class ReportMenu extends JPanel {
         JPanel sortControls = buildSortControls();
         JPanel routeControls = buildRouteControls();
         JPanel greedyControls = buildGreedyControls();
+        JPanel systemReportControls = buildSystemReportControls();
 
         JPanel allControls = new JPanel();
         allControls.setLayout(new javax.swing.BoxLayout(allControls, javax.swing.BoxLayout.Y_AXIS));
         allControls.add(sortControls);
         allControls.add(routeControls);
         allControls.add(greedyControls);
+        allControls.add(systemReportControls);
 
         runTable = new DataTablePanel<>(List.of(
                 new Column<>("Run ID", r -> String.valueOf(r.getRunId())),
@@ -94,6 +101,59 @@ public class ReportMenu extends JPanel {
 
         add(allControls, BorderLayout.NORTH);
         add(runTable, BorderLayout.CENTER);
+        systemReportArea = new JTextArea(8, 60);
+        systemReportArea.setEditable(false);
+        systemReportArea.setLineWrap(true);
+        systemReportArea.setWrapStyleWord(true);
+        JPanel reportPanel = new JPanel(new BorderLayout());
+        reportPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Backend System Report"));
+        reportPanel.add(new JScrollPane(systemReportArea), BorderLayout.CENTER);
+        add(reportPanel, BorderLayout.SOUTH);
+        refreshSystemReport();
+    }
+
+    private JPanel buildSystemReportControls() {
+        JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        JButton refresh = new JButton("Refresh System Report");
+        refresh.addActionListener(e -> refreshSystemReport());
+        controls.add(refresh);
+        return controls;
+    }
+
+    private void refreshSystemReport() {
+        try {
+            systemReportArea.setText(formatSystemReport(reportService.generateSystemReport()));
+        } catch (RuntimeException exception) {
+            MessagePrinter.showError(this, exception.getMessage());
+        }
+    }
+
+    private static String formatSystemReport(SystemReport report) {
+        StringBuilder text = new StringBuilder()
+                .append("Generated: ").append(report.getGeneratedAt()).append('\n')
+                .append("Requests: ").append(report.getTotalRequests()).append('\n')
+                .append("Requests by status: ").append(formatCounts(report.getRequestsByStatus())).append('\n')
+                .append("Resources: ").append(report.getTotalResources()).append('\n')
+                .append("Resources by availability: ")
+                .append(formatCounts(report.getResourcesByAvailability())).append('\n')
+                .append("Active assignments: ").append(report.getActiveAssignmentCount()).append('\n')
+                .append("Audit events: ").append(report.getAuditEventCount()).append('\n')
+                .append("Locations / roads: ").append(report.getLocationCount()).append(" / ")
+                .append(report.getRoadCount()).append(" (blocked: ")
+                .append(report.getBlockedRoadCount()).append(")\n")
+                .append("Algorithm runs: ").append(report.getAlgorithmRunCount())
+                .append(" (measured: ").append(report.getMeasuredAlgorithmRunCount()).append(")\n")
+                .append("Runs by algorithm: ").append(formatCounts(report.getRunsByAlgorithm()));
+        return text.toString();
+    }
+
+    private static String formatCounts(LabelCount[] counts) {
+        StringBuilder text = new StringBuilder();
+        for (int i = 0; i < counts.length; i++) {
+            if (i > 0) text.append(", ");
+            text.append(counts[i].getLabel()).append('=').append(counts[i].getCount());
+        }
+        return text.toString();
     }
 
     private JPanel buildSortControls() {

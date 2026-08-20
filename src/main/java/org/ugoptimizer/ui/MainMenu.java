@@ -7,6 +7,7 @@ import org.ugoptimizer.frontend.RequestService;
 import org.ugoptimizer.frontend.ResourceService;
 import org.ugoptimizer.frontend.RouteService;
 import org.ugoptimizer.frontend.WorkflowService;
+import org.ugoptimizer.frontend.OptimizationService;
 import org.ugoptimizer.ui.menu.DispatchWorkflowMenu;
 import org.ugoptimizer.ui.menu.LocationRoadMenu;
 import org.ugoptimizer.ui.menu.OptimizationMenu;
@@ -39,7 +40,8 @@ public class MainMenu extends JFrame {
             RouteService routeService,
             WorkflowService workflowService,
             ReportService reportService,
-            PriorityService priorityService) {
+            PriorityService priorityService,
+            OptimizationService optimizationService) {
         super("UG Campus Security & Emergency Response Optimizer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 650);
@@ -52,7 +54,7 @@ public class MainMenu extends JFrame {
         tabs.addTab("Search & Sort", new SearchSortMenu(requestService));
         tabs.addTab("Dispatch Workflow", new DispatchWorkflowMenu(requestService, workflowService));
         tabs.addTab("Priority Queue", new PriorityQueueMenu(priorityService));
-        tabs.addTab("Optimization", new OptimizationMenu(resourceService));
+        tabs.addTab("Optimization", new OptimizationMenu(requestService, optimizationService));
         tabs.addTab("Reports", new ReportMenu(reportService, routeService, locationService, resourceService));
 
         setContentPane(tabs);

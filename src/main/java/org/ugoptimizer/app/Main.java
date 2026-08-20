@@ -68,7 +68,8 @@ public final class Main {
                 services.routes(),
                 services.workflow(),
                 services.reports(),
-                services.priority()).setVisible(true));
+                services.priority(),
+                services.optimization()).setVisible(true));
     }
 
     private static String usefulMessage(Exception exception) {

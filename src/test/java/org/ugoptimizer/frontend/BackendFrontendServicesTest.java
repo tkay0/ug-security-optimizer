@@ -18,6 +18,9 @@ import org.ugoptimizer.model.Resource;
 import org.ugoptimizer.model.Road;
 import org.ugoptimizer.model.ServiceRequest;
 import org.ugoptimizer.result.PathResult;
+import org.ugoptimizer.result.OptimizationComparison;
+import org.ugoptimizer.result.RequestOptimizationCandidate;
+import org.ugoptimizer.result.RequestOptimizationResult;
 import org.ugoptimizer.result.TraversalResult;
 
 class BackendFrontendServicesTest {
@@ -147,6 +150,47 @@ class BackendFrontendServicesTest {
     assertEquals(32, second.getRunId());
     assertEquals(2, second.getRunNumber());
     assertEquals(32, frontend.reports().findAll().size());
+  }
+
+  @Test
+  void delegatesOptimizationAndResourceRecommendationToBackendServices() {
+    ServiceRequest first = frontend.requests().findAll().get(3);
+    ServiceRequest second = frontend.requests().findAll().get(11);
+    List<RequestOptimizationCandidate> candidates = List.of(
+        new RequestOptimizationCandidate(first, 3, first.getUrgency()),
+        new RequestOptimizationCandidate(second, 2, second.getUrgency()));
+
+    RequestOptimizationResult dp = frontend.optimization().runDynamicProgramming(candidates);
+    RequestOptimizationResult brute = frontend.optimization().runBruteForce(candidates);
+    OptimizationComparison comparison = frontend.optimization().compare(candidates);
+    assertEquals("DYNAMIC_PROGRAMMING", dp.getAlgorithm());
+    assertEquals("BRUTE_FORCE", brute.getAlgorithm());
+    assertTrue(comparison.hasSameOptimum());
+    assertEquals(80, dp.getObjective().getCapacity());
+
+    assertNotNull(frontend.optimization().recommendResource(first.getRequestId()));
+    assertTrue(frontend.optimization().pendingRequestCandidates().size() <= 24);
+  }
+
+  @Test
+  void obtainsSystemReportThroughTheFrontendReportAdapter() throws Exception {
+    assertEquals(
+        backend.getReportService().generateSystemReport().getTotalRequests(),
+        frontend.reports().generateSystemReport().getTotalRequests());
+    assertEquals(
+        backend.getReportService().generateSystemReport().getAuditEventCount(),
+        frontend.reports().generateSystemReport().getAuditEventCount());
+  }
+
+  @Test
+  void optimizationSwingScreenContainsNoDirectAlgorithmOrSyntheticMetricCalls() throws Exception {
+    String source = java.nio.file.Files.readString(
+        java.nio.file.Path.of("src/main/java/org/ugoptimizer/ui/menu/OptimizationMenu.java"));
+    assertFalse(source.contains("GreedyAssignment"));
+    assertFalse(source.contains("DynamicProgrammingIncidentSelector"));
+    assertFalse(source.contains("BruteForceIncidentSelector"));
+    assertFalse(source.contains("PlaceholderResponseMetrics"));
+    assertTrue(source.contains("OptimizationService"));
   }
 
   @Test

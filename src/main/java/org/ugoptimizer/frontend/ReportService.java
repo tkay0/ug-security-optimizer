@@ -7,5 +7,9 @@ import org.ugoptimizer.model.AlgorithmRun;
 public interface ReportService {
   AlgorithmRun record(AlgorithmRun run);
 
+  default org.ugoptimizer.result.SystemReport generateSystemReport() {
+    throw new UnsupportedOperationException("System reports require the backend service");
+  }
+
   List<AlgorithmRun> findAll();
 }
