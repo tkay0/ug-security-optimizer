@@ -135,6 +135,24 @@ class RedBlackTreeTest extends OrderedTreeContractTest {
         assertValid(tree);
     }
 
+    @Test
+    void exposesAndResetsRealInsertionBalancingDiagnostics() {
+        RedBlackTree<Integer, String> tree = new RedBlackTree<>();
+        for (int key = 1; key <= 12; key++) {
+            tree.put(key, Integer.toString(key));
+        }
+
+        assertTrue(tree.getLeftRotationCount() > 0);
+        assertTrue(tree.getInsertionRecolorCount() > 0);
+        assertTrue(tree.getRightRotationCount() >= 0);
+        assertValid(tree);
+
+        tree.clear();
+        assertEquals(0, tree.getLeftRotationCount());
+        assertEquals(0, tree.getRightRotationCount());
+        assertEquals(0, tree.getInsertionRecolorCount());
+    }
+
     private static RedBlackTree<Integer, String> populatedTree(int size) {
         RedBlackTree<Integer, String> tree = new RedBlackTree<>();
         for (int index = 0; index < size; index++) {

@@ -1,20 +1,14 @@
 package org.ugoptimizer.ui.menu;
 
-import org.ugoptimizer.algorithms.GreedyAssignment;
 import org.ugoptimizer.algorithms.InsertionSort;
 import org.ugoptimizer.algorithms.MergeSort;
 import org.ugoptimizer.algorithms.QuickSort;
 import org.ugoptimizer.algorithms.SelectionSort;
-import org.ugoptimizer.algorithms.assignment.AssignmentCandidate;
-import org.ugoptimizer.algorithms.assignment.PlaceholderResponseMetrics;
 import org.ugoptimizer.model.AlgorithmRun;
-import org.ugoptimizer.model.Resource;
-import org.ugoptimizer.model.ServiceRequest;
 import org.ugoptimizer.result.LabelCount;
 import org.ugoptimizer.result.SystemReport;
 import org.ugoptimizer.frontend.LocationService;
 import org.ugoptimizer.frontend.ReportService;
-import org.ugoptimizer.frontend.ResourceService;
 import org.ugoptimizer.frontend.RouteService;
 import org.ugoptimizer.ui.display.Column;
 import org.ugoptimizer.ui.display.DataTablePanel;
@@ -31,7 +25,6 @@ import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,15 +44,14 @@ import java.util.Random;
  * sorting (against a random array of the given input size), graph traversal
  * and shortest-path (against the current location/road graph via
  * {@link RouteService}/{@link LocationService}, input size = current
- * location count), and greedy assignment (against current resources via
- * {@link ResourceService}, input size = current resource count).
+ * location count). The deterministic multi-trial scheduling, greedy, and
+ * comparison experiments are exposed separately by {@link EfficiencyLabMenu}.
  */
 public class ReportMenu extends JPanel {
 
     private final ReportService reportService;
     private final RouteService routeService;
     private final LocationService locationService;
-    private final ResourceService resourceService;
     private final Map<String, Integer> runNumberByAlgorithm = new HashMap<>();
     private final BackgroundAction reportAction = new BackgroundAction();
     private int nextRunId = 1;
@@ -73,24 +65,20 @@ public class ReportMenu extends JPanel {
     public ReportMenu(
             ReportService reportService,
             RouteService routeService,
-            LocationService locationService,
-            ResourceService resourceService) {
+            LocationService locationService) {
         super(new BorderLayout(8, 8));
         this.reportService = Objects.requireNonNull(reportService, "reportService cannot be null");
         this.routeService = Objects.requireNonNull(routeService, "routeService cannot be null");
         this.locationService = Objects.requireNonNull(locationService, "locationService cannot be null");
-        this.resourceService = Objects.requireNonNull(resourceService, "resourceService cannot be null");
 
         JPanel sortControls = buildSortControls();
         JPanel routeControls = buildRouteControls();
-        JPanel greedyControls = buildGreedyControls();
         JPanel systemReportControls = buildSystemReportControls();
 
         JPanel allControls = new JPanel();
         allControls.setLayout(new javax.swing.BoxLayout(allControls, javax.swing.BoxLayout.Y_AXIS));
         allControls.add(sortControls);
         allControls.add(routeControls);
-        allControls.add(greedyControls);
         allControls.add(systemReportControls);
 
         runTable = new DataTablePanel<>(List.of(
@@ -208,14 +196,6 @@ public class ReportMenu extends JPanel {
         return controls;
     }
 
-    private JPanel buildGreedyControls() {
-        JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
-        JButton greedyRun = new JButton("Run & Record Greedy Assignment");
-        greedyRun.addActionListener(e -> runAndRecordGreedy(greedyRun));
-        controls.add(greedyRun);
-        return controls;
-    }
-
     private interface SortFunction {
         void sort(Integer[] array);
     }
@@ -305,41 +285,6 @@ public class ReportMenu extends JPanel {
                 },
                 runTable::setRows,
                 "run and record Dijkstra");
-    }
-
-    private void runAndRecordGreedy(JButton control) {
-        start(
-                control,
-                "Running...",
-                () -> {
-                    List<Resource> resources = resourceService.findAll();
-                    int inputSize = resources.size();
-                    if (inputSize <= 0) {
-                        throw new IllegalStateException("No resources exist to assign");
-                    }
-                    AssignmentCandidate[] candidates = new AssignmentCandidate[inputSize];
-                    for (int i = 0; i < inputSize; i++) {
-                        Resource resource = resources.get(i);
-                        candidates[i] = new AssignmentCandidate(
-                                resource,
-                                PlaceholderResponseMetrics.responseTime(resource),
-                                PlaceholderResponseMetrics.workload(resource));
-                    }
-                    ServiceRequest sampleRequest = buildSampleRequest();
-                    recordRun(
-                            "GreedyAssignment",
-                            inputSize,
-                            () -> GreedyAssignment.assignBestResource(sampleRequest, candidates));
-                    return reportService.findAll();
-                },
-                runTable::setRows,
-                "run and record Greedy Assignment");
-    }
-
-    private ServiceRequest buildSampleRequest() {
-        return new ServiceRequest(1, 1, 2, "MEDICAL_EMERGENCY", 5,
-                Instant.now(), Instant.now().plus(1, ChronoUnit.HOURS),
-                "PENDING", "MEDICAL_TEAM", "Sample request for greedy assignment benchmark");
     }
 
     /** Times {@code action}, records the measured {@link AlgorithmRun}, and refreshes the table. */

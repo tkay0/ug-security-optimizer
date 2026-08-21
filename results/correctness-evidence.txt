@@ -1,0 +1,82 @@
+UG OPTIMIZER CORRECTNESS EVIDENCE
+
+CUSTOM STRUCTURE TRACE
+DynamicArray: capacity 2 -> 4, values 11 -> 22 -> 33
+CustomIterator: deterministic order 11 -> 22 -> 33
+CustomLinkedList: Balme Library <-> University Bookshop; removed tail Legon Hall; iterator Balme Library -> University Bookshop
+CustomStack undo simulation: push 11, push 22, pop 22, next 11
+HashTable: size=2, load=0.5, collisions=1
+CustomMap: key 7 -> request
+CustomSet: first add=true, duplicate add=false, size=1
+DisjointSet: union(10,20), components=2, connected(10,20)=true
+
+SCHEDULING STRUCTURE DEMONSTRATION
+
+FIFO arrival -> dispatch: R1, R2, R3, R4
+Circular capacity=3: removed R1, enqueued R4 after rear wrapped (front 0->1, rear 2->0); remaining -> R2, R3, R4
+Deque rule (urgency 4-5 front, otherwise rear): rear R1; rear R2; rear R3; front R4; dispatch -> R4, R1, R2, R3
+Binary heap priority (urgency desc, deadline, ID): R4[u=4], R3[u=3], R2[u=2], R1[u=1]
+
+REQUEST INDEX DEMONSTRATION
+Records indexed: 12
+BST search path: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
+Red-black search path: 4 -> 8 -> 10 -> 9
+B-tree search path: 3 -> 6 -> 9 -> 9
+Match agreement: YES (request 9)
+Found: true
+BST height: 12
+Red-black height: 5 (balanced under ordered insertion)
+Red-black balancing events: left rotations=7, right rotations=0, insertion recolours=35
+B-tree height: 2, root keys: 3, root split occurred: true
+BST in-order IDs: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+
+BINARY SEARCH TRACE
+step | low | high | mid | value | decision
+1 | 0 | 6 | 3 | 9 | right
+2 | 4 | 6 | 5 | 18 | left
+3 | 4 | 4 | 4 | 12 | FOUND
+Verified implementation index: 4
+
+INSERTION SORT TRACE
+pass | key | state
+0 | - | [6,3,5,1]
+1 | 3 | [3,6,5,1]
+2 | 5 | [3,5,6,1]
+3 | 1 | [1,3,5,6]
+Verified implementation result: [1,3,5,6]
+
+MERGE / QUICK SORT TRACE
+Merge divide | [6,3] + [5,1]
+Merge halves | [3,6] + [1,5]
+Merge combine | [1,3,5,6]
+Quick pivot 1 | [1,3,5,6], pivot final index 0
+Quick pivot 6 | [1,3,5,6], pivot final index 3
+Quick pivot 5 | [1,3,5,6], pivot final index 2
+
+DIJKSTRA TRACE
+settled | d(1) | d(2) | d(3) | d(4)
+- | 0 | inf | inf | inf
+1 | 0 | 4 | 1 | inf
+3 | 0 | 3 | 1 | 6
+2 | 0 | 3 | 1 | 4
+4 | 0 | 3 | 1 | 4
+Verified path: [1,3,2,4], weight=4.0
+
+KRUSKAL / PRIM TRACE
+edge | weight | Kruskal decision
+1-3 | 1.0 | ACCEPT
+2-4 | 1.0 | ACCEPT
+2-3 | 2.0 | ACCEPT
+1-2 | 4.0 | REJECT cycle
+3-4 | 5.0 | REJECT cycle
+Prim weight=4.0, Kruskal weight=4.0, equal=true
+BFS from 1: [1,2,3,4]
+DFS from 1: [1,2,3,4]
+
+DYNAMIC PROGRAMMING TRACE
+item/cap | 0 | 1 | 2 | 3 | 4 | 5
+0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 0 | 3 | 3 | 3 | 3
+2 | 0 | 0 | 3 | 4 | 4 | 7
+3 | 0 | 0 | 3 | 4 | 5 | 7
+Verified optimum benefit: 7

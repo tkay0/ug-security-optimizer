@@ -9,6 +9,8 @@ import org.ugoptimizer.frontend.RouteService;
 import org.ugoptimizer.frontend.WorkflowService;
 import org.ugoptimizer.frontend.OptimizationService;
 import org.ugoptimizer.ui.menu.DispatchWorkflowMenu;
+import org.ugoptimizer.ui.menu.DsaDemonstrationMenu;
+import org.ugoptimizer.ui.menu.EfficiencyLabMenu;
 import org.ugoptimizer.ui.menu.LocationRoadMenu;
 import org.ugoptimizer.ui.menu.OptimizationMenu;
 import org.ugoptimizer.ui.menu.PriorityQueueMenu;
@@ -55,7 +57,9 @@ public class MainMenu extends JFrame {
         tabs.addTab("Dispatch Workflow", new DispatchWorkflowMenu(requestService, workflowService));
         tabs.addTab("Priority Queue", new PriorityQueueMenu(priorityService));
         tabs.addTab("Optimization", new OptimizationMenu(requestService, optimizationService));
-        tabs.addTab("Reports", new ReportMenu(reportService, routeService, locationService, resourceService));
+        tabs.addTab("DSA Demonstrations", new DsaDemonstrationMenu(requestService));
+        tabs.addTab("Efficiency Lab", new EfficiencyLabMenu());
+        tabs.addTab("Reports", new ReportMenu(reportService, routeService, locationService));
 
         setContentPane(tabs);
     }

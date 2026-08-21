@@ -43,11 +43,25 @@ Main [database-file] [canonical-dataset-directory]
 - Custom structures and implementations for search, sorting, queues, stacks, trees, hashing, graphs, heaps, and disjoint sets.
 - Deterministic BFS/DFS traversal, Dijkstra shortest paths, and Prim/Kruskal minimum-spanning-forest operations through the shared graph contracts.
 - Priority, assignment, undo, and optimisation services, exposed to the Swing screens through frontend service contracts.
+- Examiner-facing custom-structure demonstrations for FIFO, circular queue, deque, heap, BST, red-black tree, and B-tree behaviour using current request records.
+- A deterministic efficiency lab with three raw trials, averages, environment metadata, and chart-ready CSV export.
 - Canonical CSV validation and transactional database import.
 
 Routing excludes baseline roads marked blocked. The backend can also construct
-scenario-specific graphs from `road_scenarios`; the current Swing routing screen
-uses the baseline graph and does not yet offer a scenario selector.
+scenario-specific graphs from `road_scenarios`; the Swing routing screen exposes
+both baseline and named-scenario shortest paths.
+
+The **DSA Demonstrations** tab shows scheduling/index operations and generates
+verified trace evidence. The **Efficiency Lab** tab can run a small representative
+suite or the complete official-size suite. Equivalent command-line exporters are:
+
+```bash
+mvn exec:java -Dexec.mainClass=org.ugoptimizer.evidence.CorrectnessEvidenceMain
+mvn exec:java -Dexec.mainClass=org.ugoptimizer.performance.EfficiencyLabMain -Dexec.args="--quick results/representative-efficiency-lab"
+```
+
+See [`docs/performance/README.md`](docs/performance/README.md) before collecting
+final measurements; a full run is intentionally not part of normal tests.
 
 ## Data and provenance
 
