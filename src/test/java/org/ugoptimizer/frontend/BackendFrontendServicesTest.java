@@ -116,6 +116,9 @@ class BackendFrontendServicesTest {
     assertTrue(frontend.priority().priorityOrder().stream().anyMatch(r -> r.getRequestId() == requestId));
     assertEquals("ASSIGNED", frontend.requests().updateStatus(requestId, "ASSIGNED").getStatus());
     assertTrue(backend.getAssignmentService().findActiveByRequestId(requestId).isPresent());
+    assertEquals(
+        backend.getAssignmentService().findActiveByRequestId(requestId),
+        frontend.workflow().findActiveAssignment(requestId));
     assertEquals("IN_PROGRESS", frontend.requests().updateStatus(requestId, "IN_PROGRESS").getStatus());
 
     RequestStatusHistory[] history = backend.getUndoService().getHistory(requestId);
@@ -150,6 +153,24 @@ class BackendFrontendServicesTest {
     assertEquals(32, second.getRunId());
     assertEquals(2, second.getRunNumber());
     assertEquals(32, frontend.reports().findAll().size());
+  }
+
+  @Test
+  void delegatesScenarioRoutingAndRejectsUnknownScenarios() throws Exception {
+    assertEquals(
+        List.of("ACCESS_BLOCKAGE_DRILL", "EVENT_CROWD", "RAINY_EVENING"),
+        frontend.routes().getScenarioNames());
+
+    PathResult frontendPath =
+        frontend.routes().shortestPathUnderScenario("ACCESS_BLOCKAGE_DRILL", 1, 2);
+    PathResult backendPath =
+        backend.getRouteService().findShortestRouteUnderScenario("ACCESS_BLOCKAGE_DRILL", 1, 2);
+    assertEquals(backendPath.getStatus(), frontendPath.getStatus());
+    assertArrayEquals(backendPath.getVertexIds(), frontendPath.getVertexIds());
+    assertEquals(backendPath.getTotalWeight(), frontendPath.getTotalWeight());
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> frontend.routes().shortestPathUnderScenario("UNKNOWN", 1, 2));
   }
 
   @Test
