@@ -59,25 +59,23 @@ public class LocationRoadMenu extends JPanel {
                 .addTextField("Name")
                 .addTextField("Area")
                 .addTextField("Location Type")
-                .addTextField("Operating Hours");
+                .addTextField("X Coordinate")
+                .addTextField("Y Coordinate")
+                .addTextField("Operating Hours")
+                .addTextField("Source / Provenance");
 
         JButton addButton = new JButton("Add Location");
         addButton.addActionListener(e -> {
             try {
-                // xCoord/yCoord and sourceUrl are required by the Location model and
-                // the database schema (schematic map coordinates and a citation link),
-                // but nothing in this UI or any algorithm currently reads them, so
-                // this screen no longer asks for them and uses placeholder defaults
-                // instead of showing unused fields.
-                Location location = new Location(
-                        locationService.nextLocationId(),
+                LocationInput input = LocationInput.parse(
                         form.getValue("Name"),
                         form.getValue("Area"),
                         form.getValue("Location Type"),
-                        0,
-                        0,
+                        form.getValue("X Coordinate"),
+                        form.getValue("Y Coordinate"),
                         form.getValue("Operating Hours"),
-                        "N/A");
+                        form.getValue("Source / Provenance"));
+                Location location = input.toLocation(locationService.nextLocationId());
                 locationService.addLocation(location);
                 locationTable.setRows(locationService.findAllLocations());
                 form.clear();
@@ -152,5 +150,55 @@ public class LocationRoadMenu extends JPanel {
         formWrapper.add(addButton, BorderLayout.SOUTH);
         formWrapper.setBorder(BorderFactory.createTitledBorder(title));
         return formWrapper;
+    }
+}
+
+/** Validates the location fields collected by {@link LocationRoadMenu} before an ID is reserved. */
+record LocationInput(
+        String name,
+        String area,
+        String locationType,
+        int xCoord,
+        int yCoord,
+        String operatingHours,
+        String sourceUrl) {
+
+    static LocationInput parse(
+            String name,
+            String area,
+            String locationType,
+            String xCoordinate,
+            String yCoordinate,
+            String operatingHours,
+            String sourceUrl) {
+        return new LocationInput(
+                requiredText(name, "Name"),
+                requiredText(area, "Area"),
+                requiredText(locationType, "Location type"),
+                parseCoordinate(xCoordinate, "X coordinate"),
+                parseCoordinate(yCoordinate, "Y coordinate"),
+                operatingHours,
+                requiredText(sourceUrl, "Source / provenance"));
+    }
+
+    Location toLocation(int locationId) {
+        return new Location(
+                locationId, name, area, locationType, xCoord, yCoord, operatingHours, sourceUrl);
+    }
+
+    private static int parseCoordinate(String value, String label) {
+        String text = requiredText(value, label);
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException(label + " must be a whole number.");
+        }
+    }
+
+    private static String requiredText(String value, String label) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(label + " is required.");
+        }
+        return value;
     }
 }
