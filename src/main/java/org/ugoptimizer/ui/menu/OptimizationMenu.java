@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import org.ugoptimizer.algorithms.assignment.AssignmentCandidate;
 import org.ugoptimizer.frontend.OptimizationService;
 import org.ugoptimizer.frontend.RequestService;
@@ -19,6 +20,8 @@ import org.ugoptimizer.result.RequestOptimizationResult;
 import org.ugoptimizer.ui.display.Column;
 import org.ugoptimizer.ui.display.DataTablePanel;
 import org.ugoptimizer.ui.display.MessagePrinter;
+import org.ugoptimizer.ui.BackgroundAction;
+import org.ugoptimizer.ui.UiErrors;
 
 /** Swing view over the canonical request optimization and assignment services. */
 public class OptimizationMenu extends JPanel {
@@ -26,6 +29,7 @@ public class OptimizationMenu extends JPanel {
   private final OptimizationService optimizationService;
   private final DataTablePanel<ServiceRequest> requestTable;
   private final JTextArea resultArea;
+  private final BackgroundAction operation = new BackgroundAction();
 
   public OptimizationMenu(RequestService requestService, OptimizationService optimizationService) {
     super(new BorderLayout(8, 8));
@@ -38,7 +42,7 @@ public class OptimizationMenu extends JPanel {
         new Column<>("Urgency", r -> String.valueOf(r.getUrgency())),
         new Column<>("Status", ServiceRequest::getStatus),
         new Column<>("Required Resource", r -> String.valueOf(r.getRequiredResourceType()))
-    ), pendingRequests());
+    ), List.of());
 
     resultArea = new JTextArea(8, 60);
     resultArea.setEditable(false);
@@ -51,11 +55,11 @@ public class OptimizationMenu extends JPanel {
     JButton brute = new JButton("Run Brute Force");
     JButton compare = new JButton("Compare DP / Brute Force");
     JButton recommend = new JButton("Recommend Resource");
-    refresh.addActionListener(e -> requestTable.setRows(pendingRequests()));
-    dp.addActionListener(e -> runSingle(true));
-    brute.addActionListener(e -> runSingle(false));
-    compare.addActionListener(e -> runComparison());
-    recommend.addActionListener(e -> recommendSelected());
+    refresh.addActionListener(e -> refreshPending(refresh));
+    dp.addActionListener(e -> runSingle(dp, true));
+    brute.addActionListener(e -> runSingle(brute, false));
+    compare.addActionListener(e -> runComparison(compare));
+    recommend.addActionListener(e -> recommendSelected(recommend));
     controls.add(refresh);
     controls.add(dp);
     controls.add(brute);
@@ -74,6 +78,7 @@ public class OptimizationMenu extends JPanel {
     resultPanel.add(new JScrollPane(resultArea), BorderLayout.CENTER);
     add(requestPanel, BorderLayout.CENTER);
     add(resultPanel, BorderLayout.SOUTH);
+    SwingUtilities.invokeLater(() -> refreshPending(refresh));
   }
 
   private List<ServiceRequest> pendingRequests() {
@@ -86,45 +91,84 @@ public class OptimizationMenu extends JPanel {
     return optimizationService.pendingRequestCandidates();
   }
 
-  private void runSingle(boolean dynamicProgramming) {
-    try {
-      List<RequestOptimizationCandidate> candidates = candidates();
-      RequestOptimizationResult result = dynamicProgramming
-          ? optimizationService.runDynamicProgramming(candidates)
-          : optimizationService.runBruteForce(candidates);
-      resultArea.setText(format(result));
-    } catch (RuntimeException exception) {
-      MessagePrinter.showError(this, exception.getMessage());
-    }
+  private void refreshPending(JButton control) {
+    start(
+        control,
+        "Refreshing...",
+        this::pendingRequests,
+        requestTable::setRows,
+        "refresh pending requests");
   }
 
-  private void runComparison() {
-    try {
-      OptimizationComparison comparison = optimizationService.compare(candidates());
-      resultArea.setText(format(comparison.getDynamicProgramming())
-          + "\n\n" + format(comparison.getBruteForce())
-          + "\n\nSame optimum: " + comparison.hasSameOptimum());
-    } catch (RuntimeException exception) {
-      MessagePrinter.showError(this, exception.getMessage());
-    }
+  private void runSingle(JButton control, boolean dynamicProgramming) {
+    start(
+        control,
+        "Optimizing...",
+        () -> {
+          List<RequestOptimizationCandidate> candidates = candidates();
+          return dynamicProgramming
+              ? optimizationService.runDynamicProgramming(candidates)
+              : optimizationService.runBruteForce(candidates);
+        },
+        result -> resultArea.setText(format(result)),
+        "run request optimization");
   }
 
-  private void recommendSelected() {
+  private void runComparison(JButton control) {
+    start(
+        control,
+        "Comparing...",
+        () -> optimizationService.compare(candidates()),
+        comparison -> resultArea.setText(format(comparison.getDynamicProgramming())
+            + "\n\n" + format(comparison.getBruteForce())
+            + "\n\nSame optimum: " + comparison.hasSameOptimum()),
+        "compare optimization methods");
+  }
+
+  private void recommendSelected(JButton control) {
     ServiceRequest selected = requestTable.getSelectedRow();
     if (selected == null) {
       MessagePrinter.showError(this, "Select a pending request first.");
       return;
     }
-    try {
-      AssignmentCandidate candidate = optimizationService.recommendResource(selected.getRequestId());
-      resultArea.setText("Backend assignment recommendation\n"
-          + "Request " + selected.getRequestId() + " -> resource "
-          + candidate.getResource().getResourceId() + " ("
-          + candidate.getResource().getResourceType() + ")\n"
-          + "Route response cost: " + candidate.getResponseTime());
-    } catch (RuntimeException exception) {
-      MessagePrinter.showError(this, exception.getMessage());
+    start(
+        control,
+        "Recommending...",
+        () -> optimizationService.recommendResource(selected.getRequestId()),
+        candidate -> resultArea.setText(formatRecommendation(selected, candidate)),
+        "recommend a compatible resource");
+  }
+
+  private <T> void start(
+      JButton control,
+      String busyText,
+      java.util.concurrent.Callable<T> task,
+      java.util.function.Consumer<T> success,
+      String action) {
+    boolean started = operation.start(
+        control,
+        busyText,
+        task,
+        success,
+        failure -> UiErrors.show(this, action, failure));
+    if (!started) {
+      MessagePrinter.showInfo(this, "An optimization operation is already in progress.");
     }
+  }
+
+  static String formatRecommendation(ServiceRequest request, AssignmentCandidate candidate) {
+    var resource = candidate.getResource();
+    Integer currentLocation = resource.getCurrentLocationId();
+    return "Recommendation only — no assignment has been persisted\n"
+        + "Request: " + request.getRequestId() + " (urgency " + request.getUrgency() + ")\n"
+        + "Request locations: " + request.getSourceLocationId() + " -> "
+        + request.getDestinationLocationId() + "\n"
+        + "Selected resource: " + resource.getResourceId() + " ("
+        + resource.getResourceType() + ")\n"
+        + "Resource location: "
+        + (currentLocation == null ? resource.getHomeLocationId() : currentLocation) + "\n"
+        + "Current resource state: " + resource.getAvailabilityStatus() + "\n"
+        + "Estimated response cost: " + String.format("%.2f minutes", candidate.getResponseTime());
   }
 
   private static String format(RequestOptimizationResult result) {
