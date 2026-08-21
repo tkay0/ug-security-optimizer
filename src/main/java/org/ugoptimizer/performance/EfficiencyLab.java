@@ -224,19 +224,21 @@ public final class EfficiencyLab {
     private static void benchmarkHeap(RecordBuffer output, int[] sizes, int trials) {
         for (int size : sizes) {
             measure(output, "heap", "BinaryHeap_INSERT", size, trials,
-                    "deterministic integer priorities", trial -> {
-                        Integer[] values = randomValues(size, seedFor("heap", size, trial));
+                    "request priority=(urgency desc, arrival order, ID)", trial -> {
+                        DispatchPriority[] values = priorityValues(size, seedFor("heap", size, trial));
                         return () -> {
-                            BinaryHeap<Integer> heap = new BinaryHeap<>();
-                            for (Integer value : values) heap.add(value);
-                            return "size=" + heap.size() + ";minimum=" + heap.peek();
+                            BinaryHeap<DispatchPriority> heap = new BinaryHeap<>();
+                            for (DispatchPriority value : values) heap.add(value);
+                            DispatchPriority top = heap.peek();
+                            return "size=" + heap.size() + ";top_request=" + top.requestId
+                                    + ";urgency=" + top.urgency;
                         };
                     });
             measure(output, "heap", "BinaryHeap_EXTRACT", size, trials,
-                    "same priorities; heap construction excluded", trial -> {
-                        Integer[] values = randomValues(size, seedFor("heap", size, trial));
-                        BinaryHeap<Integer> heap = new BinaryHeap<>();
-                        for (Integer value : values) heap.add(value);
+                    "same request priorities; heap construction excluded", trial -> {
+                        DispatchPriority[] values = priorityValues(size, seedFor("heap", size, trial));
+                        BinaryHeap<DispatchPriority> heap = new BinaryHeap<>();
+                        for (DispatchPriority value : values) heap.add(value);
                         return () -> {
                             int extracted = 0;
                             while (!heap.isEmpty()) {
@@ -254,7 +256,8 @@ public final class EfficiencyLab {
         for (int size : sizes) {
             for (String algorithm : algorithms) {
                 measure(output, "graph", algorithm, size, trials,
-                        "connected deterministic graph; vertices=" + size, trial -> {
+                        "connected deterministic graph; vertices=" + size
+                                + ";edges=" + (2 * size - 3), trial -> {
                             AdjacencyListGraph graph = connectedGraph(size, trial);
                             MSTResult primCheck = new Prim().compute(graph);
                             MSTResult kruskalCheck = new Kruskal().compute(graph);
@@ -427,6 +430,15 @@ public final class EfficiencyLab {
         return items;
     }
 
+    private static DispatchPriority[] priorityValues(int size, long seed) {
+        Random random = new Random(seed);
+        DispatchPriority[] values = new DispatchPriority[size];
+        for (int index = 0; index < size; index++) {
+            values[index] = new DispatchPriority(index + 1, 1 + random.nextInt(5), index);
+        }
+        return values;
+    }
+
     private static AssignmentCandidate[] candidates(int size, int trial) {
         Random random = new Random(seedFor("greedy", size, trial));
         AssignmentCandidate[] candidates = new AssignmentCandidate[size];
@@ -509,6 +521,26 @@ public final class EfficiencyLab {
             BenchmarkRecord[] snapshot = new BenchmarkRecord[size];
             System.arraycopy(records, 0, snapshot, 0, size);
             return snapshot;
+        }
+    }
+
+    private static final class DispatchPriority implements Comparable<DispatchPriority> {
+        private final int requestId;
+        private final int urgency;
+        private final int arrivalOrder;
+
+        private DispatchPriority(int requestId, int urgency, int arrivalOrder) {
+            this.requestId = requestId;
+            this.urgency = urgency;
+            this.arrivalOrder = arrivalOrder;
+        }
+
+        @Override
+        public int compareTo(DispatchPriority other) {
+            int urgencyOrder = Integer.compare(other.urgency, urgency);
+            if (urgencyOrder != 0) return urgencyOrder;
+            int arrival = Integer.compare(arrivalOrder, other.arrivalOrder);
+            return arrival != 0 ? arrival : Integer.compare(requestId, other.requestId);
         }
     }
 }

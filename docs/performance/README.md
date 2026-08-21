@@ -13,7 +13,7 @@ post-run correctness checks, and height/statistic collection happen outside timi
 | Sort | Selection, Insertion, Merge, Quick | 100, 500, 1,000, 5,000, 10,000 |
 | Hash | custom `HashTable`, three initial capacities | 100, 500, 1,000, 5,000, 10,000, 20,000 |
 | Trees | BST/RB insertion, search, and height | 100, 500, 1,000, 5,000, 10,000 |
-| Heap | custom heap insertion/extraction | 100, 500, 1,000, 5,000, 10,000, 20,000 |
+| Heap | custom heap request-priority insertion/extraction | 100, 500, 1,000, 5,000, 10,000, 20,000 |
 | Graph | BFS, DFS, Dijkstra, Prim, Kruskal | 50, 100, 200, 500 vertices |
 | Exact optimization | DP and brute force, identical inputs | 8, 12, 16 items |
 | Assignment | actual greedy selector and candidates | 100, 500, 1,000, 5,000, 10,000, 20,000 |

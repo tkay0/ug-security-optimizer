@@ -41,6 +41,9 @@ If item `i` is too costly, exclusion is the only feasible state. Otherwise the r
 exclusion with the item's benefit plus the already-correct state for the remaining capacity.
 Induction over decreasing item index proves every state optimal. Reconstruction follows exactly
 the stored winning decisions, so its selected cost is feasible and its benefit equals the optimum.
+The exhaustive reference checks every one of `2^n` subsets and is therefore limited to 24 items;
+that exponential growth explains why it is a correctness oracle for small inputs, not a scalable
+runtime strategy.
 
 ## Graph and MST checks
 

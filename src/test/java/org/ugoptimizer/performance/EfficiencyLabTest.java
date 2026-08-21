@@ -47,7 +47,12 @@ class EfficiencyLabTest {
         assertTrue(hasMetric(records, "BinarySearch", "sorted=true"));
         assertTrue(hasMetric(records, "Prim", "matches_kruskal=true"));
         assertTrue(hasMetric(records, "DynamicProgramming", "exact_match=true"));
+        assertTrue(hasMetric(records, "BruteForce", "exact_match=true"));
         assertTrue(hasMetric(records, "GreedyAssignment", "resource_id="));
+        assertTrue(hasMetric(records, "HashTable", "collisions="));
+        assertTrue(hasMetric(records, "BinaryHeap_INSERT", "top_request="));
+        assertTrue(hasParameter(records, "BFS", "edges=7"));
+        assertThreeTrialAverages(records);
     }
 
     @Test
@@ -70,6 +75,27 @@ class EfficiencyLabTest {
                 new int[]{5}, new int[]{5}, new int[]{5}, new int[]{3}, new int[]{3}, 2));
     }
 
+    @Test
+    void deterministicSeedReproducesParametersAndResultMetrics() {
+        EfficiencyLab lab = new EfficiencyLab();
+        BenchmarkRecord[] first = lab.runPlan(
+                new int[]{8}, new int[]{8}, new int[]{8}, new int[]{5}, new int[]{4}, 3)
+                .getRecords();
+        BenchmarkRecord[] second = lab.runPlan(
+                new int[]{8}, new int[]{8}, new int[]{8}, new int[]{5}, new int[]{4}, 3)
+                .getRecords();
+
+        assertEquals(first.length, second.length);
+        for (int index = 0; index < first.length; index++) {
+            assertEquals(first[index].experiment(), second[index].experiment());
+            assertEquals(first[index].algorithm(), second[index].algorithm());
+            assertEquals(first[index].inputSize(), second[index].inputSize());
+            assertEquals(first[index].trial(), second[index].trial());
+            assertEquals(first[index].parameters(), second[index].parameters());
+            assertEquals(first[index].resultMetric(), second[index].resultMetric());
+        }
+    }
+
     private static boolean hasMetric(BenchmarkRecord[] records, String algorithm, String fragment) {
         for (BenchmarkRecord record : records) {
             if (record.algorithm().equals(algorithm) && record.resultMetric().contains(fragment)) {
@@ -77,5 +103,35 @@ class EfficiencyLabTest {
             }
         }
         return false;
+    }
+
+    private static boolean hasParameter(
+            BenchmarkRecord[] records, String algorithm, String fragment) {
+        for (BenchmarkRecord record : records) {
+            if (record.algorithm().equals(algorithm) && record.parameters().contains(fragment)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void assertThreeTrialAverages(BenchmarkRecord[] records) {
+        assertEquals(0, records.length % 3);
+        for (int start = 0; start < records.length; start += 3) {
+            BenchmarkRecord first = records[start];
+            long sum = 0L;
+            for (int index = start; index < start + 3; index++) {
+                assertEquals(first.experiment(), records[index].experiment());
+                assertEquals(first.algorithm(), records[index].algorithm());
+                assertEquals(first.inputSize(), records[index].inputSize());
+                assertEquals(first.parameters(), records[index].parameters());
+                assertEquals(index - start + 1, records[index].trial());
+                sum += records[index].runtimeNs();
+            }
+            long average = sum / 3;
+            for (int index = start; index < start + 3; index++) {
+                assertEquals(average, records[index].averageRuntimeNs());
+            }
+        }
     }
 }
