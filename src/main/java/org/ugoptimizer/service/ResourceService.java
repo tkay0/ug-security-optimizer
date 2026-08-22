@@ -72,6 +72,16 @@ public final class ResourceService {
         return requireResource(resourceId);
     }
 
+    public Resource createResource(Resource resource) throws SQLException {
+        Objects.requireNonNull(resource, "resource cannot be null");
+        requireExistingLocation(resource.getHomeLocationId(), "home");
+        if (resource.getCurrentLocationId() != null) {
+            requireExistingLocation(resource.getCurrentLocationId(), "current");
+        }
+        resourceDao.insert(resource);
+        return requireResource(resource.getResourceId());
+    }
+
     private Resource[] availableResources(String resourceType) throws SQLException {
         Resource[] resources = getAllResources();
         int count = 0;
@@ -112,5 +122,12 @@ public final class ResourceService {
             throw new IllegalArgumentException(fieldName + " cannot be blank");
         }
         return value;
+    }
+
+    private void requireExistingLocation(int locationId, String role) throws SQLException {
+        if (locationDao.findById(locationId).isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Resource " + role + " location does not exist: " + locationId);
+        }
     }
 }

@@ -23,6 +23,7 @@ class DatabaseManagerTest {
           "algorithm_runs",
           "assignments",
           "audit_events",
+          "id_sequences",
           "locations",
           "request_status_history",
           "resources",
@@ -33,7 +34,7 @@ class DatabaseManagerTest {
   @TempDir Path temporaryDirectory;
 
   @Test
-  void initializeSchemaCreatesConfiguredTemporaryDatabaseAndSevenTables() throws Exception {
+  void initializeSchemaCreatesConfiguredTemporaryDatabaseAndAllTables() throws Exception {
     Path databasePath = temporaryDirectory.resolve("fresh.db");
     DatabaseManager manager = new DatabaseManager(databasePath);
 

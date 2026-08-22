@@ -8,7 +8,8 @@ import java.util.Optional;
  *
  * <p>Lookup, insertion, and removal take {@code O(log n)} time. In-order
  * snapshots take {@code O(n)} time and space. The implementation uses a private
- * black sentinel for null leaves and never exposes nodes, colors, or rotations.</p>
+ * black sentinel for null leaves and never exposes mutable nodes or colors. Read-only rotation and
+ * insertion-recolour counters support examiner-visible balancing evidence.</p>
  */
 public final class RedBlackTree<K extends Comparable<? super K>, V>
         implements OrderedTree<K, V> {
@@ -19,6 +20,9 @@ public final class RedBlackTree<K extends Comparable<? super K>, V>
     private final Node<K, V> nil;
     private Node<K, V> root;
     private int size;
+    private int leftRotationCount;
+    private int rightRotationCount;
+    private int insertionRecolorCount;
 
     public RedBlackTree() {
         nil = new Node<>(null, null, BLACK);
@@ -160,6 +164,9 @@ public final class RedBlackTree<K extends Comparable<? super K>, V>
         size = 0;
         nil.parent = nil;
         nil.color = BLACK;
+        leftRotationCount = 0;
+        rightRotationCount = 0;
+        insertionRecolorCount = 0;
     }
 
     /** Package-private invariant diagnostic for implementation-specific tests. */
@@ -182,12 +189,28 @@ public final class RedBlackTree<K extends Comparable<? super K>, V>
         return hasValidOrdering(root, null, null);
     }
 
-    /** Package-private height diagnostic for balancing tests. */
-    int height() {
+    /** Returns the current tree height for balancing and performance diagnostics. */
+    public int height() {
         return height(root);
     }
 
+    /** Returns left rotations performed since construction or the last clear. */
+    public int getLeftRotationCount() {
+        return leftRotationCount;
+    }
+
+    /** Returns right rotations performed since construction or the last clear. */
+    public int getRightRotationCount() {
+        return rightRotationCount;
+    }
+
+    /** Returns actual color changes made by insertion repair since construction or clear. */
+    public int getInsertionRecolorCount() {
+        return insertionRecolorCount;
+    }
+
     private void rotateLeft(Node<K, V> pivot) {
+        leftRotationCount++;
         Node<K, V> promoted = pivot.right;
         pivot.right = promoted.left;
         if (promoted.left != nil) {
@@ -206,6 +229,7 @@ public final class RedBlackTree<K extends Comparable<? super K>, V>
     }
 
     private void rotateRight(Node<K, V> pivot) {
+        rightRotationCount++;
         Node<K, V> promoted = pivot.left;
         pivot.left = promoted.right;
         if (promoted.right != nil) {
@@ -229,39 +253,46 @@ public final class RedBlackTree<K extends Comparable<? super K>, V>
             if (current.parent == current.parent.parent.left) {
                 Node<K, V> uncle = current.parent.parent.right;
                 if (uncle.color == RED) {
-                    current.parent.color = BLACK;
-                    uncle.color = BLACK;
-                    current.parent.parent.color = RED;
+                    setInsertionColor(current.parent, BLACK);
+                    setInsertionColor(uncle, BLACK);
+                    setInsertionColor(current.parent.parent, RED);
                     current = current.parent.parent;
                 } else {
                     if (current == current.parent.right) {
                         current = current.parent;
                         rotateLeft(current);
                     }
-                    current.parent.color = BLACK;
-                    current.parent.parent.color = RED;
+                    setInsertionColor(current.parent, BLACK);
+                    setInsertionColor(current.parent.parent, RED);
                     rotateRight(current.parent.parent);
                 }
             } else {
                 Node<K, V> uncle = current.parent.parent.left;
                 if (uncle.color == RED) {
-                    current.parent.color = BLACK;
-                    uncle.color = BLACK;
-                    current.parent.parent.color = RED;
+                    setInsertionColor(current.parent, BLACK);
+                    setInsertionColor(uncle, BLACK);
+                    setInsertionColor(current.parent.parent, RED);
                     current = current.parent.parent;
                 } else {
                     if (current == current.parent.left) {
                         current = current.parent;
                         rotateRight(current);
                     }
-                    current.parent.color = BLACK;
-                    current.parent.parent.color = RED;
+                    setInsertionColor(current.parent, BLACK);
+                    setInsertionColor(current.parent.parent, RED);
                     rotateLeft(current.parent.parent);
                 }
             }
         }
-        root.color = BLACK;
+        setInsertionColor(root, BLACK);
         root.parent = nil;
+    }
+
+    private void setInsertionColor(Node<K, V> node, boolean color) {
+        if (node.color != color) {
+            node.color = color;
+            insertionRecolorCount++;
+        }
     }
 
     private void fixAfterDeletion(Node<K, V> node) {

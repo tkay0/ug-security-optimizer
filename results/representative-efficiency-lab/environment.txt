@@ -1,0 +1,9 @@
+Benchmark seed: 7497
+OS: Linux 6.6.135-09383-g1140e4f27e24
+Architecture: amd64
+Java: 17.0.20
+JVM: OpenJDK 64-Bit Server VM
+Available processors: 8
+Maximum JVM heap bytes: 1696595968
+Hardware model/CPU/RAM: record manually on the final benchmark machine.
+Memory column: approximate used-heap delta; setup excluded; negative deltas clamped to zero.

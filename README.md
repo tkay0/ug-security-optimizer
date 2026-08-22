@@ -1,98 +1,71 @@
-# 🛡️ UG Campus Security & Emergency Response Optimizer
+# UG Campus Security & Emergency Response Optimizer
 
-An enterprise-grade Java 17 & SQLite academic simulation designed to optimize incident reporting, dispatch priorities, and emergency response routing across the University of Ghana, Legon campus.
+A Java 17 academic application for modelling campus security and emergency-response work at the University of Ghana, Legon. It stores a validated localised seed dataset in SQLite, prioritises and assigns requests, calculates routes, records workflow history, and presents the available operations in a Swing desktop interface.
 
----
+## Requirements
 
-## 📌 Project Overview
-This system serves as the backend operational brain for UG Campus Security. It processes fictional safety incidents (medical cases, theft, crowd control, road blockages), calculates real-time incident priorities, assigns available security teams, determines optimal routes across campus, and tracks incident lifecycles with full audit logging.
+- Java 17
+- Maven 3.9 or later
 
-Every data structure and algorithm core is built **from scratch** without relying on standard Java Collections (`ArrayList`, `HashMap`, `PriorityQueue`, etc.).
+Run commands from the repository root so the default `data/` directory is available.
 
----
+## Build and test
 
-## 🏗️ System Architecture & Workflow
-
-`SQLite Database` ➔ `DAO Layer` ➔ `Custom Data Structures` ➔ `Algorithm Engines` ➔ `Service Layer` ➔ `Console UI`
-
-1. **Data Ingestion:** Reads locations, campus roads, available security resources, and incident logs from SQLite/CSV files.
-2. **Prioritization & Queueing:** Incident severity is calculated; critical life-safety incidents enter a priority heap and deque, while routine issues use FIFO queues.
-3. **Indexing & Search:** Custom BSTs, Red-Black Trees, B-Trees, and Hash Tables maintain fast indices over active incidents.
-4. **Route Optimization:** Dijkstra and Graph algorithms determine the fastest non-blocked response route across campus nodes.
-5. **Audit Trail & Undo:** Stacks maintain incident status history and allow undo operations on incorrect dispatches.
-
----
-
-## 👥 Team Structure & Allocation
-
-* **Overall Project Lead:** Isaac Morrison Quaye
-* **Frontend Lead:** Selorm Sem
-* **GitHub & Integration Lead:** Eastwood Tweneboah Osei
-* **Algorithm Quality Coordinator:** Messiah Asiedu
-
-### Module Division
-* **Team 1 (Foundation & Routing):** Dynamic Arrays, Linked Lists, Graph (Matrix/List), Disjoint Set | BFS, DFS, Dijkstra, Prim, Kruskal.
-* **Team 2 (Requests & Priority Indexing):** Binary Heap, Priority Queue, B-Tree, Hash Table, Custom Set/Map | Linear/Binary Search, Selection/Insertion Sort, Greedy Assignment.
-* **Team 3 (Workflow, Trees & Optimization):** BST, Red-Black Tree, Stack, FIFO Queue, Circular Queue, Deque | Merge Sort, Quick Sort, Dynamic Programming, Brute-Force.
-
----
-
-## 🛠️ Tech Stack & Requirements
-* **Language:** Java 17 (Pure Java, no built-in collections for core logic)
-* **Database:** SQLite (JDBC Driver)
-* **Testing Framework:** JUnit 5
-* **Build System:** Standard Java Compiler (`javac`) / IDE (VS Code / IntelliJ)
-
----
-
-## 🚀 Getting Started
-
-### 1. Clone the Repository
 ```bash
-git clone https://github.com/tkay0/ug-security-optimizer.git
-cd ug-security-optimizer
+mvn clean test
+mvn package -DskipTests
 ```
 
----
+The first command runs the JUnit 5 suite. The second packages the application after tests have already passed.
 
-## 🗄️ Database Workflow
+## Run the Swing application
 
-SQLite provides persistent storage for the project. The workflow is:
+Run `org.ugoptimizer.app.Main` from your IDE, or use Maven:
 
-1. `database/schema.sql` initializes the seven project tables.
-2. The CSV files under `data/` are the canonical seed dataset.
-3. `CsvDatasetImporter` imports and validates all seven datasets in one transaction.
-4. The DAO classes provide persistent reads, inserts, searches, and focused updates.
-5. `DatabaseGraphLoader` reloads locations and roads through the DAOs into any
-   approved `WeightedGraph` implementation.
+```bash
+mvn compile exec:java -Dexec.mainClass=org.ugoptimizer.app.Main
+```
 
-Graph routing cost is derived at load time as:
+The application starts the Swing `MainMenu`. By default it creates or opens
+`database/ug-security-optimizer.db`, initializes the SQLite schema, and imports
+the canonical CSV dataset from `data/` only when the database has no locations.
+Generated SQLite files are ignored by Git.
+
+Optional command-line arguments let an IDE run use different paths:
 
 ```text
-travelTimeMin * conditionWeight
+Main [database-file] [canonical-dataset-directory]
 ```
 
-The baseline loader omits roads marked as blocked. Runtime application of
-`road_scenarios` is intentionally deferred to a later integration checkpoint.
-Generated `*.db`, `*.sqlite`, and `*.sqlite3` files are ignored by Git.
+## Available functionality
 
-There is currently no application command that initializes and imports a
-database. The implemented workflow is exercised through the JUnit suite. A
-developer can follow the same API sequence in an isolated path:
+- Campus locations, roads, resources, service requests, workflow history, and reports persisted through SQLite DAOs.
+- Custom structures and implementations for search, sorting, queues, stacks, trees, hashing, graphs, heaps, and disjoint sets.
+- Deterministic BFS/DFS traversal, Dijkstra shortest paths, and Prim/Kruskal minimum-spanning-forest operations through the shared graph contracts.
+- Priority, assignment, undo, and optimisation services, exposed to the Swing screens through frontend service contracts.
+- Examiner-facing custom-structure demonstrations for FIFO, circular queue, deque, heap, BST, red-black tree, and B-tree behaviour using current request records.
+- A deterministic efficiency lab with three raw trials, averages, environment metadata, and chart-ready CSV export.
+- Canonical CSV validation and transactional database import.
 
-```java
-DatabaseManager manager = new DatabaseManager(databasePath);
-manager.initializeSchema();
-new CsvDatasetImporter(manager, Path.of("data")).importAll();
+Routing excludes baseline roads marked blocked. The backend can also construct
+scenario-specific graphs from `road_scenarios`; the Swing routing screen exposes
+both baseline and named-scenario shortest paths.
 
-LocationDao locationDao = new LocationDao(manager);
-RoadDao roadDao = new RoadDao(manager);
-DatabaseGraphLoader loader = new DatabaseGraphLoader(locationDao, roadDao);
-loader.loadInto(new AdjacencyListGraph());
-```
-
-Run the current database and integration tests with:
+The **DSA Demonstrations** tab shows scheduling/index operations and generates
+verified trace evidence. The **Efficiency Lab** tab can run a small representative
+suite or the complete official-size suite. Equivalent command-line exporters are:
 
 ```bash
-mvn test
+mvn exec:java -Dexec.mainClass=org.ugoptimizer.evidence.CorrectnessEvidenceMain
+mvn exec:java -Dexec.mainClass=org.ugoptimizer.performance.EfficiencyLabMain -Dexec.args="--quick results/representative-efficiency-lab"
 ```
+
+See [`docs/performance/README.md`](docs/performance/README.md) before collecting
+final measurements; a full run is intentionally not part of normal tests.
+
+## Data and provenance
+
+The files in `data/` are seed data for an academic simulation. See
+[`docs/data/README_DATASET.md`](docs/data/README_DATASET.md) and
+[`docs/data/DATASET_PROVENANCE.md`](docs/data/DATASET_PROVENANCE.md) for the
+dataset schema, validation, and provenance notes.

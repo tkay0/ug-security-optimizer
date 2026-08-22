@@ -1,0 +1,4 @@
+location_id,name,area,location_type,x_coord,y_coord
+L001,Balme Library,Legon,Library,5.650,0.190
+L002,Computer Science Department,Legon,Academic,5.651,0.188
+L003,UG Hospital,Legon,Health,5.655,0.185

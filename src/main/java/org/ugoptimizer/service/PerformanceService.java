@@ -27,12 +27,18 @@ public final class PerformanceService {
     clock = Objects.requireNonNull(c);
   }
 
-  public <T> PerformanceMeasurement<T> measureAndRecord(int runId, MeasuredOperation<T> operation)
+  public <T> PerformanceMeasurement<T> measureAndRecord(
+      int runId, String algorithmName, int inputSize, MeasuredOperation<T> operation)
       throws Exception {
     Objects.requireNonNull(operation);
+    requireText(algorithmName, "algorithmName");
+    if (inputSize <= 0) throw new IllegalArgumentException("inputSize must be positive");
     AlgorithmRun planned = requireRun(runId);
     if (!"PLANNED".equals(planned.getStatus()))
       throw new IllegalStateException("Algorithm run is already measured");
+    if (!planned.getAlgorithmName().equals(algorithmName) || planned.getInputSize() != inputSize)
+      throw new IllegalArgumentException(
+          "Measurement metadata does not match planned algorithm run " + runId);
     Runtime runtime = Runtime.getRuntime();
     long before = runtime.totalMemory() - runtime.freeMemory();
     long start = System.nanoTime();
@@ -64,5 +70,19 @@ public final class PerformanceService {
 
   public AlgorithmRun[] getRunsByExperimentGroup(String g) throws SQLException {
     return dao.findByExperimentGroup(g);
+  }
+
+  /** Records a measurement already performed by an external caller such as a frontend action. */
+  public AlgorithmRun recordMeasuredRun(AlgorithmRun measurement) throws SQLException {
+    Objects.requireNonNull(measurement, "measurement cannot be null");
+    if (!"MEASURED".equals(measurement.getStatus())) {
+      throw new IllegalArgumentException("Only MEASURED algorithm runs can be recorded");
+    }
+    return dao.insertGeneratedMeasurement(measurement);
+  }
+
+  private static void requireText(String value, String fieldName) {
+    Objects.requireNonNull(value, fieldName + " cannot be null");
+    if (value.isBlank()) throw new IllegalArgumentException(fieldName + " cannot be blank");
   }
 }

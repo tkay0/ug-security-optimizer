@@ -22,6 +22,7 @@ public final class BackendContext {
   private final OptimizationService optimization;
   private final PerformanceService performance;
   private final ReportService reports;
+  private final IdService ids;
 
   private BackendContext(DatabaseManager d) {
     locations = new LocationService(d);
@@ -36,6 +37,7 @@ public final class BackendContext {
     optimization = new OptimizationService();
     performance = new PerformanceService(d);
     reports = new ReportService(d);
+    ids = new IdService(d);
   }
 
   public static BackendContext initialize(Path path) throws IOException, SQLException {
@@ -54,6 +56,15 @@ public final class BackendContext {
     DatabaseManager manager = new DatabaseManager(Objects.requireNonNull(databasePath));
     manager.initializeSchema();
     new CsvDatasetImporter(manager, Objects.requireNonNull(datasetDirectory)).importAll();
+    return new BackendContext(manager);
+  }
+
+  /** Opens the application database and imports canonical data only when it is empty. */
+  public static BackendContext initializeApplication(
+      Path databasePath, Path datasetDirectory) throws IOException, SQLException {
+    DatabaseManager manager = new DatabaseManager(Objects.requireNonNull(databasePath));
+    manager.initializeSchema();
+    new CsvDatasetImporter(manager, Objects.requireNonNull(datasetDirectory)).importAllIfEmpty();
     return new BackendContext(manager);
   }
 
@@ -103,5 +114,9 @@ public final class BackendContext {
 
   public ReportService getReportService() {
     return reports;
+  }
+
+  public IdService getIdService() {
+    return ids;
   }
 }
