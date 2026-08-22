@@ -8,6 +8,8 @@ import org.ugoptimizer.ui.display.Column;
 import org.ugoptimizer.ui.display.DataTablePanel;
 import org.ugoptimizer.ui.display.MessagePrinter;
 import org.ugoptimizer.ui.input.InputReader;
+import org.ugoptimizer.ui.BackgroundAction;
+import org.ugoptimizer.ui.UiErrors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -51,6 +53,7 @@ public class RequestResourceMenu extends JPanel {
     private final RequestService requestService;
     private final ResourceService resourceService;
     private final String[] resourceTypes;
+    private final BackgroundAction persistenceAction = new BackgroundAction();
 
     private DataTablePanel<ServiceRequest> requestTable;
     private DataTablePanel<Resource> resourceTable;
@@ -97,27 +100,47 @@ public class RequestResourceMenu extends JPanel {
                 .addTextField("Description");
 
         JButton refreshButton = new JButton("Refresh");
-        refreshButton.addActionListener(e -> requestTable.setRows(requestService.findAll()));
+        refreshButton.addActionListener(e -> refreshRequests(refreshButton));
         panel.add(refreshButton, BorderLayout.NORTH);
 
         JButton addButton = new JButton("Add Request");
         addButton.addActionListener(e -> {
             try {
-                ServiceRequest request = new ServiceRequest(
-                        requestService.nextRequestId(),
-                        Integer.parseInt(form.getValue("Source Location ID")),
-                        Integer.parseInt(form.getValue("Destination Location ID")),
-                        form.getValue("Category"),
-                        Integer.parseInt(form.getValue("Urgency (1-5)")),
-                        Instant.now(),
-                        Instant.now().plus(2, ChronoUnit.HOURS),
-                        form.getValue("Status"),
-                        form.getValue("Required Resource Type"),
-                        form.getValue("Description"));
-                requestService.add(request);
-                requestTable.setRows(requestService.findAll());
-                form.clear();
-                MessagePrinter.showInfo(this, "Request added.");
+                int source = Integer.parseInt(form.getValue("Source Location ID"));
+                int destination = Integer.parseInt(form.getValue("Destination Location ID"));
+                int urgency = Integer.parseInt(form.getValue("Urgency (1-5)"));
+                String category = form.getValue("Category");
+                String status = form.getValue("Status");
+                String requiredType = form.getValue("Required Resource Type");
+                String description = form.getValue("Description");
+                boolean started = persistenceAction.start(
+                        addButton,
+                        "Adding...",
+                        () -> {
+                            Instant submitted = Instant.now();
+                            ServiceRequest request = new ServiceRequest(
+                                    requestService.nextRequestId(),
+                                    source,
+                                    destination,
+                                    category,
+                                    urgency,
+                                    submitted,
+                                    submitted.plus(2, ChronoUnit.HOURS),
+                                    status,
+                                    requiredType,
+                                    description);
+                            requestService.add(request);
+                            return requestService.findAll();
+                        },
+                        requests -> {
+                            requestTable.setRows(requests);
+                            form.clear();
+                            MessagePrinter.showInfo(this, "Request added.");
+                        },
+                        failure -> UiErrors.show(this, "add the service request", failure));
+                if (!started) {
+                    MessagePrinter.showInfo(this, "A request or resource update is already in progress.");
+                }
             } catch (NumberFormatException ex) {
                 MessagePrinter.showError(this, "Location ID and urgency must be numbers.");
             } catch (IllegalArgumentException ex) {
@@ -148,25 +171,41 @@ public class RequestResourceMenu extends JPanel {
                 .addDropdownField("Availability", AVAILABILITY);
 
         JButton refreshButton = new JButton("Refresh");
-        refreshButton.addActionListener(e -> resourceTable.setRows(resourceService.findAll()));
+        refreshButton.addActionListener(e -> refreshResources(refreshButton));
         panel.add(refreshButton, BorderLayout.NORTH);
 
         JButton addButton = new JButton("Add Resource");
         addButton.addActionListener(e -> {
             try {
-                Resource resource = new Resource(
-                        resourceService.nextResourceId(),
-                        form.getValue("Type"),
-                        Integer.parseInt(form.getValue("Home Location ID")),
-                        Integer.parseInt(form.getValue("Capacity")),
-                        form.getValue("Availability"),
-                        null,
-                        null,
-                        null);
-                resourceService.add(resource);
-                resourceTable.setRows(resourceService.findAll());
-                form.clear();
-                MessagePrinter.showInfo(this, "Resource added.");
+                String type = form.getValue("Type");
+                int homeLocation = Integer.parseInt(form.getValue("Home Location ID"));
+                int capacity = Integer.parseInt(form.getValue("Capacity"));
+                String availability = form.getValue("Availability");
+                boolean started = persistenceAction.start(
+                        addButton,
+                        "Adding...",
+                        () -> {
+                            Resource resource = new Resource(
+                                    resourceService.nextResourceId(),
+                                    type,
+                                    homeLocation,
+                                    capacity,
+                                    availability,
+                                    null,
+                                    null,
+                                    null);
+                            resourceService.add(resource);
+                            return resourceService.findAll();
+                        },
+                        resources -> {
+                            resourceTable.setRows(resources);
+                            form.clear();
+                            MessagePrinter.showInfo(this, "Resource added.");
+                        },
+                        failure -> UiErrors.show(this, "add the resource", failure));
+                if (!started) {
+                    MessagePrinter.showInfo(this, "A request or resource update is already in progress.");
+                }
             } catch (NumberFormatException ex) {
                 MessagePrinter.showError(this, "Home location and capacity must be numbers.");
             } catch (IllegalArgumentException ex) {
@@ -184,5 +223,29 @@ public class RequestResourceMenu extends JPanel {
         formWrapper.add(addButton, BorderLayout.SOUTH);
         formWrapper.setBorder(BorderFactory.createTitledBorder(title));
         return formWrapper;
+    }
+
+    private void refreshRequests(JButton control) {
+        boolean started = persistenceAction.start(
+                control,
+                "Refreshing...",
+                requestService::findAll,
+                requestTable::setRows,
+                failure -> UiErrors.show(this, "refresh service requests", failure));
+        if (!started) {
+            MessagePrinter.showInfo(this, "A request or resource update is already in progress.");
+        }
+    }
+
+    private void refreshResources(JButton control) {
+        boolean started = persistenceAction.start(
+                control,
+                "Refreshing...",
+                resourceService::findAll,
+                resourceTable::setRows,
+                failure -> UiErrors.show(this, "refresh resources", failure));
+        if (!started) {
+            MessagePrinter.showInfo(this, "A request or resource update is already in progress.");
+        }
     }
 }

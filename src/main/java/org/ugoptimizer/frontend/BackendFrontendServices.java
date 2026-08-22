@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import org.ugoptimizer.app.BackendContext;
 import org.ugoptimizer.model.AlgorithmRun;
+import org.ugoptimizer.model.Assignment;
 import org.ugoptimizer.model.AuditEvent;
 import org.ugoptimizer.model.Location;
 import org.ugoptimizer.model.RequestStatusHistory;
@@ -225,6 +226,20 @@ public final class BackendFrontendServices {
     public PathResult shortestPath(int sourceLocationId, int destinationLocationId) {
       return call("find shortest path", () -> routes.shortestPath(sourceLocationId, destinationLocationId));
     }
+
+    @Override
+    public List<String> getScenarioNames() {
+      return call("load road scenarios", () -> list(routes.getRoadScenarioNames()));
+    }
+
+    @Override
+    public PathResult shortestPathUnderScenario(
+        String scenarioName, int sourceLocationId, int destinationLocationId) {
+      return call(
+          "find a scenario route",
+          () -> routes.findShortestRouteUnderScenario(
+              scenarioName, sourceLocationId, destinationLocationId));
+    }
   }
 
   private static final class WorkflowAdapter implements WorkflowService {
@@ -247,6 +262,13 @@ public final class BackendFrontendServices {
     @Override
     public List<AuditEvent> findAuditLog() {
       return call("load audit log", () -> list(backend.getAuditService().getAuditLog()));
+    }
+
+    @Override
+    public java.util.Optional<Assignment> findActiveAssignment(int requestId) {
+      return call(
+          "load active assignment",
+          () -> backend.getAssignmentService().findActiveByRequestId(requestId));
     }
   }
 

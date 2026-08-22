@@ -1,0 +1,337 @@
+experiment,algorithm,input_size,trial,runtime_ns,average_runtime_ns,memory_kb_approx,seed,parameters,result_metric,date_run
+"search","LinearSearch",100,1,2487207,838633,0,7497,"target=last generated value; input=unsorted","index=99",2026-08-21T16:00:54.697040393Z
+"search","LinearSearch",100,2,15911,838633,0,7497,"target=last generated value; input=unsorted","index=99",2026-08-21T16:00:54.697161845Z
+"search","LinearSearch",100,3,12782,838633,0,7497,"target=last generated value; input=unsorted","index=99",2026-08-21T16:00:54.697237256Z
+"search","BinarySearch",100,1,166169,58498,0,7497,"target=same generated value; precondition=sorted clone","index=95;sorted=true",2026-08-21T16:00:54.699729558Z
+"search","BinarySearch",100,2,5536,58498,0,7497,"target=same generated value; precondition=sorted clone","index=47;sorted=true",2026-08-21T16:00:54.699886486Z
+"search","BinarySearch",100,3,3790,58498,0,7497,"target=same generated value; precondition=sorted clone","index=77;sorted=true",2026-08-21T16:00:54.699994860Z
+"search","LinearSearch",500,1,66583,58653,0,7497,"target=last generated value; input=unsorted","index=499",2026-08-21T16:00:54.700117050Z
+"search","LinearSearch",500,2,58703,58653,0,7497,"target=last generated value; input=unsorted","index=499",2026-08-21T16:00:54.700218880Z
+"search","LinearSearch",500,3,50673,58653,0,7497,"target=last generated value; input=unsorted","index=499",2026-08-21T16:00:54.700307298Z
+"search","BinarySearch",500,1,4091,4044,0,7497,"target=same generated value; precondition=sorted clone","index=24;sorted=true",2026-08-21T16:00:54.700532574Z
+"search","BinarySearch",500,2,4617,4044,0,7497,"target=same generated value; precondition=sorted clone","index=313;sorted=true",2026-08-21T16:00:54.700733347Z
+"search","BinarySearch",500,3,3425,4044,0,7497,"target=same generated value; precondition=sorted clone","index=362;sorted=true",2026-08-21T16:00:54.700938806Z
+"search","LinearSearch",1000,1,42732,45981,0,7497,"target=last generated value; input=unsorted","index=999",2026-08-21T16:00:54.701058203Z
+"search","LinearSearch",1000,2,43798,45981,0,7497,"target=last generated value; input=unsorted","index=999",2026-08-21T16:00:54.701171951Z
+"search","LinearSearch",1000,3,51414,45981,0,7497,"target=last generated value; input=unsorted","index=999",2026-08-21T16:00:54.701311770Z
+"search","BinarySearch",1000,1,7406,6640,0,7497,"target=same generated value; precondition=sorted clone","index=744;sorted=true",2026-08-21T16:00:54.701760043Z
+"search","BinarySearch",1000,2,4305,6640,0,7497,"target=same generated value; precondition=sorted clone","index=680;sorted=true",2026-08-21T16:00:54.702180937Z
+"search","BinarySearch",1000,3,8211,6640,0,7497,"target=same generated value; precondition=sorted clone","index=477;sorted=true",2026-08-21T16:00:54.702799099Z
+"search","LinearSearch",5000,1,171705,154615,0,7497,"target=last generated value; input=unsorted","index=4999",2026-08-21T16:00:54.703335723Z
+"search","LinearSearch",5000,2,140851,154615,0,7497,"target=last generated value; input=unsorted","index=4999",2026-08-21T16:00:54.703904373Z
+"search","LinearSearch",5000,3,151289,154615,0,7497,"target=last generated value; input=unsorted","index=4999",2026-08-21T16:00:54.704461918Z
+"search","BinarySearch",5000,1,5418,4158,0,7497,"target=same generated value; precondition=sorted clone","index=3541;sorted=true",2026-08-21T16:00:54.706006512Z
+"search","BinarySearch",5000,2,3382,4158,0,7497,"target=same generated value; precondition=sorted clone","index=3790;sorted=true",2026-08-21T16:00:54.707565309Z
+"search","BinarySearch",5000,3,3675,4158,0,7497,"target=same generated value; precondition=sorted clone","index=360;sorted=true",2026-08-21T16:00:54.709019047Z
+"search","LinearSearch",10000,1,280321,320935,0,7497,"target=last generated value; input=unsorted","index=9999",2026-08-21T16:00:54.709867944Z
+"search","LinearSearch",10000,2,280799,320935,0,7497,"target=last generated value; input=unsorted","index=9999",2026-08-21T16:00:54.710816479Z
+"search","LinearSearch",10000,3,401685,320935,0,7497,"target=last generated value; input=unsorted","index=9999",2026-08-21T16:00:54.711947879Z
+"search","BinarySearch",10000,1,8719,8540,0,7497,"target=same generated value; precondition=sorted clone","index=2947;sorted=true",2026-08-21T16:00:54.714920991Z
+"search","BinarySearch",10000,2,3629,8540,0,7497,"target=same generated value; precondition=sorted clone","index=2628;sorted=true",2026-08-21T16:00:54.717538986Z
+"search","BinarySearch",10000,3,13273,8540,0,7497,"target=same generated value; precondition=sorted clone","index=1108;sorted=true",2026-08-21T16:00:54.720299211Z
+"sort","SelectionSort",100,1,784752,389491,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.723987347Z
+"sort","SelectionSort",100,2,193657,389491,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.724216552Z
+"sort","SelectionSort",100,3,190066,389491,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.724427856Z
+"sort","InsertionSort",100,1,322752,166515,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.724809378Z
+"sort","InsertionSort",100,2,87783,166515,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.724910983Z
+"sort","InsertionSort",100,3,89011,166515,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.725025620Z
+"sort","MergeSort",100,1,17552,13716,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.725065664Z
+"sort","MergeSort",100,2,12730,13716,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.725087421Z
+"sort","MergeSort",100,3,10868,13716,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.725105861Z
+"sort","QuickSort",100,1,237409,119206,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.725365382Z
+"sort","QuickSort",100,2,64256,119206,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.725448729Z
+"sort","QuickSort",100,3,55955,119206,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.725522445Z
+"sort","SelectionSort",500,1,885243,801776,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.726474207Z
+"sort","SelectionSort",500,2,754855,801776,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.727280799Z
+"sort","SelectionSort",500,3,765232,801776,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.728092298Z
+"sort","InsertionSort",500,1,2094604,1032334,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.730245695Z
+"sort","InsertionSort",500,2,540770,1032334,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.730855303Z
+"sort","InsertionSort",500,3,461629,1032334,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.731361753Z
+"sort","MergeSort",500,1,76079,71367,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.731496269Z
+"sort","MergeSort",500,2,69151,71367,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.731613023Z
+"sort","MergeSort",500,3,68872,71367,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.731722060Z
+"sort","QuickSort",500,1,273077,145623,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.732052870Z
+"sort","QuickSort",500,2,109148,145623,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.732208031Z
+"sort","QuickSort",500,3,54644,145623,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.732308874Z
+"sort","SelectionSort",1000,1,3161857,3123810,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.735579420Z
+"sort","SelectionSort",1000,2,3127666,3123810,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.738827927Z
+"sort","SelectionSort",1000,3,3081909,3123810,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.742027493Z
+"sort","InsertionSort",1000,1,1719649,1954448,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.743872767Z
+"sort","InsertionSort",1000,2,2335457,1954448,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.746359406Z
+"sort","InsertionSort",1000,3,1808238,1954448,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.748274495Z
+"sort","MergeSort",1000,1,235814,188871,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.748605596Z
+"sort","MergeSort",1000,2,162667,188871,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.748809587Z
+"sort","MergeSort",1000,3,168132,188871,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.749025638Z
+"sort","QuickSort",1000,1,159338,147209,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.749322900Z
+"sort","QuickSort",1000,2,132475,147209,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.749500517Z
+"sort","QuickSort",1000,3,149816,147209,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.749696071Z
+"sort","SelectionSort",5000,1,68485388,29126048,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.818569273Z
+"sort","SelectionSort",5000,2,9345177,29126048,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.828160217Z
+"sort","SelectionSort",5000,3,9547581,29126048,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.837925729Z
+"sort","InsertionSort",5000,1,24226158,17061888,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.862754745Z
+"sort","InsertionSort",5000,2,13757286,17061888,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.876930265Z
+"sort","InsertionSort",5000,3,13202220,17061888,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.890332800Z
+"sort","MergeSort",5000,1,3318660,3272528,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.893877595Z
+"sort","MergeSort",5000,2,3213196,3272528,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.897199392Z
+"sort","MergeSort",5000,3,3285730,3272528,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.900774560Z
+"sort","QuickSort",5000,1,3509841,3559966,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.904526066Z
+"sort","QuickSort",5000,2,3356532,3559966,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.908190742Z
+"sort","QuickSort",5000,3,3813525,3559966,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.912287402Z
+"sort","SelectionSort",10000,1,37497139,37865637,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.950204188Z
+"sort","SelectionSort",10000,2,38846094,37865637,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:54.989521390Z
+"sort","SelectionSort",10000,3,37253678,37865637,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.027211466Z
+"sort","InsertionSort",10000,1,56303901,40024423,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.084055834Z
+"sort","InsertionSort",10000,2,32063165,40024423,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.116595614Z
+"sort","InsertionSort",10000,3,31706205,40024423,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.148695701Z
+"sort","MergeSort",10000,1,8578993,7415877,39,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.157710781Z
+"sort","MergeSort",10000,2,6914129,7415877,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.164753309Z
+"sort","MergeSort",10000,3,6754511,7415877,39,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.171662795Z
+"sort","QuickSort",10000,1,6298592,3663234,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.178162150Z
+"sort","QuickSort",10000,2,3825640,3663234,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.182244868Z
+"sort","QuickSort",10000,3,865472,3663234,0,7497,"equivalent deterministic clone; random order","sorted=true",2026-08-21T16:00:55.183369685Z
+"hash","HashTable",100,1,8296867,2794374,260,7497,"initial_capacity=25;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=51",2026-08-21T16:00:55.192739475Z
+"hash","HashTable",100,2,48513,2794374,0,7497,"initial_capacity=25;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=53",2026-08-21T16:00:55.192799419Z
+"hash","HashTable",100,3,37743,2794374,0,7497,"initial_capacity=25;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=48",2026-08-21T16:00:55.192840584Z
+"hash","HashTable",100,1,38813,36657,0,7497,"initial_capacity=50;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=47",2026-08-21T16:00:55.192905632Z
+"hash","HashTable",100,2,31867,36657,0,7497,"initial_capacity=50;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=47",2026-08-21T16:00:55.192940616Z
+"hash","HashTable",100,3,39292,36657,0,7497,"initial_capacity=50;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=43",2026-08-21T16:00:55.192988377Z
+"hash","HashTable",100,1,24746,24908,0,7497,"initial_capacity=100;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=39",2026-08-21T16:00:55.193023147Z
+"hash","HashTable",100,2,28050,24908,0,7497,"initial_capacity=100;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=39",2026-08-21T16:00:55.193053922Z
+"hash","HashTable",100,3,21930,24908,0,7497,"initial_capacity=100;threshold=1.0","unique=100;capacity=100;load=1.0;collisions=34",2026-08-21T16:00:55.193083501Z
+"hash","HashTable",500,1,126737,96098,0,7497,"initial_capacity=125;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=235",2026-08-21T16:00:55.193233080Z
+"hash","HashTable",500,2,99522,96098,0,7497,"initial_capacity=125;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=242",2026-08-21T16:00:55.193341855Z
+"hash","HashTable",500,3,62037,96098,0,7497,"initial_capacity=125;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=241",2026-08-21T16:00:55.193411066Z
+"hash","HashTable",500,1,47895,56296,0,7497,"initial_capacity=250;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=222",2026-08-21T16:00:55.193470531Z
+"hash","HashTable",500,2,71880,56296,0,7497,"initial_capacity=250;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=221",2026-08-21T16:00:55.193566066Z
+"hash","HashTable",500,3,49113,56296,0,7497,"initial_capacity=250;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=220",2026-08-21T16:00:55.193628278Z
+"hash","HashTable",500,1,32886,36742,0,7497,"initial_capacity=500;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=179",2026-08-21T16:00:55.193671726Z
+"hash","HashTable",500,2,37186,36742,0,7497,"initial_capacity=500;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=190",2026-08-21T16:00:55.193716593Z
+"hash","HashTable",500,3,40156,36742,0,7497,"initial_capacity=500;threshold=1.0","unique=500;capacity=500;load=1.0;collisions=182",2026-08-21T16:00:55.193775202Z
+"hash","HashTable",1000,1,152531,146312,92,7497,"initial_capacity=250;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=489",2026-08-21T16:00:55.193950497Z
+"hash","HashTable",1000,2,150983,146312,0,7497,"initial_capacity=250;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=452",2026-08-21T16:00:55.194130364Z
+"hash","HashTable",1000,3,135423,146312,0,7497,"initial_capacity=250;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=471",2026-08-21T16:00:55.194293769Z
+"hash","HashTable",1000,1,135754,133837,92,7497,"initial_capacity=500;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=450",2026-08-21T16:00:55.194471222Z
+"hash","HashTable",1000,2,137641,133837,92,7497,"initial_capacity=500;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=413",2026-08-21T16:00:55.194637673Z
+"hash","HashTable",1000,3,128117,133837,0,7497,"initial_capacity=500;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=431",2026-08-21T16:00:55.194784084Z
+"hash","HashTable",1000,1,120814,90392,92,7497,"initial_capacity=1000;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=364",2026-08-21T16:00:55.194933618Z
+"hash","HashTable",1000,2,79230,90392,92,7497,"initial_capacity=1000;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=337",2026-08-21T16:00:55.195040020Z
+"hash","HashTable",1000,3,71132,90392,0,7497,"initial_capacity=1000;threshold=1.0","unique=1000;capacity=1000;load=1.0;collisions=356",2026-08-21T16:00:55.195136324Z
+"hash","HashTable",5000,1,699250,614187,296,7497,"initial_capacity=1250;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=2438",2026-08-21T16:00:55.195924247Z
+"hash","HashTable",5000,2,604304,614187,184,7497,"initial_capacity=1250;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=2395",2026-08-21T16:00:55.196624522Z
+"hash","HashTable",5000,3,539009,614187,203,7497,"initial_capacity=1250;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=2448",2026-08-21T16:00:55.197240018Z
+"hash","HashTable",5000,1,656724,627707,184,7497,"initial_capacity=2500;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=2251",2026-08-21T16:00:55.197984681Z
+"hash","HashTable",5000,2,641153,627707,296,7497,"initial_capacity=2500;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=2205",2026-08-21T16:00:55.198712533Z
+"hash","HashTable",5000,3,585245,627707,184,7497,"initial_capacity=2500;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=2261",2026-08-21T16:00:55.199412222Z
+"hash","HashTable",5000,1,419267,428355,276,7497,"initial_capacity=5000;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=1855",2026-08-21T16:00:55.199930957Z
+"hash","HashTable",5000,2,423567,428355,184,7497,"initial_capacity=5000;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=1813",2026-08-21T16:00:55.200477633Z
+"hash","HashTable",5000,3,442233,428355,184,7497,"initial_capacity=5000;threshold=1.0","unique=5000;capacity=5000;load=1.0;collisions=1852",2026-08-21T16:00:55.201014620Z
+"hash","HashTable",10000,1,1416986,1134989,460,7497,"initial_capacity=2500;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=4820",2026-08-21T16:00:55.202631574Z
+"hash","HashTable",10000,2,1102279,1134989,431,7497,"initial_capacity=2500;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=4792",2026-08-21T16:00:55.203904934Z
+"hash","HashTable",10000,3,885703,1134989,460,7497,"initial_capacity=2500;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=4834",2026-08-21T16:00:55.204916141Z
+"hash","HashTable",10000,1,47059896,21205747,0,7497,"initial_capacity=5000;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=4440",2026-08-21T16:00:55.252407380Z
+"hash","HashTable",10000,2,15716235,21205747,0,7497,"initial_capacity=5000;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=4418",2026-08-21T16:00:55.268834952Z
+"hash","HashTable",10000,3,841112,21205747,488,7497,"initial_capacity=5000;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=4447",2026-08-21T16:00:55.270025851Z
+"hash","HashTable",10000,1,581396,771956,493,7497,"initial_capacity=10000;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=3678",2026-08-21T16:00:55.270756635Z
+"hash","HashTable",10000,2,841521,771956,234,7497,"initial_capacity=10000;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=3666",2026-08-21T16:00:55.271756617Z
+"hash","HashTable",10000,3,892953,771956,469,7497,"initial_capacity=10000;threshold=1.0","unique=10000;capacity=10000;load=1.0;collisions=3656",2026-08-21T16:00:55.272922076Z
+"hash","HashTable",20000,1,2331237,1505564,1024,7497,"initial_capacity=5000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=9664",2026-08-21T16:00:55.275824465Z
+"hash","HashTable",20000,2,1094497,1505564,1024,7497,"initial_capacity=5000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=9637",2026-08-21T16:00:55.277151435Z
+"hash","HashTable",20000,3,1090959,1505564,1102,7497,"initial_capacity=5000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=9666",2026-08-21T16:00:55.278469891Z
+"hash","HashTable",20000,1,983335,878984,945,7497,"initial_capacity=10000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=8873",2026-08-21T16:00:55.279703476Z
+"hash","HashTable",20000,2,917281,878984,977,7497,"initial_capacity=10000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=8870",2026-08-21T16:00:55.280844422Z
+"hash","HashTable",20000,3,736337,878984,789,7497,"initial_capacity=10000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=8888",2026-08-21T16:00:55.281778618Z
+"hash","HashTable",20000,1,627761,589182,789,7497,"initial_capacity=20000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=7348",2026-08-21T16:00:55.282703303Z
+"hash","HashTable",20000,2,594472,589182,789,7497,"initial_capacity=20000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=7305",2026-08-21T16:00:55.283564158Z
+"hash","HashTable",20000,3,545313,589182,1016,7497,"initial_capacity=20000;threshold=1.0","unique=20000;capacity=20000;load=1.0;collisions=7343",2026-08-21T16:00:55.284324484Z
+"tree","BST_INSERT",100,1,1396486,586971,0,7497,"ordered IDs expose unbalanced degradation","height=100",2026-08-21T16:00:55.288156266Z
+"tree","BST_INSERT",100,2,190225,586971,0,7497,"ordered IDs expose unbalanced degradation","height=100",2026-08-21T16:00:55.288392568Z
+"tree","BST_INSERT",100,3,174202,586971,0,7497,"ordered IDs expose unbalanced degradation","height=100",2026-08-21T16:00:55.288617144Z
+"tree","RED_BLACK_INSERT",100,1,132669,97860,0,7497,"same ordered IDs; balancing active","height=11",2026-08-21T16:00:55.290498080Z
+"tree","RED_BLACK_INSERT",100,2,72560,97860,0,7497,"same ordered IDs; balancing active","height=11",2026-08-21T16:00:55.290600840Z
+"tree","RED_BLACK_INSERT",100,3,88351,97860,0,7497,"same ordered IDs; balancing active","height=11",2026-08-21T16:00:55.290706230Z
+"tree","BST_SEARCH",100,1,193583,69927,0,7497,"ordered IDs; target=last","found=true;height=100",2026-08-21T16:00:55.292533591Z
+"tree","BST_SEARCH",100,2,9557,69927,0,7497,"ordered IDs; target=last","found=true;height=100",2026-08-21T16:00:55.292656340Z
+"tree","BST_SEARCH",100,3,6641,69927,0,7497,"ordered IDs; target=last","found=true;height=100",2026-08-21T16:00:55.292769137Z
+"tree","RED_BLACK_SEARCH",100,1,189829,66738,0,7497,"ordered IDs; target=last","found=true;height=11",2026-08-21T16:00:55.293593797Z
+"tree","RED_BLACK_SEARCH",100,2,6648,66738,0,7497,"ordered IDs; target=last","found=true;height=11",2026-08-21T16:00:55.293674522Z
+"tree","RED_BLACK_SEARCH",100,3,3739,66738,0,7497,"ordered IDs; target=last","found=true;height=11",2026-08-21T16:00:55.293729424Z
+"tree","BST_INSERT",500,1,946648,981290,0,7497,"ordered IDs expose unbalanced degradation","height=500",2026-08-21T16:00:55.295468201Z
+"tree","BST_INSERT",500,2,968827,981290,0,7497,"ordered IDs expose unbalanced degradation","height=500",2026-08-21T16:00:55.296759292Z
+"tree","BST_INSERT",500,3,1028395,981290,0,7497,"ordered IDs expose unbalanced degradation","height=500",2026-08-21T16:00:55.298110387Z
+"tree","RED_BLACK_INSERT",500,1,140640,128038,0,7497,"same ordered IDs; balancing active","height=15",2026-08-21T16:00:55.298289190Z
+"tree","RED_BLACK_INSERT",500,2,132111,128038,0,7497,"same ordered IDs; balancing active","height=15",2026-08-21T16:00:55.298431945Z
+"tree","RED_BLACK_INSERT",500,3,111363,128038,0,7497,"same ordered IDs; balancing active","height=15",2026-08-21T16:00:55.298552529Z
+"tree","BST_SEARCH",500,1,36254,33313,0,7497,"ordered IDs; target=last","found=true;height=500",2026-08-21T16:00:55.299972501Z
+"tree","BST_SEARCH",500,2,35408,33313,0,7497,"ordered IDs; target=last","found=true;height=500",2026-08-21T16:00:55.301381121Z
+"tree","BST_SEARCH",500,3,28279,33313,0,7497,"ordered IDs; target=last","found=true;height=500",2026-08-21T16:00:55.302765513Z
+"tree","RED_BLACK_SEARCH",500,1,14999,7945,0,7497,"ordered IDs; target=last","found=true;height=15",2026-08-21T16:00:55.302949806Z
+"tree","RED_BLACK_SEARCH",500,2,4752,7945,0,7497,"ordered IDs; target=last","found=true;height=15",2026-08-21T16:00:55.303077786Z
+"tree","RED_BLACK_SEARCH",500,3,4084,7945,0,7497,"ordered IDs; target=last","found=true;height=15",2026-08-21T16:00:55.303201488Z
+"tree","BST_INSERT",1000,1,4027606,3824057,0,7497,"ordered IDs expose unbalanced degradation","height=1000",2026-08-21T16:00:55.308518640Z
+"tree","BST_INSERT",1000,2,4856414,3824057,0,7497,"ordered IDs expose unbalanced degradation","height=1000",2026-08-21T16:00:55.314608703Z
+"tree","BST_INSERT",1000,3,2588151,3824057,0,7497,"ordered IDs expose unbalanced degradation","height=1000",2026-08-21T16:00:55.318137092Z
+"tree","RED_BLACK_INSERT",1000,1,166831,160576,0,7497,"same ordered IDs; balancing active","height=17",2026-08-21T16:00:55.318343497Z
+"tree","RED_BLACK_INSERT",1000,2,159233,160576,234,7497,"same ordered IDs; balancing active","height=17",2026-08-21T16:00:55.318511037Z
+"tree","RED_BLACK_INSERT",1000,3,155666,160576,0,7497,"same ordered IDs; balancing active","height=17",2026-08-21T16:00:55.318674293Z
+"tree","BST_SEARCH",1000,1,42178,35590,0,7497,"ordered IDs; target=last","found=true;height=1000",2026-08-21T16:00:55.320249832Z
+"tree","BST_SEARCH",1000,2,32981,35590,0,7497,"ordered IDs; target=last","found=true;height=1000",2026-08-21T16:00:55.321744165Z
+"tree","BST_SEARCH",1000,3,31611,35590,0,7497,"ordered IDs; target=last","found=true;height=1000",2026-08-21T16:00:55.323198336Z
+"tree","RED_BLACK_SEARCH",1000,1,4146,3051,0,7497,"ordered IDs; target=last","found=true;height=17",2026-08-21T16:00:55.323374203Z
+"tree","RED_BLACK_SEARCH",1000,2,3161,3051,0,7497,"ordered IDs; target=last","found=true;height=17",2026-08-21T16:00:55.323546628Z
+"tree","RED_BLACK_SEARCH",1000,3,1848,3051,0,7497,"ordered IDs; target=last","found=true;height=17",2026-08-21T16:00:55.323695666Z
+"tree","BST_INSERT",5000,1,16864875,16856269,234,7497,"ordered IDs expose unbalanced degradation","height=5000",2026-08-21T16:00:55.355543162Z
+"tree","BST_INSERT",5000,2,16689745,16856269,469,7497,"ordered IDs expose unbalanced degradation","height=5000",2026-08-21T16:00:55.387304781Z
+"tree","BST_INSERT",5000,3,17014188,16856269,320,7497,"ordered IDs expose unbalanced degradation","height=5000",2026-08-21T16:00:55.419432253Z
+"tree","RED_BLACK_INSERT",5000,1,445426,430192,234,7497,"same ordered IDs; balancing active","height=22",2026-08-21T16:00:55.419920570Z
+"tree","RED_BLACK_INSERT",5000,2,420931,430192,469,7497,"same ordered IDs; balancing active","height=22",2026-08-21T16:00:55.420357350Z
+"tree","RED_BLACK_INSERT",5000,3,424219,430192,320,7497,"same ordered IDs; balancing active","height=22",2026-08-21T16:00:55.420794920Z
+"tree","BST_SEARCH",5000,1,158975,171058,0,7497,"ordered IDs; target=last","found=true;height=5000",2026-08-21T16:00:55.452924327Z
+"tree","BST_SEARCH",5000,2,166051,171058,0,7497,"ordered IDs; target=last","found=true;height=5000",2026-08-21T16:00:55.485977031Z
+"tree","BST_SEARCH",5000,3,188148,171058,0,7497,"ordered IDs; target=last","found=true;height=5000",2026-08-21T16:00:55.518564484Z
+"tree","RED_BLACK_SEARCH",5000,1,12928,7058,0,7497,"ordered IDs; target=last","found=true;height=22",2026-08-21T16:00:55.520403822Z
+"tree","RED_BLACK_SEARCH",5000,2,4363,7058,0,7497,"ordered IDs; target=last","found=true;height=22",2026-08-21T16:00:55.520888049Z
+"tree","RED_BLACK_SEARCH",5000,3,3883,7058,0,7497,"ordered IDs; target=last","found=true;height=22",2026-08-21T16:00:55.521372133Z
+"tree","BST_INSERT",10000,1,67252784,67360569,593,7497,"ordered IDs expose unbalanced degradation","height=10000",2026-08-21T16:00:55.649486165Z
+"tree","BST_INSERT",10000,2,67737496,67360569,430,7497,"ordered IDs expose unbalanced degradation","height=10000",2026-08-21T16:00:55.777711252Z
+"tree","BST_INSERT",10000,3,67091429,67360569,593,7497,"ordered IDs expose unbalanced degradation","height=10000",2026-08-21T16:00:55.907525903Z
+"tree","RED_BLACK_INSERT",10000,1,918615,902249,727,7497,"same ordered IDs; balancing active","height=24",2026-08-21T16:00:55.908517444Z
+"tree","RED_BLACK_INSERT",10000,2,898376,902249,727,7497,"same ordered IDs; balancing active","height=24",2026-08-21T16:00:55.909448659Z
+"tree","RED_BLACK_INSERT",10000,3,889756,902249,727,7497,"same ordered IDs; balancing active","height=24",2026-08-21T16:00:55.910371494Z
+"tree","BST_SEARCH",10000,1,327045,319207,0,7497,"ordered IDs; target=last","found=true;height=10000",2026-08-21T16:00:56.038380560Z
+"tree","BST_SEARCH",10000,2,310064,319207,0,7497,"ordered IDs; target=last","found=true;height=10000",2026-08-21T16:00:56.171100132Z
+"tree","BST_SEARCH",10000,3,320513,319207,0,7497,"ordered IDs; target=last","found=true;height=10000",2026-08-21T16:00:56.299306903Z
+"tree","RED_BLACK_SEARCH",10000,1,8773,6867,0,7497,"ordered IDs; target=last","found=true;height=24",2026-08-21T16:00:56.300261643Z
+"tree","RED_BLACK_SEARCH",10000,2,6739,6867,0,7497,"ordered IDs; target=last","found=true;height=24",2026-08-21T16:00:56.301191550Z
+"tree","RED_BLACK_SEARCH",10000,3,5090,6867,0,7497,"ordered IDs; target=last","found=true;height=24",2026-08-21T16:00:56.302100788Z
+"heap","BinaryHeap_INSERT",100,1,1539878,547905,133,7497,"request priority=(urgency desc, arrival order, ID)","size=100;top_request=2;urgency=5",2026-08-21T16:00:56.304523626Z
+"heap","BinaryHeap_INSERT",100,2,49121,547905,0,7497,"request priority=(urgency desc, arrival order, ID)","size=100;top_request=3;urgency=5",2026-08-21T16:00:56.304598101Z
+"heap","BinaryHeap_INSERT",100,3,54716,547905,0,7497,"request priority=(urgency desc, arrival order, ID)","size=100;top_request=3;urgency=5",2026-08-21T16:00:56.304673684Z
+"heap","BinaryHeap_EXTRACT",100,1,213033,150392,0,7497,"same request priorities; heap construction excluded","extracted=100",2026-08-21T16:00:56.305215577Z
+"heap","BinaryHeap_EXTRACT",100,2,133411,150392,0,7497,"same request priorities; heap construction excluded","extracted=100",2026-08-21T16:00:56.305392936Z
+"heap","BinaryHeap_EXTRACT",100,3,104733,150392,0,7497,"same request priorities; heap construction excluded","extracted=100",2026-08-21T16:00:56.305531353Z
+"heap","BinaryHeap_INSERT",500,1,37260,33875,0,7497,"request priority=(urgency desc, arrival order, ID)","size=500;top_request=3;urgency=5",2026-08-21T16:00:56.305617047Z
+"heap","BinaryHeap_INSERT",500,2,33030,33875,0,7497,"request priority=(urgency desc, arrival order, ID)","size=500;top_request=3;urgency=5",2026-08-21T16:00:56.305680070Z
+"heap","BinaryHeap_INSERT",500,3,31336,33875,0,7497,"request priority=(urgency desc, arrival order, ID)","size=500;top_request=15;urgency=5",2026-08-21T16:00:56.305740563Z
+"heap","BinaryHeap_EXTRACT",500,1,200934,154642,0,7497,"same request priorities; heap construction excluded","extracted=500",2026-08-21T16:00:56.306005321Z
+"heap","BinaryHeap_EXTRACT",500,2,127946,154642,0,7497,"same request priorities; heap construction excluded","extracted=500",2026-08-21T16:00:56.306193329Z
+"heap","BinaryHeap_EXTRACT",500,3,135046,154642,0,7497,"same request priorities; heap construction excluded","extracted=500",2026-08-21T16:00:56.306389643Z
+"heap","BinaryHeap_INSERT",1000,1,69002,63912,0,7497,"request priority=(urgency desc, arrival order, ID)","size=1000;top_request=6;urgency=5",2026-08-21T16:00:56.306518831Z
+"heap","BinaryHeap_INSERT",1000,2,61538,63912,0,7497,"request priority=(urgency desc, arrival order, ID)","size=1000;top_request=3;urgency=5",2026-08-21T16:00:56.306636794Z
+"heap","BinaryHeap_INSERT",1000,3,61197,63912,0,7497,"request priority=(urgency desc, arrival order, ID)","size=1000;top_request=2;urgency=5",2026-08-21T16:00:56.306755183Z
+"heap","BinaryHeap_EXTRACT",1000,1,251594,235298,0,7497,"same request priorities; heap construction excluded","extracted=1000",2026-08-21T16:00:56.307138141Z
+"heap","BinaryHeap_EXTRACT",1000,2,230193,235298,0,7497,"same request priorities; heap construction excluded","extracted=1000",2026-08-21T16:00:56.307491674Z
+"heap","BinaryHeap_EXTRACT",1000,3,224107,235298,0,7497,"same request priorities; heap construction excluded","extracted=1000",2026-08-21T16:00:56.307835103Z
+"heap","BinaryHeap_INSERT",5000,1,288487,286123,0,7497,"request priority=(urgency desc, arrival order, ID)","size=5000;top_request=4;urgency=5",2026-08-21T16:00:56.308417661Z
+"heap","BinaryHeap_INSERT",5000,2,282221,286123,0,7497,"request priority=(urgency desc, arrival order, ID)","size=5000;top_request=10;urgency=5",2026-08-21T16:00:56.308978468Z
+"heap","BinaryHeap_INSERT",5000,3,287661,286123,133,7497,"request priority=(urgency desc, arrival order, ID)","size=5000;top_request=12;urgency=5",2026-08-21T16:00:56.309543633Z
+"heap","BinaryHeap_EXTRACT",5000,1,1370718,1348722,0,7497,"same request priorities; heap construction excluded","extracted=5000",2026-08-21T16:00:56.311491405Z
+"heap","BinaryHeap_EXTRACT",5000,2,1356236,1348722,0,7497,"same request priorities; heap construction excluded","extracted=5000",2026-08-21T16:00:56.313423094Z
+"heap","BinaryHeap_EXTRACT",5000,3,1319214,1348722,0,7497,"same request priorities; heap construction excluded","extracted=5000",2026-08-21T16:00:56.315274237Z
+"heap","BinaryHeap_INSERT",10000,1,632573,534038,0,7497,"request priority=(urgency desc, arrival order, ID)","size=10000;top_request=1;urgency=5",2026-08-21T16:00:56.316505063Z
+"heap","BinaryHeap_INSERT",10000,2,514124,534038,0,7497,"request priority=(urgency desc, arrival order, ID)","size=10000;top_request=17;urgency=5",2026-08-21T16:00:56.317634633Z
+"heap","BinaryHeap_INSERT",10000,3,455418,534038,64,7497,"request priority=(urgency desc, arrival order, ID)","size=10000;top_request=2;urgency=5",2026-08-21T16:00:56.318663890Z
+"heap","BinaryHeap_EXTRACT",10000,1,1817214,1722128,0,7497,"same request priorities; heap construction excluded","extracted=10000",2026-08-21T16:00:56.321145670Z
+"heap","BinaryHeap_EXTRACT",10000,2,1723776,1722128,0,7497,"same request priorities; heap construction excluded","extracted=10000",2026-08-21T16:00:56.323470771Z
+"heap","BinaryHeap_EXTRACT",10000,3,1625394,1722128,0,7497,"same request priorities; heap construction excluded","extracted=10000",2026-08-21T16:00:56.325649583Z
+"heap","BinaryHeap_INSERT",20000,1,965198,807651,128,7497,"request priority=(urgency desc, arrival order, ID)","size=20000;top_request=6;urgency=5",2026-08-21T16:00:56.326896388Z
+"heap","BinaryHeap_INSERT",20000,2,933846,807651,192,7497,"request priority=(urgency desc, arrival order, ID)","size=20000;top_request=11;urgency=5",2026-08-21T16:00:56.328077699Z
+"heap","BinaryHeap_INSERT",20000,3,523911,807651,224,7497,"request priority=(urgency desc, arrival order, ID)","size=20000;top_request=1;urgency=5",2026-08-21T16:00:56.328840266Z
+"heap","BinaryHeap_EXTRACT",20000,1,3162445,3035696,0,7497,"same request priorities; heap construction excluded","extracted=20000",2026-08-21T16:00:56.333229581Z
+"heap","BinaryHeap_EXTRACT",20000,2,2769097,3035696,0,7497,"same request priorities; heap construction excluded","extracted=20000",2026-08-21T16:00:56.336835112Z
+"heap","BinaryHeap_EXTRACT",20000,3,3175548,3035696,0,7497,"same request priorities; heap construction excluded","extracted=20000",2026-08-21T16:00:56.340899246Z
+"graph","BFS",50,1,887091,335635,0,7497,"connected deterministic graph; vertices=50;edges=97","visited=50",2026-08-21T16:00:56.353057547Z
+"graph","BFS",50,2,60744,335635,0,7497,"connected deterministic graph; vertices=50;edges=97","visited=50",2026-08-21T16:00:56.353675024Z
+"graph","BFS",50,3,59071,335635,0,7497,"connected deterministic graph; vertices=50;edges=97","visited=50",2026-08-21T16:00:56.354190477Z
+"graph","DFS",50,1,209748,116242,0,7497,"connected deterministic graph; vertices=50;edges=97","visited=50",2026-08-21T16:00:56.354879562Z
+"graph","DFS",50,2,72392,116242,0,7497,"connected deterministic graph; vertices=50;edges=97","visited=50",2026-08-21T16:00:56.355365690Z
+"graph","DFS",50,3,66588,116242,0,7497,"connected deterministic graph; vertices=50;edges=97","visited=50",2026-08-21T16:00:56.355877633Z
+"graph","Dijkstra",50,1,2885411,1075533,0,7497,"connected deterministic graph; vertices=50;edges=97","weight=126.0",2026-08-21T16:00:56.359139335Z
+"graph","Dijkstra",50,2,157150,1075533,0,7497,"connected deterministic graph; vertices=50;edges=97","weight=129.0",2026-08-21T16:00:56.359683029Z
+"graph","Dijkstra",50,3,184040,1075533,0,7497,"connected deterministic graph; vertices=50;edges=97","weight=130.0",2026-08-21T16:00:56.360168111Z
+"graph","Prim",50,1,227179,146011,0,7497,"connected deterministic graph; vertices=50;edges=97","mst_weight=192.0;matches_kruskal=true",2026-08-21T16:00:56.360664790Z
+"graph","Prim",50,2,101717,146011,0,7497,"connected deterministic graph; vertices=50;edges=97","mst_weight=192.0;matches_kruskal=true",2026-08-21T16:00:56.360973983Z
+"graph","Prim",50,3,109138,146011,0,7497,"connected deterministic graph; vertices=50;edges=97","mst_weight=192.0;matches_kruskal=true",2026-08-21T16:00:56.361276253Z
+"graph","Kruskal",50,1,128648,92717,0,7497,"connected deterministic graph; vertices=50;edges=97","mst_weight=192.0;matches_prim=true",2026-08-21T16:00:56.361617830Z
+"graph","Kruskal",50,2,75556,92717,0,7497,"connected deterministic graph; vertices=50;edges=97","mst_weight=192.0;matches_prim=true",2026-08-21T16:00:56.361886288Z
+"graph","Kruskal",50,3,73947,92717,0,7497,"connected deterministic graph; vertices=50;edges=97","mst_weight=192.0;matches_prim=true",2026-08-21T16:00:56.362144683Z
+"graph","BFS",100,1,109746,95056,0,7497,"connected deterministic graph; vertices=100;edges=197","visited=100",2026-08-21T16:00:56.362675365Z
+"graph","BFS",100,2,87856,95056,0,7497,"connected deterministic graph; vertices=100;edges=197","visited=100",2026-08-21T16:00:56.363166847Z
+"graph","BFS",100,3,87566,95056,0,7497,"connected deterministic graph; vertices=100;edges=197","visited=100",2026-08-21T16:00:56.363639208Z
+"graph","DFS",100,1,102395,98967,0,7497,"connected deterministic graph; vertices=100;edges=197","visited=100",2026-08-21T16:00:56.364078406Z
+"graph","DFS",100,2,98652,98967,0,7497,"connected deterministic graph; vertices=100;edges=197","visited=100",2026-08-21T16:00:56.364512096Z
+"graph","DFS",100,3,95855,98967,0,7497,"connected deterministic graph; vertices=100;edges=197","visited=100",2026-08-21T16:00:56.364931124Z
+"graph","Dijkstra",100,1,339841,232772,0,7497,"connected deterministic graph; vertices=100;edges=197","weight=257.0",2026-08-21T16:00:56.365586299Z
+"graph","Dijkstra",100,2,178990,232772,0,7497,"connected deterministic graph; vertices=100;edges=197","weight=257.0",2026-08-21T16:00:56.366226624Z
+"graph","Dijkstra",100,3,179486,232772,0,7497,"connected deterministic graph; vertices=100;edges=197","weight=261.0",2026-08-21T16:00:56.366916249Z
+"graph","Prim",100,1,282532,266619,0,7497,"connected deterministic graph; vertices=100;edges=197","mst_weight=387.0;matches_kruskal=true",2026-08-21T16:00:56.367716041Z
+"graph","Prim",100,2,283056,266619,0,7497,"connected deterministic graph; vertices=100;edges=197","mst_weight=387.0;matches_kruskal=true",2026-08-21T16:00:56.369405089Z
+"graph","Prim",100,3,234271,266619,0,7497,"connected deterministic graph; vertices=100;edges=197","mst_weight=389.0;matches_kruskal=true",2026-08-21T16:00:56.370049887Z
+"graph","Kruskal",100,1,135365,138604,0,7497,"connected deterministic graph; vertices=100;edges=197","mst_weight=387.0;matches_prim=true",2026-08-21T16:00:56.370601183Z
+"graph","Kruskal",100,2,140140,138604,0,7497,"connected deterministic graph; vertices=100;edges=197","mst_weight=387.0;matches_prim=true",2026-08-21T16:00:56.371131565Z
+"graph","Kruskal",100,3,140308,138604,0,7497,"connected deterministic graph; vertices=100;edges=197","mst_weight=389.0;matches_prim=true",2026-08-21T16:00:56.371677739Z
+"graph","BFS",200,1,253506,210785,0,7497,"connected deterministic graph; vertices=200;edges=397","visited=200",2026-08-21T16:00:56.372853611Z
+"graph","BFS",200,2,243961,210785,10,7497,"connected deterministic graph; vertices=200;edges=397","visited=200",2026-08-21T16:00:56.374014360Z
+"graph","BFS",200,3,134889,210785,0,7497,"connected deterministic graph; vertices=200;edges=397","visited=200",2026-08-21T16:00:56.375056273Z
+"graph","DFS",200,1,132372,132097,0,7497,"connected deterministic graph; vertices=200;edges=397","visited=200",2026-08-21T16:00:56.376101107Z
+"graph","DFS",200,2,129494,132097,0,7497,"connected deterministic graph; vertices=200;edges=397","visited=200",2026-08-21T16:00:56.376915980Z
+"graph","DFS",200,3,134425,132097,0,7497,"connected deterministic graph; vertices=200;edges=397","visited=200",2026-08-21T16:00:56.377701086Z
+"graph","Dijkstra",200,1,262864,248258,0,7497,"connected deterministic graph; vertices=200;edges=397","weight=516.0",2026-08-21T16:00:56.378621894Z
+"graph","Dijkstra",200,2,245495,248258,0,7497,"connected deterministic graph; vertices=200;edges=397","weight=517.0",2026-08-21T16:00:56.379538685Z
+"graph","Dijkstra",200,3,236415,248258,344,7497,"connected deterministic graph; vertices=200;edges=397","weight=517.0",2026-08-21T16:00:56.380401813Z
+"graph","Prim",200,1,251851,231012,0,7497,"connected deterministic graph; vertices=200;edges=397","mst_weight=776.0;matches_kruskal=true",2026-08-21T16:00:56.381268410Z
+"graph","Prim",200,2,220535,231012,0,7497,"connected deterministic graph; vertices=200;edges=397","mst_weight=777.0;matches_kruskal=true",2026-08-21T16:00:56.382051061Z
+"graph","Prim",200,3,220651,231012,0,7497,"connected deterministic graph; vertices=200;edges=397","mst_weight=778.0;matches_kruskal=true",2026-08-21T16:00:56.382827575Z
+"graph","Kruskal",200,1,277394,261249,0,7497,"connected deterministic graph; vertices=200;edges=397","mst_weight=776.0;matches_prim=true",2026-08-21T16:00:56.383665367Z
+"graph","Kruskal",200,2,265727,261249,0,7497,"connected deterministic graph; vertices=200;edges=397","mst_weight=777.0;matches_prim=true",2026-08-21T16:00:56.384497138Z
+"graph","Kruskal",200,3,240626,261249,0,7497,"connected deterministic graph; vertices=200;edges=397","mst_weight=778.0;matches_prim=true",2026-08-21T16:00:56.385249139Z
+"graph","BFS",500,1,462862,446131,0,7497,"connected deterministic graph; vertices=500;edges=997","visited=500",2026-08-21T16:00:56.387116901Z
+"graph","BFS",500,2,440605,446131,332,7497,"connected deterministic graph; vertices=500;edges=997","visited=500",2026-08-21T16:00:56.388959876Z
+"graph","BFS",500,3,434926,446131,0,7497,"connected deterministic graph; vertices=500;edges=997","visited=500",2026-08-21T16:00:56.390732823Z
+"graph","DFS",500,1,332413,341918,0,7497,"connected deterministic graph; vertices=500;edges=997","visited=500",2026-08-21T16:00:56.392330237Z
+"graph","DFS",500,2,375481,341918,0,7497,"connected deterministic graph; vertices=500;edges=997","visited=500",2026-08-21T16:00:56.393992585Z
+"graph","DFS",500,3,317861,341918,0,7497,"connected deterministic graph; vertices=500;edges=997","visited=500",2026-08-21T16:00:56.395594408Z
+"graph","Dijkstra",500,1,553700,529591,345,7497,"connected deterministic graph; vertices=500;edges=997","weight=1297.0",2026-08-21T16:00:56.397464113Z
+"graph","Dijkstra",500,2,532429,529591,348,7497,"connected deterministic graph; vertices=500;edges=997","weight=1299.0",2026-08-21T16:00:56.399313428Z
+"graph","Dijkstra",500,3,502646,529591,0,7497,"connected deterministic graph; vertices=500;edges=997","weight=1303.0",2026-08-21T16:00:56.401168600Z
+"graph","Prim",500,1,530456,550480,0,7497,"connected deterministic graph; vertices=500;edges=997","mst_weight=1949.0;matches_kruskal=true",2026-08-21T16:00:56.403030478Z
+"graph","Prim",500,2,623638,550480,0,7497,"connected deterministic graph; vertices=500;edges=997","mst_weight=1953.0;matches_kruskal=true",2026-08-21T16:00:56.404967303Z
+"graph","Prim",500,3,497348,550480,0,7497,"connected deterministic graph; vertices=500;edges=997","mst_weight=1957.0;matches_kruskal=true",2026-08-21T16:00:56.406765796Z
+"graph","Kruskal",500,1,521482,478579,0,7497,"connected deterministic graph; vertices=500;edges=997","mst_weight=1949.0;matches_prim=true",2026-08-21T16:00:56.408482431Z
+"graph","Kruskal",500,2,485312,478579,0,7497,"connected deterministic graph; vertices=500;edges=997","mst_weight=1953.0;matches_prim=true",2026-08-21T16:00:56.410043780Z
+"graph","Kruskal",500,3,428945,478579,0,7497,"connected deterministic graph; vertices=500;edges=997","mst_weight=1957.0;matches_prim=true",2026-08-21T16:00:56.411530709Z
+"optimization","DynamicProgramming",8,1,260095,156120,0,7497,"identical items; capacity=80","benefit=336;exact_match=true",2026-08-21T16:00:56.414416012Z
+"optimization","DynamicProgramming",8,2,101566,156120,0,7497,"identical items; capacity=80","benefit=279;exact_match=true",2026-08-21T16:00:56.414763336Z
+"optimization","DynamicProgramming",8,3,106699,156120,0,7497,"identical items; capacity=80","benefit=473;exact_match=true",2026-08-21T16:00:56.415113654Z
+"optimization","BruteForce",8,1,134624,129165,0,7497,"identical items; capacity=80","benefit=336;exact_match=true",2026-08-21T16:00:56.415495942Z
+"optimization","BruteForce",8,2,125376,129165,0,7497,"identical items; capacity=80","benefit=279;exact_match=true",2026-08-21T16:00:56.415861223Z
+"optimization","BruteForce",8,3,127497,129165,0,7497,"identical items; capacity=80","benefit=473;exact_match=true",2026-08-21T16:00:56.416235666Z
+"optimization","DynamicProgramming",12,1,149630,157211,0,7497,"identical items; capacity=80","benefit=482;exact_match=true",2026-08-21T16:00:56.419045132Z
+"optimization","DynamicProgramming",12,2,150351,157211,0,7497,"identical items; capacity=80","benefit=531;exact_match=true",2026-08-21T16:00:56.419769262Z
+"optimization","DynamicProgramming",12,3,171654,157211,346,7497,"identical items; capacity=80","benefit=631;exact_match=true",2026-08-21T16:00:56.420499409Z
+"optimization","BruteForce",12,1,370564,378518,0,7497,"identical items; capacity=80","benefit=482;exact_match=true",2026-08-21T16:00:56.421403059Z
+"optimization","BruteForce",12,2,362449,378518,0,7497,"identical items; capacity=80","benefit=531;exact_match=true",2026-08-21T16:00:56.422284748Z
+"optimization","BruteForce",12,3,402541,378518,0,7497,"identical items; capacity=80","benefit=631;exact_match=true",2026-08-21T16:00:56.423260518Z
+"optimization","DynamicProgramming",16,1,242669,235987,0,7497,"identical items; capacity=80","benefit=662;exact_match=true",2026-08-21T16:00:56.427653583Z
+"optimization","DynamicProgramming",16,2,257708,235987,0,7497,"identical items; capacity=80","benefit=716;exact_match=true",2026-08-21T16:00:56.432674604Z
+"optimization","DynamicProgramming",16,3,207586,235987,0,7497,"identical items; capacity=80","benefit=582;exact_match=true",2026-08-21T16:00:56.436336453Z
+"optimization","BruteForce",16,1,3112796,3352358,0,7497,"identical items; capacity=80","benefit=662;exact_match=true",2026-08-21T16:00:56.442890146Z
+"optimization","BruteForce",16,2,3625820,3352358,0,7497,"identical items; capacity=80","benefit=716;exact_match=true",2026-08-21T16:00:56.450376545Z
+"optimization","BruteForce",16,3,3318459,3352358,0,7497,"identical items; capacity=80","benefit=582;exact_match=true",2026-08-21T16:00:56.457272964Z
+"assignment","GreedyAssignment",100,1,2392258,827022,0,7497,"actual eligible resources and response metrics","resource_id=91;response_time=1.0304754533607687",2026-08-21T16:00:56.460789692Z
+"assignment","GreedyAssignment",100,2,53530,827022,0,7497,"actual eligible resources and response metrics","resource_id=13;response_time=1.2542647801183762",2026-08-21T16:00:56.460990511Z
+"assignment","GreedyAssignment",100,3,35279,827022,0,7497,"actual eligible resources and response metrics","resource_id=97;response_time=1.099022618814304",2026-08-21T16:00:56.461086533Z
+"assignment","GreedyAssignment",500,1,194022,179311,0,7497,"actual eligible resources and response metrics","resource_id=388;response_time=1.1204886863054189",2026-08-21T16:00:56.461610623Z
+"assignment","GreedyAssignment",500,2,171328,179311,0,7497,"actual eligible resources and response metrics","resource_id=119;response_time=1.0036124885596633",2026-08-21T16:00:56.462065598Z
+"assignment","GreedyAssignment",500,3,172585,179311,0,7497,"actual eligible resources and response metrics","resource_id=248;response_time=1.0219917150575155",2026-08-21T16:00:56.462518950Z
+"assignment","GreedyAssignment",1000,1,113393,104106,0,7497,"actual eligible resources and response metrics","resource_id=449;response_time=1.0221176073709761",2026-08-21T16:00:56.463149999Z
+"assignment","GreedyAssignment",1000,2,99965,104106,0,7497,"actual eligible resources and response metrics","resource_id=834;response_time=1.0304155994948818",2026-08-21T16:00:56.463737755Z
+"assignment","GreedyAssignment",1000,3,98960,104106,0,7497,"actual eligible resources and response metrics","resource_id=679;response_time=1.0272542483298233",2026-08-21T16:00:56.464292167Z
+"assignment","GreedyAssignment",5000,1,310164,282492,0,7497,"actual eligible resources and response metrics","resource_id=1606;response_time=1.0144462697977876",2026-08-21T16:00:56.465871851Z
+"assignment","GreedyAssignment",5000,2,262082,282492,0,7497,"actual eligible resources and response metrics","resource_id=426;response_time=1.0069436984873472",2026-08-21T16:00:56.467217194Z
+"assignment","GreedyAssignment",5000,3,275230,282492,0,7497,"actual eligible resources and response metrics","resource_id=1414;response_time=1.0008822172652445",2026-08-21T16:00:56.468606945Z
+"assignment","GreedyAssignment",10000,1,608694,614216,0,7497,"actual eligible resources and response metrics","resource_id=8572;response_time=1.002553029345801",2026-08-21T16:00:56.471612715Z
+"assignment","GreedyAssignment",10000,2,625952,614216,0,7497,"actual eligible resources and response metrics","resource_id=6742;response_time=1.0067451745043745",2026-08-21T16:00:56.474665307Z
+"assignment","GreedyAssignment",10000,3,608002,614216,0,7497,"actual eligible resources and response metrics","resource_id=3500;response_time=1.009171247669184",2026-08-21T16:00:56.476581327Z
+"assignment","GreedyAssignment",20000,1,827752,402286,0,7497,"actual eligible resources and response metrics","resource_id=18742;response_time=1.0014275991137636",2026-08-21T16:00:56.479513942Z
+"assignment","GreedyAssignment",20000,2,204484,402286,0,7497,"actual eligible resources and response metrics","resource_id=7192;response_time=1.0014031658070457",2026-08-21T16:00:56.484651883Z
+"assignment","GreedyAssignment",20000,3,174623,402286,0,7497,"actual eligible resources and response metrics","resource_id=8988;response_time=1.001681881541471",2026-08-21T16:00:56.485696535Z

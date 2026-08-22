@@ -130,8 +130,8 @@ public final class BinarySearchTree<K extends Comparable<? super K>, V>
         size = 0;
     }
 
-    /** Package-private diagnostic used by implementation-specific tests. */
-    int height() {
+    /** Returns the current tree height for balancing and performance diagnostics. */
+    public int height() {
         int maximum = 0;
         Node<K, V> current = root == null ? null : minimum(root);
         while (current != null) {

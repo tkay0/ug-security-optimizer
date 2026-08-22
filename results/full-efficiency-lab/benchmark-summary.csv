@@ -1,0 +1,113 @@
+experiment,algorithm,input_size,parameters,trials,average_runtime_ns,average_runtime_ms,average_memory_kb_approx
+assignment,GreedyAssignment,100,actual eligible resources and response metrics,3,827022.3333333334,0.8270223333333334,0.0
+assignment,GreedyAssignment,500,actual eligible resources and response metrics,3,179311.66666666666,0.17931166666666665,0.0
+assignment,GreedyAssignment,1000,actual eligible resources and response metrics,3,104106.0,0.104106,0.0
+assignment,GreedyAssignment,5000,actual eligible resources and response metrics,3,282492.0,0.282492,0.0
+assignment,GreedyAssignment,10000,actual eligible resources and response metrics,3,614216.0,0.614216,0.0
+assignment,GreedyAssignment,20000,actual eligible resources and response metrics,3,402286.3333333333,0.4022863333333333,0.0
+graph,BFS,50,connected deterministic graph; vertices=50;edges=97,3,335635.3333333333,0.33563533333333334,0.0
+graph,BFS,100,connected deterministic graph; vertices=100;edges=197,3,95056.0,0.095056,0.0
+graph,BFS,200,connected deterministic graph; vertices=200;edges=397,3,210785.33333333334,0.21078533333333335,3.3333333333333335
+graph,BFS,500,connected deterministic graph; vertices=500;edges=997,3,446131.0,0.446131,110.66666666666667
+graph,DFS,50,connected deterministic graph; vertices=50;edges=97,3,116242.66666666667,0.11624266666666667,0.0
+graph,DFS,100,connected deterministic graph; vertices=100;edges=197,3,98967.33333333333,0.09896733333333332,0.0
+graph,DFS,200,connected deterministic graph; vertices=200;edges=397,3,132097.0,0.132097,0.0
+graph,DFS,500,connected deterministic graph; vertices=500;edges=997,3,341918.3333333333,0.3419183333333333,0.0
+graph,Dijkstra,50,connected deterministic graph; vertices=50;edges=97,3,1075533.6666666667,1.0755336666666668,0.0
+graph,Dijkstra,100,connected deterministic graph; vertices=100;edges=197,3,232772.33333333334,0.23277233333333333,0.0
+graph,Dijkstra,200,connected deterministic graph; vertices=200;edges=397,3,248258.0,0.248258,114.66666666666667
+graph,Dijkstra,500,connected deterministic graph; vertices=500;edges=997,3,529591.6666666666,0.5295916666666667,231.0
+graph,Kruskal,50,connected deterministic graph; vertices=50;edges=97,3,92717.0,0.092717,0.0
+graph,Kruskal,100,connected deterministic graph; vertices=100;edges=197,3,138604.33333333334,0.13860433333333333,0.0
+graph,Kruskal,200,connected deterministic graph; vertices=200;edges=397,3,261249.0,0.261249,0.0
+graph,Kruskal,500,connected deterministic graph; vertices=500;edges=997,3,478579.6666666667,0.4785796666666667,0.0
+graph,Prim,50,connected deterministic graph; vertices=50;edges=97,3,146011.33333333334,0.14601133333333335,0.0
+graph,Prim,100,connected deterministic graph; vertices=100;edges=197,3,266619.6666666667,0.2666196666666667,0.0
+graph,Prim,200,connected deterministic graph; vertices=200;edges=397,3,231012.33333333334,0.23101233333333335,0.0
+graph,Prim,500,connected deterministic graph; vertices=500;edges=997,3,550480.6666666666,0.5504806666666666,0.0
+hash,HashTable,100,initial_capacity=100;threshold=1.0,3,24908.666666666668,0.02490866666666667,0.0
+hash,HashTable,100,initial_capacity=25;threshold=1.0,3,2794374.3333333335,2.7943743333333333,86.66666666666667
+hash,HashTable,100,initial_capacity=50;threshold=1.0,3,36657.333333333336,0.03665733333333333,0.0
+hash,HashTable,500,initial_capacity=125;threshold=1.0,3,96098.66666666667,0.09609866666666667,0.0
+hash,HashTable,500,initial_capacity=250;threshold=1.0,3,56296.0,0.056296,0.0
+hash,HashTable,500,initial_capacity=500;threshold=1.0,3,36742.666666666664,0.03674266666666667,0.0
+hash,HashTable,1000,initial_capacity=1000;threshold=1.0,3,90392.0,0.090392,61.333333333333336
+hash,HashTable,1000,initial_capacity=250;threshold=1.0,3,146312.33333333334,0.14631233333333335,30.666666666666668
+hash,HashTable,1000,initial_capacity=500;threshold=1.0,3,133837.33333333334,0.13383733333333334,61.333333333333336
+hash,HashTable,5000,initial_capacity=1250;threshold=1.0,3,614187.6666666666,0.6141876666666666,227.66666666666666
+hash,HashTable,5000,initial_capacity=2500;threshold=1.0,3,627707.3333333334,0.6277073333333334,221.33333333333334
+hash,HashTable,5000,initial_capacity=5000;threshold=1.0,3,428355.6666666667,0.4283556666666667,214.66666666666666
+hash,HashTable,10000,initial_capacity=10000;threshold=1.0,3,771956.6666666666,0.7719566666666666,398.6666666666667
+hash,HashTable,10000,initial_capacity=2500;threshold=1.0,3,1134989.3333333333,1.1349893333333332,450.3333333333333
+hash,HashTable,10000,initial_capacity=5000;threshold=1.0,3,21205747.666666668,21.205747666666667,162.66666666666666
+hash,HashTable,20000,initial_capacity=10000;threshold=1.0,3,878984.3333333334,0.8789843333333334,903.6666666666666
+hash,HashTable,20000,initial_capacity=20000;threshold=1.0,3,589182.0,0.589182,864.6666666666666
+hash,HashTable,20000,initial_capacity=5000;threshold=1.0,3,1505564.3333333333,1.5055643333333333,1050.0
+heap,BinaryHeap_EXTRACT,100,same request priorities; heap construction excluded,3,150392.33333333334,0.15039233333333335,0.0
+heap,BinaryHeap_EXTRACT,500,same request priorities; heap construction excluded,3,154642.0,0.154642,0.0
+heap,BinaryHeap_EXTRACT,1000,same request priorities; heap construction excluded,3,235298.0,0.235298,0.0
+heap,BinaryHeap_EXTRACT,5000,same request priorities; heap construction excluded,3,1348722.6666666667,1.3487226666666667,0.0
+heap,BinaryHeap_EXTRACT,10000,same request priorities; heap construction excluded,3,1722128.0,1.722128,0.0
+heap,BinaryHeap_EXTRACT,20000,same request priorities; heap construction excluded,3,3035696.6666666665,3.0356966666666665,0.0
+heap,BinaryHeap_INSERT,100,"request priority=(urgency desc, arrival order, ID)",3,547905.0,0.547905,44.333333333333336
+heap,BinaryHeap_INSERT,500,"request priority=(urgency desc, arrival order, ID)",3,33875.333333333336,0.033875333333333334,0.0
+heap,BinaryHeap_INSERT,1000,"request priority=(urgency desc, arrival order, ID)",3,63912.333333333336,0.06391233333333333,0.0
+heap,BinaryHeap_INSERT,5000,"request priority=(urgency desc, arrival order, ID)",3,286123.0,0.286123,44.333333333333336
+heap,BinaryHeap_INSERT,10000,"request priority=(urgency desc, arrival order, ID)",3,534038.3333333334,0.5340383333333334,21.333333333333332
+heap,BinaryHeap_INSERT,20000,"request priority=(urgency desc, arrival order, ID)",3,807651.6666666666,0.8076516666666667,181.33333333333334
+optimization,BruteForce,8,identical items; capacity=80,3,129165.66666666667,0.12916566666666668,0.0
+optimization,BruteForce,12,identical items; capacity=80,3,378518.0,0.378518,0.0
+optimization,BruteForce,16,identical items; capacity=80,3,3352358.3333333335,3.3523583333333336,0.0
+optimization,DynamicProgramming,8,identical items; capacity=80,3,156120.0,0.15612,0.0
+optimization,DynamicProgramming,12,identical items; capacity=80,3,157211.66666666666,0.15721166666666667,115.33333333333333
+optimization,DynamicProgramming,16,identical items; capacity=80,3,235987.66666666666,0.23598766666666665,0.0
+search,BinarySearch,100,target=same generated value; precondition=sorted clone,3,58498.333333333336,0.05849833333333333,0.0
+search,BinarySearch,500,target=same generated value; precondition=sorted clone,3,4044.3333333333335,0.004044333333333334,0.0
+search,BinarySearch,1000,target=same generated value; precondition=sorted clone,3,6640.666666666667,0.006640666666666667,0.0
+search,BinarySearch,5000,target=same generated value; precondition=sorted clone,3,4158.333333333333,0.004158333333333333,0.0
+search,BinarySearch,10000,target=same generated value; precondition=sorted clone,3,8540.333333333334,0.008540333333333334,0.0
+search,LinearSearch,100,target=last generated value; input=unsorted,3,838633.3333333334,0.8386333333333333,0.0
+search,LinearSearch,500,target=last generated value; input=unsorted,3,58653.0,0.058653,0.0
+search,LinearSearch,1000,target=last generated value; input=unsorted,3,45981.333333333336,0.04598133333333333,0.0
+search,LinearSearch,5000,target=last generated value; input=unsorted,3,154615.0,0.154615,0.0
+search,LinearSearch,10000,target=last generated value; input=unsorted,3,320935.0,0.320935,0.0
+sort,InsertionSort,100,equivalent deterministic clone; random order,3,166515.33333333334,0.16651533333333335,0.0
+sort,InsertionSort,500,equivalent deterministic clone; random order,3,1032334.3333333334,1.0323343333333335,0.0
+sort,InsertionSort,1000,equivalent deterministic clone; random order,3,1954448.0,1.954448,0.0
+sort,InsertionSort,5000,equivalent deterministic clone; random order,3,17061888.0,17.061888,0.0
+sort,InsertionSort,10000,equivalent deterministic clone; random order,3,40024423.666666664,40.024423666666664,0.0
+sort,MergeSort,100,equivalent deterministic clone; random order,3,13716.666666666666,0.013716666666666665,0.0
+sort,MergeSort,500,equivalent deterministic clone; random order,3,71367.33333333333,0.07136733333333332,0.0
+sort,MergeSort,1000,equivalent deterministic clone; random order,3,188871.0,0.188871,0.0
+sort,MergeSort,5000,equivalent deterministic clone; random order,3,3272528.6666666665,3.2725286666666666,0.0
+sort,MergeSort,10000,equivalent deterministic clone; random order,3,7415877.666666667,7.415877666666667,26.0
+sort,QuickSort,100,equivalent deterministic clone; random order,3,119206.66666666667,0.11920666666666667,0.0
+sort,QuickSort,500,equivalent deterministic clone; random order,3,145623.0,0.145623,0.0
+sort,QuickSort,1000,equivalent deterministic clone; random order,3,147209.66666666666,0.14720966666666666,0.0
+sort,QuickSort,5000,equivalent deterministic clone; random order,3,3559966.0,3.559966,0.0
+sort,QuickSort,10000,equivalent deterministic clone; random order,3,3663234.6666666665,3.6632346666666664,0.0
+sort,SelectionSort,100,equivalent deterministic clone; random order,3,389491.6666666667,0.3894916666666667,0.0
+sort,SelectionSort,500,equivalent deterministic clone; random order,3,801776.6666666666,0.8017766666666666,0.0
+sort,SelectionSort,1000,equivalent deterministic clone; random order,3,3123810.6666666665,3.1238106666666665,0.0
+sort,SelectionSort,5000,equivalent deterministic clone; random order,3,29126048.666666668,29.12604866666667,0.0
+sort,SelectionSort,10000,equivalent deterministic clone; random order,3,37865637.0,37.865637,0.0
+tree,BST_INSERT,100,ordered IDs expose unbalanced degradation,3,586971.0,0.586971,0.0
+tree,BST_INSERT,500,ordered IDs expose unbalanced degradation,3,981290.0,0.98129,0.0
+tree,BST_INSERT,1000,ordered IDs expose unbalanced degradation,3,3824057.0,3.824057,0.0
+tree,BST_INSERT,5000,ordered IDs expose unbalanced degradation,3,16856269.333333332,16.856269333333334,341.0
+tree,BST_INSERT,10000,ordered IDs expose unbalanced degradation,3,67360569.66666667,67.36056966666668,538.6666666666666
+tree,BST_SEARCH,100,ordered IDs; target=last,3,69927.0,0.069927,0.0
+tree,BST_SEARCH,500,ordered IDs; target=last,3,33313.666666666664,0.033313666666666665,0.0
+tree,BST_SEARCH,1000,ordered IDs; target=last,3,35590.0,0.03559,0.0
+tree,BST_SEARCH,5000,ordered IDs; target=last,3,171058.0,0.171058,0.0
+tree,BST_SEARCH,10000,ordered IDs; target=last,3,319207.3333333333,0.3192073333333333,0.0
+tree,RED_BLACK_INSERT,100,same ordered IDs; balancing active,3,97860.0,0.09786,0.0
+tree,RED_BLACK_INSERT,500,same ordered IDs; balancing active,3,128038.0,0.128038,0.0
+tree,RED_BLACK_INSERT,1000,same ordered IDs; balancing active,3,160576.66666666666,0.16057666666666665,78.0
+tree,RED_BLACK_INSERT,5000,same ordered IDs; balancing active,3,430192.0,0.430192,341.0
+tree,RED_BLACK_INSERT,10000,same ordered IDs; balancing active,3,902249.0,0.902249,727.0
+tree,RED_BLACK_SEARCH,100,ordered IDs; target=last,3,66738.66666666667,0.06673866666666667,0.0
+tree,RED_BLACK_SEARCH,500,ordered IDs; target=last,3,7945.0,0.007945,0.0
+tree,RED_BLACK_SEARCH,1000,ordered IDs; target=last,3,3051.6666666666665,0.0030516666666666665,0.0
+tree,RED_BLACK_SEARCH,5000,ordered IDs; target=last,3,7058.0,0.007058,0.0
+tree,RED_BLACK_SEARCH,10000,ordered IDs; target=last,3,6867.333333333333,0.006867333333333333,0.0
