@@ -48,6 +48,8 @@ public class OptimizationMenu extends JPanel {
     resultArea.setEditable(false);
     resultArea.setLineWrap(true);
     resultArea.setWrapStyleWord(true);
+    resultArea.setText(
+        "Choose an optimization action to compare the existing project implementations.");
 
     JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT));
     JButton refresh = new JButton("Refresh Pending Requests");

@@ -1,6 +1,6 @@
 # UG Campus Security & Emergency Response Optimizer
 
-A Java 17 academic application for modelling campus security and emergency-response work at the University of Ghana, Legon. It stores a validated localised seed dataset in SQLite, prioritises and assigns requests, calculates routes, records workflow history, and presents the available operations in a Swing desktop interface.
+A Java 17 academic application for modelling campus security and emergency-response work at the University of Ghana, Legon. It stores a validated localised seed dataset in SQLite, prioritises and assigns incidents, calculates routes, records workflow history, and presents both operational and examiner-facing functionality in one Swing desktop application.
 
 ## Requirements
 
@@ -26,7 +26,7 @@ Run `org.ugoptimizer.app.Main` from your IDE, or use Maven:
 mvn compile exec:java -Dexec.mainClass=org.ugoptimizer.app.Main
 ```
 
-The application starts the Swing `MainMenu`. By default it creates or opens
+The application starts the Swing `MainMenu` in **Operational Mode**. By default it creates or opens
 `database/ug-security-optimizer.db`, initializes the SQLite schema, and imports
 the canonical CSV dataset from `data/` only when the database has no locations.
 Generated SQLite files are ignored by Git.
@@ -36,6 +36,39 @@ Optional command-line arguments let an IDE run use different paths:
 ```text
 Main [database-file] [canonical-dataset-directory]
 ```
+
+## Interface modes
+
+The application uses one backend composition root, one database, and one runtime
+state. Switching modes changes only the Swing presentation; it does not restart
+the application or create another backend.
+
+**Operational Mode** is the default operator workflow:
+
+```text
+Dashboard -> Incidents -> Dispatch -> Routes -> Resources -> Reports
+```
+
+- **Dashboard** shows compact live incident/resource totals, priority incidents, and quick actions.
+- **Incidents** uses named campus locations and readable incident, urgency, response, and status labels. Its local search and filters do not change stored records.
+- **Dispatch** presents the selected incident's current status and next valid workflow action, plus cancel and undo safeguards.
+- **Routes** finds a recommended route under normal or named road conditions. Location and road maintenance remains available in the secondary **Campus Network** view.
+- **Resources** lists and registers response resources using named home locations and readable operational values.
+- **Reports** shows the current incident/resource summary and recent workflow audit history.
+
+Select **DSA Lab** to open the examiner-facing academic workflow:
+
+```text
+Structures -> Search & Sort -> Graph Algorithms -> Optimization -> Correctness -> Efficiency Lab
+```
+
+The **Back to Operations** button returns to Operational Mode without replacing
+the injected services or database state. Structures contains the queue, heap,
+tree-index, and priority-queue demonstrations. Sort execution/recording is under
+Search & Sort; BFS, DFS, and Dijkstra execution/recording is under Graph
+Algorithms; recorded run timing/memory data is under Efficiency Lab. Correctness
+exposes generated traces and the locations of retained proof, counterexample,
+and test evidence.
 
 ## Available functionality
 
@@ -48,12 +81,13 @@ Main [database-file] [canonical-dataset-directory]
 - Canonical CSV validation and transactional database import.
 
 Routing excludes baseline roads marked blocked. The backend can also construct
-scenario-specific graphs from `road_scenarios`; the Swing routing screen exposes
-both baseline and named-scenario shortest paths.
+scenario-specific graphs from `road_scenarios`; Operational Mode exposes both
+baseline and named-scenario shortest paths through **Routes**. Route values are
+based on the selected project road scenario and are not live navigation data.
 
-The **DSA Demonstrations** tab shows scheduling/index operations and generates
-verified trace evidence. The **Efficiency Lab** tab can run a small representative
-suite or the complete official-size suite. Equivalent command-line exporters are:
+The DSA Lab can generate verified trace evidence and can run a small
+representative efficiency suite or the complete official-size suite. Benchmarks
+do not run automatically at startup. Equivalent command-line exporters are:
 
 ```bash
 mvn exec:java -Dexec.mainClass=org.ugoptimizer.evidence.CorrectnessEvidenceMain

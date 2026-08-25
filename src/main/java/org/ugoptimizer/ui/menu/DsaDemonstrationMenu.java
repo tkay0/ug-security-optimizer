@@ -34,6 +34,7 @@ public final class DsaDemonstrationMenu extends JPanel {
         this.requestService = Objects.requireNonNull(requestService, "requestService cannot be null");
         output.setEditable(false);
         output.setLineWrap(false);
+        output.setText("Select a demonstration above to inspect the custom data structures.");
 
         JButton schedulingButton = new JButton("Demonstrate Queues & Heap");
         schedulingButton.addActionListener(event -> runScheduling(schedulingButton));

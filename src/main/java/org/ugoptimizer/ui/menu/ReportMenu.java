@@ -25,9 +25,7 @@ import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
@@ -49,12 +47,17 @@ import java.util.Random;
  */
 public class ReportMenu extends JPanel {
 
+    private enum View {
+        ALL,
+        SORTING,
+        GRAPH,
+        RESULTS
+    }
+
     private final ReportService reportService;
     private final RouteService routeService;
     private final LocationService locationService;
-    private final Map<String, Integer> runNumberByAlgorithm = new HashMap<>();
     private final BackgroundAction reportAction = new BackgroundAction();
-    private int nextRunId = 1;
 
     private DataTablePanel<AlgorithmRun> runTable;
     private JTextField sizeField;
@@ -66,20 +69,42 @@ public class ReportMenu extends JPanel {
             ReportService reportService,
             RouteService routeService,
             LocationService locationService) {
+        this(reportService, routeService, locationService, View.ALL);
+    }
+
+    /** Sorting execution/recording controls for the DSA Lab Search & Sort area. */
+    public static ReportMenu sortingRuns(
+            ReportService reportService,
+            RouteService routeService,
+            LocationService locationService) {
+        return new ReportMenu(reportService, routeService, locationService, View.SORTING);
+    }
+
+    /** Graph execution/recording controls for the DSA Lab Graph Algorithms area. */
+    public static ReportMenu graphRuns(
+            ReportService reportService,
+            RouteService routeService,
+            LocationService locationService) {
+        return new ReportMenu(reportService, routeService, locationService, View.GRAPH);
+    }
+
+    /** Recorded run table for the DSA Lab Efficiency Lab area. */
+    public static ReportMenu recordedRuns(
+            ReportService reportService,
+            RouteService routeService,
+            LocationService locationService) {
+        return new ReportMenu(reportService, routeService, locationService, View.RESULTS);
+    }
+
+    private ReportMenu(
+            ReportService reportService,
+            RouteService routeService,
+            LocationService locationService,
+            View view) {
         super(new BorderLayout(8, 8));
         this.reportService = Objects.requireNonNull(reportService, "reportService cannot be null");
         this.routeService = Objects.requireNonNull(routeService, "routeService cannot be null");
         this.locationService = Objects.requireNonNull(locationService, "locationService cannot be null");
-
-        JPanel sortControls = buildSortControls();
-        JPanel routeControls = buildRouteControls();
-        JPanel systemReportControls = buildSystemReportControls();
-
-        JPanel allControls = new JPanel();
-        allControls.setLayout(new javax.swing.BoxLayout(allControls, javax.swing.BoxLayout.Y_AXIS));
-        allControls.add(sortControls);
-        allControls.add(routeControls);
-        allControls.add(systemReportControls);
 
         runTable = new DataTablePanel<>(List.of(
                 new Column<>("Run ID", r -> String.valueOf(r.getRunId())),
@@ -90,6 +115,35 @@ public class ReportMenu extends JPanel {
                 new Column<>("Run #", r -> String.valueOf(r.getRunNumber()))
         ), reportService.findAll());
 
+        switch (view) {
+            case SORTING -> {
+                add(buildSortControls(), BorderLayout.NORTH);
+                add(runTable, BorderLayout.CENTER);
+            }
+            case GRAPH -> {
+                add(buildRouteControls(), BorderLayout.NORTH);
+                add(runTable, BorderLayout.CENTER);
+            }
+            case RESULTS -> {
+                JButton refresh = new JButton("Refresh Recorded Runs");
+                refresh.addActionListener(event -> refreshRecordedRuns(refresh));
+                JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+                controls.add(new JLabel(
+                        "Measured algorithm runs retained by the shared backend report service."));
+                controls.add(refresh);
+                add(controls, BorderLayout.NORTH);
+                add(runTable, BorderLayout.CENTER);
+            }
+            case ALL -> buildLegacyCombinedView();
+        }
+    }
+
+    private void buildLegacyCombinedView() {
+        JPanel allControls = new JPanel();
+        allControls.setLayout(new javax.swing.BoxLayout(allControls, javax.swing.BoxLayout.Y_AXIS));
+        allControls.add(buildSortControls());
+        allControls.add(buildRouteControls());
+        allControls.add(buildSystemReportControls());
         add(allControls, BorderLayout.NORTH);
         add(runTable, BorderLayout.CENTER);
         systemReportArea = new JTextArea(8, 60);
@@ -101,6 +155,15 @@ public class ReportMenu extends JPanel {
         reportPanel.add(new JScrollPane(systemReportArea), BorderLayout.CENTER);
         add(reportPanel, BorderLayout.SOUTH);
         systemReportArea.setText("Select Refresh System Report to load current backend totals.");
+    }
+
+    private void refreshRecordedRuns(JButton control) {
+        start(
+                control,
+                "Refreshing...",
+                reportService::findAll,
+                runTable::setRows,
+                "refresh recorded algorithm runs");
     }
 
     private JPanel buildSystemReportControls() {
@@ -300,9 +363,17 @@ public class ReportMenu extends JPanel {
         long memAfterBytes = runtime.totalMemory() - runtime.freeMemory();
         double memoryKb = Math.max(0L, memAfterBytes - memBeforeBytes) / 1024.0;
 
-        int runNumber = runNumberByAlgorithm.merge(algorithmName, 1, Integer::sum);
+        List<AlgorithmRun> existing = reportService.findAll();
+        int nextRunId = 1;
+        int runNumber = 1;
+        for (AlgorithmRun previous : existing) {
+            nextRunId = Math.max(nextRunId, previous.getRunId() + 1);
+            if (algorithmName.equals(previous.getAlgorithmName())) {
+                runNumber = Math.max(runNumber, previous.getRunNumber() + 1);
+            }
+        }
         AlgorithmRun run = new AlgorithmRun(
-                nextRunId++,
+                nextRunId,
                 algorithmName,
                 inputSize,
                 elapsedNs,
