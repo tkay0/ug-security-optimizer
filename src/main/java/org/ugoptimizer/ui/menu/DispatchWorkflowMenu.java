@@ -1,119 +1,139 @@
 package org.ugoptimizer.ui.menu;
 
-import org.ugoptimizer.model.AuditEvent;
-import org.ugoptimizer.model.Assignment;
-import org.ugoptimizer.model.ServiceRequest;
-import org.ugoptimizer.frontend.RequestService;
-import org.ugoptimizer.frontend.WorkflowService;
-import org.ugoptimizer.structures.stack.CustomStack;
-import org.ugoptimizer.ui.display.Column;
-import org.ugoptimizer.ui.display.DataTablePanel;
-import org.ugoptimizer.ui.display.MessagePrinter;
-import org.ugoptimizer.ui.BackgroundAction;
-import org.ugoptimizer.ui.UiErrors;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import org.ugoptimizer.frontend.LocationService;
+import org.ugoptimizer.frontend.RequestService;
+import org.ugoptimizer.frontend.WorkflowService;
+import org.ugoptimizer.model.Assignment;
+import org.ugoptimizer.model.Location;
+import org.ugoptimizer.model.ServiceRequest;
+import org.ugoptimizer.structures.stack.CustomStack;
+import org.ugoptimizer.ui.BackgroundAction;
+import org.ugoptimizer.ui.UiErrors;
+import org.ugoptimizer.ui.UiFormat;
+import org.ugoptimizer.ui.display.Column;
+import org.ugoptimizer.ui.display.DataTablePanel;
+import org.ugoptimizer.ui.display.MessagePrinter;
 
-/**
- * Menu for dispatch workflow operations: advancing a request's status,
- * cancelling it, and undoing the most recent change.
- *
- * <p>Status changes go through the shared {@link RequestService} (the same
- * instance {@link RequestResourceMenu} and {@link SearchSortMenu} use).
- * {@code requestService.updateStatus(...)} already records its own
- * {@link AuditEvent}(s) as part of that call on a real backend (e.g. a
- * PENDING-to-ASSIGNED transition logs both a REQUEST_ASSIGNED and a
- * RESOURCE_ASSIGNED event) -- this menu only re-reads
- * {@link WorkflowService#findAuditLog()} afterward to refresh what it
- * displays, it does not also write its own duplicate entry. Undo is still
- * backed by the project's own {@link CustomStack} kept locally here
- * &mdash; that's UI workflow control, not persisted state, so it doesn't
- * belong in a service.
- */
+/** Operator-facing status workflow using the canonical request lifecycle and assignment service. */
 public class DispatchWorkflowMenu extends JPanel {
 
     private final RequestService requestService;
     private final WorkflowService workflowService;
+    private final List<Location> locations;
     private final CustomStack<UndoEntry> undoStack = new CustomStack<>();
     private final BackgroundAction statusAction = new BackgroundAction();
+    private final DataTablePanel<ServiceRequest> requestTable;
+    private final JTextArea outcomeArea = new JTextArea(8, 60);
+    private final JLabel selectedState = new JLabel(
+            "Select an incident to view its current status and next workflow action.");
+    private final JButton advanceButton = new JButton("Select an incident");
+    private final JButton cancelButton = new JButton("Cancel Incident");
+    private final JButton undoButton = new JButton("Undo Last Action");
 
-    private DataTablePanel<ServiceRequest> requestTable;
-    private DataTablePanel<AuditEvent> auditTable;
-    private final JTextArea outcomeArea;
-
-    public DispatchWorkflowMenu(RequestService requestService, WorkflowService workflowService) {
-        super(new BorderLayout(8, 8));
+    public DispatchWorkflowMenu(
+            RequestService requestService,
+            WorkflowService workflowService,
+            LocationService locationService) {
+        super(new BorderLayout(10, 10));
         this.requestService = Objects.requireNonNull(requestService, "requestService cannot be null");
         this.workflowService = Objects.requireNonNull(workflowService, "workflowService cannot be null");
+        Objects.requireNonNull(locationService, "locationService cannot be null");
+        locations = List.copyOf(locationService.findAllLocations());
 
         requestTable = new DataTablePanel<>(List.of(
-                new Column<>("ID", r -> String.valueOf(r.getRequestId())),
-                new Column<>("Category", ServiceRequest::getCategory),
-                new Column<>("Status", ServiceRequest::getStatus)
+                new Column<>("Incident ID", request -> "#" + request.getRequestId()),
+                new Column<>("Type", request -> UiFormat.humanize(request.getCategory())),
+                new Column<>("Incident Location", request ->
+                        UiFormat.locationName(locations, request.getSourceLocationId())),
+                new Column<>("Urgency", request -> UiFormat.urgencyOption(request.getUrgency()).label()),
+                new Column<>("Current Status", request -> UiFormat.humanize(request.getStatus())),
+                new Column<>("Required Response", request ->
+                        UiFormat.humanize(request.getRequiredResourceType()))
         ), requestService.findAll());
 
-        auditTable = new DataTablePanel<>(List.of(
-                new Column<>("Event ID", a -> String.valueOf(a.getEventId())),
-                new Column<>("Type", AuditEvent::getEventType),
-                new Column<>("Entity ID", a -> String.valueOf(a.getEntityId())),
-                new Column<>("Details", AuditEvent::getDetails)
-        ), workflowService.findAuditLog());
+        advanceButton.addActionListener(event -> advanceSelected(advanceButton));
+        cancelButton.addActionListener(event -> cancelSelected(cancelButton));
+        undoButton.addActionListener(event -> undoLast(undoButton));
+        JButton refresh = new JButton("Refresh Incidents");
+        refresh.addActionListener(event -> refresh(refresh));
+        requestTable.getTable().getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                updateActionPresentation();
+            }
+        });
 
-        JButton advanceButton = new JButton("Advance Status");
-        JButton cancelButton = new JButton("Cancel Request");
-        JButton undoButton = new JButton("Undo Last Action");
-
-        advanceButton.addActionListener(e -> advanceSelected(advanceButton));
-        cancelButton.addActionListener(e -> cancelSelected(cancelButton));
-        undoButton.addActionListener(e -> undoLast(undoButton));
-
+        advanceButton.setEnabled(false);
+        cancelButton.setEnabled(false);
+        undoButton.setEnabled(false);
         JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        controls.add(refresh);
         controls.add(advanceButton);
         controls.add(cancelButton);
         controls.add(undoButton);
 
-        JPanel requestsPanel = new JPanel(new BorderLayout());
-        requestsPanel.setBorder(BorderFactory.createTitledBorder("Requests"));
-        requestsPanel.add(controls, BorderLayout.NORTH);
-        requestsPanel.add(requestTable, BorderLayout.CENTER);
+        JPanel selection = new JPanel(new BorderLayout(6, 6));
+        selection.setBorder(BorderFactory.createTitledBorder("Selected Incident Workflow"));
+        selection.add(selectedState, BorderLayout.NORTH);
+        selection.add(controls, BorderLayout.CENTER);
 
-        outcomeArea = new JTextArea(7, 60);
+        JPanel incidents = new JPanel(new BorderLayout(8, 8));
+        incidents.setBorder(BorderFactory.createTitledBorder("Incidents Ready for Workflow Actions"));
+        incidents.add(selection, BorderLayout.NORTH);
+        incidents.add(requestTable, BorderLayout.CENTER);
+
         outcomeArea.setEditable(false);
         outcomeArea.setLineWrap(true);
         outcomeArea.setWrapStyleWord(true);
-        JScrollPane outcomeScroll = new JScrollPane(outcomeArea);
-        outcomeScroll.setBorder(BorderFactory.createTitledBorder("Latest dispatch outcome"));
-        requestsPanel.add(outcomeScroll, BorderLayout.SOUTH);
+        outcomeArea.setText("Select an incident and perform a dispatch action to view the result.");
+        JScrollPane outcome = new JScrollPane(outcomeArea);
+        outcome.setBorder(BorderFactory.createTitledBorder("Latest Dispatch Outcome"));
 
-        JPanel auditPanel = new JPanel(new BorderLayout());
-        auditPanel.setBorder(BorderFactory.createTitledBorder("Audit Log"));
-        auditPanel.add(auditTable, BorderLayout.CENTER);
+        add(incidents, BorderLayout.CENTER);
+        add(outcome, BorderLayout.SOUTH);
+    }
 
-        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, requestsPanel, auditPanel);
-        split.setResizeWeight(0.6);
-        add(split, BorderLayout.CENTER);
+    private void updateActionPresentation() {
+        ServiceRequest selected = requestTable.getSelectedRow();
+        if (selected == null) {
+            selectedState.setText(
+                    "Select an incident to view its current status and next workflow action.");
+            advanceButton.setText("Select an incident");
+            advanceButton.setEnabled(false);
+            cancelButton.setEnabled(false);
+            return;
+        }
+        String next = nextStatus(selected.getStatus());
+        selectedState.setText("Incident #" + selected.getRequestId()
+                + " | Current Status: " + UiFormat.humanize(selected.getStatus())
+                + " | Next Step: " + (next == null ? "No further workflow step"
+                        : UiFormat.humanize(next)));
+        advanceButton.setText(next == null
+                ? "Workflow Complete"
+                : "Move to " + UiFormat.humanize(next));
+        advanceButton.setEnabled(next != null && !statusAction.isRunning());
+        cancelButton.setEnabled(next != null && !statusAction.isRunning());
     }
 
     private void advanceSelected(JButton control) {
         ServiceRequest selected = requestTable.getSelectedRow();
         if (selected == null) {
-            MessagePrinter.showError(this, "Select a request first.");
             return;
         }
         String next = nextStatus(selected.getStatus());
         if (next == null) {
-            MessagePrinter.showError(this, "Request " + selected.getRequestId()
-                    + " is already " + selected.getStatus() + " and cannot advance further.");
+            MessagePrinter.showError(this, "This incident has no further workflow action.");
             return;
         }
         applyStatusChange(selected, next, control);
@@ -121,43 +141,46 @@ public class DispatchWorkflowMenu extends JPanel {
 
     private void cancelSelected(JButton control) {
         ServiceRequest selected = requestTable.getSelectedRow();
-        if (selected == null) {
-            MessagePrinter.showError(this, "Select a request first.");
+        if (selected == null || nextStatus(selected.getStatus()) == null) {
             return;
         }
-        if ("COMPLETED".equals(selected.getStatus()) || "CANCELLED".equals(selected.getStatus())) {
-            MessagePrinter.showError(this, "Request " + selected.getRequestId()
-                    + " is already " + selected.getStatus() + ".");
-            return;
+        int confirmation = JOptionPane.showConfirmDialog(
+                this,
+                "Cancel incident #" + selected.getRequestId() + "?",
+                "Confirm Incident Cancellation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+        if (confirmation == JOptionPane.YES_OPTION) {
+            applyStatusChange(selected, "CANCELLED", control);
         }
-        applyStatusChange(selected, "CANCELLED", control);
     }
 
-    private void applyStatusChange(
-            ServiceRequest original, String newStatus, JButton control) {
+    private void applyStatusChange(ServiceRequest original, String newStatus, JButton control) {
         String oldStatus = original.getStatus();
         boolean started = statusAction.start(
                 control,
-                "Working...",
+                "Updating...",
                 () -> {
                     ServiceRequest updated =
                             requestService.updateStatus(original.getRequestId(), newStatus);
-                    Optional<Assignment> assignment = "ASSIGNED".equals(newStatus)
+                    Optional<Assignment> assignment = "ASSIGNED".equals(updated.getStatus())
                             ? workflowService.findActiveAssignment(original.getRequestId())
                             : Optional.empty();
-                    return new DispatchUpdate(
-                            updated,
-                            assignment,
-                            requestService.findAll(),
-                            workflowService.findAuditLog());
+                    return new DispatchUpdate(updated, assignment, requestService.findAll());
                 },
                 update -> {
                     undoStack.push(new UndoEntry(original.getRequestId(), oldStatus));
                     requestTable.setRows(update.requests());
-                    auditTable.setRows(update.auditEvents());
-                    outcomeArea.setText(formatOutcome(original, update.updated(), update.assignment()));
+                    requestTable.getTable().clearSelection();
+                    undoButton.setEnabled(true);
+                    outcomeArea.setText(formatOutcome(
+                            original, update.updated(), update.assignment(), locations));
+                    updateActionPresentation();
                 },
-                failure -> UiErrors.show(this, "update the dispatch status", failure));
+                failure -> {
+                    updateActionPresentation();
+                    UiErrors.show(this, "update the dispatch status", failure);
+                });
         if (!started) {
             MessagePrinter.showInfo(this, "A dispatch operation is already in progress.");
         }
@@ -165,10 +188,18 @@ public class DispatchWorkflowMenu extends JPanel {
 
     private void undoLast(JButton control) {
         if (undoStack.isEmpty()) {
-            MessagePrinter.showError(this, "Nothing to undo.");
             return;
         }
         UndoEntry entry = undoStack.peek();
+        int confirmation = JOptionPane.showConfirmDialog(
+                this,
+                "Undo the last dispatch action for incident #" + entry.requestId() + "?",
+                "Confirm Undo",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+        if (confirmation != JOptionPane.YES_OPTION) {
+            return;
+        }
         boolean started = statusAction.start(
                 control,
                 "Undoing...",
@@ -176,30 +207,44 @@ public class DispatchWorkflowMenu extends JPanel {
                     ServiceRequest current = findRequest(entry.requestId(), requestService.findAll());
                     if (current == null) {
                         throw new IllegalStateException(
-                                "Request " + entry.requestId() + " no longer exists");
+                                "Incident #" + entry.requestId() + " no longer exists");
                     }
                     ServiceRequest updated =
                             requestService.updateStatus(entry.requestId(), entry.previousStatus());
-                    return new DispatchUpdate(
-                            updated,
-                            Optional.empty(),
-                            requestService.findAll(),
-                            workflowService.findAuditLog());
+                    return new DispatchUpdate(updated, Optional.empty(), requestService.findAll());
                 },
                 update -> {
                     undoStack.pop();
                     requestTable.setRows(update.requests());
-                    auditTable.setRows(update.auditEvents());
-                    outcomeArea.setText("Request " + update.updated().getRequestId()
-                            + " restored to " + update.updated().getStatus() + ".");
+                    requestTable.getTable().clearSelection();
+                    undoButton.setEnabled(!undoStack.isEmpty());
+                    outcomeArea.setText("Incident #" + update.updated().getRequestId()
+                            + " restored to " + UiFormat.humanize(update.updated().getStatus()) + ".");
+                    updateActionPresentation();
                 },
-                failure -> UiErrors.show(this, "undo the last dispatch change", failure));
+                failure -> UiErrors.show(this, "undo the last dispatch action", failure));
         if (!started) {
             MessagePrinter.showInfo(this, "A dispatch operation is already in progress.");
         }
     }
 
-    private String nextStatus(String current) {
+    private void refresh(JButton control) {
+        boolean started = statusAction.start(
+                control,
+                "Refreshing...",
+                requestService::findAll,
+                requests -> {
+                    requestTable.setRows(requests);
+                    requestTable.getTable().clearSelection();
+                    updateActionPresentation();
+                },
+                failure -> UiErrors.show(this, "refresh dispatch incidents", failure));
+        if (!started) {
+            MessagePrinter.showInfo(this, "A dispatch operation is already in progress.");
+        }
+    }
+
+    static String nextStatus(String current) {
         return switch (current) {
             case "PENDING" -> "ASSIGNED";
             case "ASSIGNED" -> "IN_PROGRESS";
@@ -211,22 +256,26 @@ public class DispatchWorkflowMenu extends JPanel {
     static String formatOutcome(
             ServiceRequest original,
             ServiceRequest updated,
-            Optional<Assignment> assignment) {
+            Optional<Assignment> assignment,
+            List<Location> locations) {
+        String transition = "Incident #" + updated.getRequestId() + " moved from "
+                + UiFormat.humanize(original.getStatus()) + " to "
+                + UiFormat.humanize(updated.getStatus()) + ".";
         if (assignment.isEmpty()) {
-            return "Request " + updated.getRequestId() + " changed from "
-                    + original.getStatus() + " to " + updated.getStatus() + ".";
+            return transition;
         }
         Assignment value = assignment.orElseThrow();
-        return "Assignment " + value.getAssignmentId() + " persisted\n"
-                + "Request: " + updated.getRequestId() + " (urgency "
-                + updated.getUrgency() + ", status " + updated.getStatus() + ")\n"
-                + "Required resource type: " + updated.getRequiredResourceType() + "\n"
-                + "Selected resource: " + value.getResourceId() + "\n"
-                + "Request locations: " + updated.getSourceLocationId()
-                + " -> " + updated.getDestinationLocationId() + "\n"
+        return transition + "\n"
+                + "Assignment #" + value.getAssignmentId() + " was created.\n"
+                + "Selected resource: #" + value.getResourceId() + "\n"
+                + "Required response: " + UiFormat.humanize(updated.getRequiredResourceType()) + "\n"
+                + "Incident location: "
+                + UiFormat.locationName(locations, updated.getSourceLocationId()) + "\n"
+                + "Response destination: "
+                + UiFormat.locationName(locations, updated.getDestinationLocationId()) + "\n"
                 + "Estimated response time: "
                 + String.format("%.2f minutes", value.getEstimatedResponseTimeMinutes()) + "\n"
-                + "Assignment status: " + value.getStatus();
+                + "Assignment status: " + UiFormat.humanize(value.getStatus());
     }
 
     private static ServiceRequest findRequest(int requestId, List<ServiceRequest> requests) {
@@ -244,7 +293,6 @@ public class DispatchWorkflowMenu extends JPanel {
     private record DispatchUpdate(
             ServiceRequest updated,
             Optional<Assignment> assignment,
-            List<ServiceRequest> requests,
-            List<AuditEvent> auditEvents) {
+            List<ServiceRequest> requests) {
     }
 }

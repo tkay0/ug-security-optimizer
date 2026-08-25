@@ -135,7 +135,7 @@ The final report also includes:
 
 **Status: COMPLETE**
 
-- **669 tests** were reported passing at the final coding checkpoint with 0 failures, 0 errors and 0 skipped.
+- **681 tests** pass at the final two-mode usability checkpoint with 0 failures, 0 errors and 0 skipped.
 - Required trace categories are represented:
   - Binary Search
   - Insertion Sort
@@ -146,7 +146,7 @@ The final report also includes:
 - At least three proof/correctness sketches are included.
 - At least two counterexamples/invalid-precondition cases are documented, including greedy failure and unsorted-input Binary Search.
 - Edge-case coverage includes empty/single-element structures, invalid input, duplicates/collisions, disconnected graphs, unreachable paths, queue boundary behavior and graph edge cases.
-- The DSA Demonstrations screen can generate correctness evidence for examiner review.
+- **Academic / DSA Lab -> Correctness** can generate correctness evidence for examiner review.
 
 ---
 
@@ -186,20 +186,28 @@ Representative final observations include:
 
 **Status: COMPLETE FOR THE SOFTWARE; VIDEO/ORAL PENDING**
 
-The Swing application exposes examiner-accessible tabs for:
+The Swing application opens in Operational Mode with first-level navigation for:
 
-- Locations & Roads
-- Routing
-- Requests & Resources
-- Search & Sort
-- Dispatch Workflow
-- Priority Queue
-- Optimization
-- DSA Demonstrations
-- Efficiency Lab
+- Dashboard
+- Incidents
+- Dispatch
+- Routes
+- Resources
 - Reports
 
-The final report contains screenshots showing database-backed data, routing, persisted dispatch/audit history, priority ordering, DP/brute-force comparison, correctness traces and measured algorithm runs.
+Academic / DSA Lab exposes the examiner-facing areas:
+
+- Structures
+- Search & Sort
+- Graph Algorithms
+- Optimization
+- Correctness
+- Efficiency Lab
+
+Both modes reuse the same injected frontend services, database and runtime state.
+The frozen final report contains the pre-refactor GUI screenshots; their controlled
+replacement after visual approval is specified in
+`docs/evidence/USER_MODE_REPORT_UPDATE_NOTES.md`.
 
 The required **5-8 minute demonstration video** remains a separate pending submission item.
 
@@ -207,7 +215,7 @@ The required **5-8 minute demonstration video** remains a separate pending submi
 
 ## Technical Report
 
-**Status: COMPLETE**
+**Status: TECHNICAL CONTENT COMPLETE; GUI SCREENSHOT REFRESH DEFERRED**
 
 The submission-final report exists in both DOCX and PDF form and contains:
 

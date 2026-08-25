@@ -3,10 +3,12 @@ package org.ugoptimizer.ui.menu;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.ugoptimizer.algorithms.assignment.AssignmentCandidate;
 import org.ugoptimizer.model.Assignment;
+import org.ugoptimizer.model.Location;
 import org.ugoptimizer.model.Resource;
 import org.ugoptimizer.model.ServiceRequest;
 
@@ -24,13 +26,15 @@ class OperationalDisplayTest {
                 7, 21, 12, Instant.parse("2026-08-21T12:00:00Z"), null, "ACTIVE", 8.25);
 
         String display = DispatchWorkflowMenu.formatOutcome(
-                pending, assigned, Optional.of(assignment));
+                pending, assigned, Optional.of(assignment), locations());
 
-        assertTrue(display.contains("Assignment 7 persisted"));
-        assertTrue(display.contains("Request: 21 (urgency 5, status ASSIGNED)"));
-        assertTrue(display.contains("Selected resource: 12"));
+        assertTrue(display.contains("Incident #21 moved from Pending to Assigned"));
+        assertTrue(display.contains("Assignment #7 was created"));
+        assertTrue(display.contains("Selected resource: #12"));
         assertTrue(display.contains("8.25 minutes"));
-        assertTrue(display.contains("Assignment status: ACTIVE"));
+        assertTrue(display.contains("Incident location: Balme Library"));
+        assertTrue(display.contains("Response destination: Legon Hall"));
+        assertTrue(display.contains("Assignment status: Active"));
     }
 
     @Test
@@ -62,5 +66,13 @@ class OperationalDisplayTest {
                 status,
                 "MEDICAL_TEAM",
                 "Medical response requested");
+    }
+
+    private static List<Location> locations() {
+        return List.of(
+                new Location(1, "Balme Library", "Legon", "LIBRARY", 1, 1,
+                        "Open", "test source"),
+                new Location(9, "Legon Hall", "Legon", "HALL", 9, 9,
+                        "Open", "test source"));
     }
 }
